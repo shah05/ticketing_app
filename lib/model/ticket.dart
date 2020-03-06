@@ -24,7 +24,7 @@ class Ticket {
           partNum: 'abc123',
           serialNum: '123456',
           problemDesc : 'Feature A not working',
-          attachmentUrl: 'picture',
+          attachmentUrl: 'assets/part-stuckdefect.png',
           serviceDate: DateTime.now(),
           contactName: 'Shahidan',
           contactNum: '0133990224',
