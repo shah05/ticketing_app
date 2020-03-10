@@ -1,4 +1,8 @@
+import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'dart:io';
 
 class TicketFormPage extends StatefulWidget {
   TicketFormPage({this.title});
@@ -9,96 +13,85 @@ class TicketFormPage extends StatefulWidget {
 }
 
 class _TicketFormPageState extends State<TicketFormPage> {
+  File _image;
+
+  Future getImage() async {
+    var image = await ImagePicker.pickImage(source: ImageSource.gallery);
+    setState(() {
+      _image = image;
+    });
+  }
+
 
   final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
-
+  final format = DateFormat("yyyy-MM-dd");
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
-      appBar: new AppBar(
-        title: new Text(widget.title),
-      ),
+    return Scaffold(
+      appBar: AppBar(title: Text('Create New Ticket'),),
       body: new SafeArea(
-          top: false,
-          bottom: false,
-          child: new Form(
-              key: _formKey,
-              autovalidate: true,
-              child: new ListView(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                children: <Widget>[
-                  new TextFormField(
-                    decoration: const InputDecoration(
-                      icon: const Icon(Icons.person),
-                      hintText: 'Enter your first and last name',
-                      labelText: 'Name',
-                    ),
-                  ),
-                  new TextFormField(
-                    decoration: const InputDecoration(
-                      icon: const Icon(Icons.calendar_today),
-                      hintText: 'Enter your date of birth',
-                      labelText: 'Dob',
-                    ),
-                    keyboardType: TextInputType.datetime,
-                  ),
-                  new TextFormField(
-                    decoration: const InputDecoration(
-                      icon: const Icon(Icons.phone),
-                      hintText: 'Enter a phone number',
-                      labelText: 'Phone',
-                    ),
-                    keyboardType: TextInputType.phone,
-                    inputFormatters: [
-                      WhitelistingTextInputFormatter.digitsOnly,
-                    ],
-                  ),
-                  new TextFormField(
-                    decoration: const InputDecoration(
-                      icon: const Icon(Icons.email),
-                      hintText: 'Enter a email address',
-                      labelText: 'Email',
-                    ),
-                    keyboardType: TextInputType.emailAddress,
-                  ),
-                  new FormField(
-                    builder: (FormFieldState state) {
-                      return InputDecorator(
-                        decoration: InputDecoration(
-                          icon: const Icon(Icons.color_lens),
-                          labelText: 'Color',
-                        ),
-                        isEmpty: _color == '',
-                        child: new DropdownButtonHideUnderline(
-                          child: new DropdownButton(
-                            value: _color,
-                            isDense: true,
-                            onChanged: (String newValue) {
-                              setState(() {
-                                newContact.favoriteColor = newValue;
-                                _color = newValue;
-                                state.didChange(newValue);
-                              });
-                            },
-                            items: _colors.map((String value) {
-                              return new DropdownMenuItem(
-                                value: value,
-                                child: new Text(value),
-                              );
-                            }).toList(),
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                  new Container(
-                      padding: const EdgeInsets.only(left: 40.0, top: 20.0),
-                      child: new RaisedButton(
-                        child: const Text('Submit'),
-                        onPressed: null,
-                      )),
-                ],
-              ))),
+        child: Form(
+          key: _formKey,
+          child: ListView(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            children: <Widget>[
+              TextFormField(
+                maxLines: 4,
+                decoration: InputDecoration(
+                  labelText: 'Problem Description',
+                  icon: Icon(Icons.person),
+                ),
+              ),
+              TextFormField(
+                decoration: InputDecoration(
+                  labelText: 'Part No',
+                  icon: Icon(Icons.subdirectory_arrow_right),
+                ),
+              ),
+
+              TextFormField(
+                decoration: InputDecoration(
+                  labelText: 'Serial No',
+                  icon: Icon(Icons.flare),
+                ),
+              ),
+              DateTimeField(
+                decoration: InputDecoration(icon: Icon(Icons.calendar_today)),
+                format: format,
+                onShowPicker: (context, currentValue) {
+                  return showDatePicker(
+                      context: context,
+                      firstDate: DateTime(1900),
+                      initialDate: currentValue ?? DateTime.now(),
+                      lastDate: DateTime(2100));
+                },),
+
+              TextFormField(
+                decoration: InputDecoration(
+                  labelText: 'Contact Details',
+                  icon: Icon(Icons.phone),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(15.0),
+                child: Center(
+                  child: _image == null
+                      ? Text('No image selected')
+                      : Image.file(_image),
+                ),
+              ),
+              SizedBox(
+                  width: 20.0,
+                  height: 20.0,
+                  child: RaisedButton(
+                    onPressed: getImage,
+                    child: Icon(Icons.add_a_photo),
+                  )),
+            ],
+          ),
+
+        ),),
     );
   }
+
 }

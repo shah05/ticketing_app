@@ -5,6 +5,7 @@ import 'package:ticketing_2/util/constants.dart';
 import 'standard_card.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'bottom_navbar.dart';
+import 'ticket_form_page.dart';
 
 class TicketListPage extends StatelessWidget {
   final Ticket _ticket = Ticket();
@@ -39,6 +40,7 @@ class TicketListPage extends StatelessWidget {
                       cardDesc: _ticket.getTickets()[0].serialNum,
                       icon: FontAwesomeIcons.infoCircle,
                       onPress: () {
+                        print(_ticket.getTickets()[0]);
                         Navigator.push(
                             context,
                             MaterialPageRoute(
@@ -49,12 +51,13 @@ class TicketListPage extends StatelessWidget {
                     cardName: 'New Tickets',
                     cardDesc: 'Create & submit a new ticket',
                     icon: FontAwesomeIcons.infoCircle,
-//            onPress: (){
-//              Navigator.push(
-//                  context,
-//                  MaterialPageRoute(
-//                      builder: (context) => TicketListPage()));
-//            }
+                      onPress: () {
+                        print(_ticket.getTickets()[0]);
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => TicketFormPage()));
+                      }
                   )
                 ],
               ), //open

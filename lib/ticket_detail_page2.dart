@@ -6,8 +6,8 @@ import 'bottom_navbar.dart';
 import 'standard_card.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-class TicketDetailPage extends StatelessWidget {
-  TicketDetailPage({Key key, this.ticket}) : super(key: key);
+class TicketDetailPage2 extends StatelessWidget {
+  TicketDetailPage2({Key key, this.ticket}) : super(key: key);
 
   final Ticket ticket;
 
@@ -18,7 +18,7 @@ class TicketDetailPage extends StatelessWidget {
       body: Column(
           children: <Widget>[
             TopContent(ticketNum: 'abc1234',),
-          Expanded(child: MenuListTile()),
+//          Expanded(child: MenuListTile()),
           ],
           ),
       bottomNavigationBar: BottomNavBar(),
@@ -26,85 +26,6 @@ class TicketDetailPage extends StatelessWidget {
   }
 }
 
-class BottomContent extends StatelessWidget {
-
-  BottomContent({this.ticket});
-
-  final Ticket ticket;
-
-  @override
-  Widget build(BuildContext context) {
-    return ListView(children: <Widget>[
-      Card(
-      elevation: 8.0,
-      margin: new EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
-      child: Container(
-        decoration: BoxDecoration(color: kCardBackgroundColor),
-        child: ListTile(
-            contentPadding:
-            EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
-            leading: Container(
-              padding: EdgeInsets.only(right: 12.0),
-              decoration: new BoxDecoration(
-                  border: new Border(
-                      right:
-                      new BorderSide(width: 1.0, color: Colors.white24))),
-            ),
-            title: Text(
-              "Serial Number",
-              style:
-              TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-            ),
-            subtitle: Text("", style: TextStyle(color: Colors.white)),
-            trailing: Icon(Icons.keyboard_arrow_right,
-                color: Colors.white, size: 30.0)),
-      ),
-    )
-    ],);
-      Container(child:
-    Column(children: <Widget>[
-      Row(
-        children: <Widget>[
-        Text('Problem Description :',
-            style: TextStyle(color: Colors.white)),
-        Text(ticket.problemDesc,style: TextStyle(color: Colors.white))
-      ],),
-      Row(
-        children: <Widget>[
-          Text('Part No :',
-              style: TextStyle(color: Colors.white)),
-          Text(ticket.partNum,style: TextStyle(color: Colors.white))
-        ],),
-      Row(
-        children: <Widget>[
-          Text('Serial No :',
-              style: TextStyle(color: Colors.white)),
-          Text(ticket.serialNum,style: TextStyle(color: Colors.white))
-        ],),
-      Row(
-        children: <Widget>[
-          Text('Preferred Service Date/Time :',
-              style: TextStyle(color: Colors.white)),
-          Text(ticket.serviceDate.toString(),style: TextStyle(color: Colors.white))
-        ],),
-      Row(
-        children: <Widget>[
-          Text('Contact Name :',
-              style: TextStyle(color: Colors.white)),
-          Text(ticket.contactName,style: TextStyle(color: Colors.white))
-        ],),
-      Row(
-        children: <Widget>[
-          Text('Contact Number :',
-              style: TextStyle(color: Colors.white)),
-          Text(ticket.contactNum,style: TextStyle(color: Colors.white))
-        ],)
-
-    ],),);
-  }
-}
-
-//
 class TopContent extends StatelessWidget {
   TopContent({this.ticketNum,this.attachmentUrl});
 
