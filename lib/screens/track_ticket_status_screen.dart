@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:ticketing_2/model/ticket.dart';
-import 'package:ticketing_2/ticket_detail_page.dart';
-import 'package:ticketing_2/util/constants.dart';
-import 'standard_card.dart';
+import 'package:ticketing_app/model/ticket.dart';
+import 'package:ticketing_app/screens/ticket_detail_screen.dart';
+import 'package:ticketing_app/util/constants.dart';
+import '../widgets/standard_card.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'bottom_navbar.dart';
-import 'ticket_form_page.dart';
+import '../widgets/bottom_navbar.dart';
+import 'create_new_ticket_screen.dart';
 
-class TicketListPage extends StatelessWidget {
+class TrackTicketStatusScreen extends StatelessWidget {
   final Ticket _ticket = Ticket();
   @override
   Widget build(BuildContext context) {
@@ -44,7 +44,7 @@ class TicketListPage extends StatelessWidget {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => TicketDetailPage(
+                                builder: (context) => TicketDetailScreen(
                                     ticket: _ticket.getTickets()[0])));
                       }),
                   StandardCard(
@@ -56,7 +56,7 @@ class TicketListPage extends StatelessWidget {
                         Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => TicketFormPage()));
+                                builder: (context) => CreateNewTicketScreen()));
                       }
                   )
                 ],
@@ -89,7 +89,7 @@ class TicketListPage extends StatelessWidget {
               ) //closed
             ],
           ),
-          bottomNavigationBar: BottomNavBar(),
+//          bottomNavigationBar: BottomNavBar(),
         ),
       ),
     );

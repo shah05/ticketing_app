@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:ticketing_2/util/constants.dart';
+import 'package:ticketing_app/util/constants.dart';
 
 class StandardCard extends StatelessWidget {
   StandardCard({this.cardName, this.cardDesc, this.icon, this.onPress});

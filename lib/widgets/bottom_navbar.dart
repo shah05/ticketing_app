@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'util/constants.dart';
+import 'package:ticketing_app/screens/home_screen.dart';
+import 'package:ticketing_app/screens/settings_screen.dart';
+import '../util/constants.dart';
 
 class BottomNavBar extends StatelessWidget {
   const BottomNavBar({
@@ -17,11 +19,23 @@ class BottomNavBar extends StatelessWidget {
           children: <Widget>[
             IconButton(
               icon: Icon(Icons.home, color: Colors.white),
-              onPressed: () {},
+              onPressed: () {
+//                Navigator.push(
+//                  context,
+//                  MaterialPageRoute(
+//                      builder: (context) => HomeScreen()),
+//                );
+              },
             ),
             IconButton(
               icon: Icon(Icons.account_box, color: Colors.white),
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => SettingsScreen()),
+                );
+              },
             )
           ],
         ),

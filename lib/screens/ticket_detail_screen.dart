@@ -1,21 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:ticketing_2/main.dart';
-import 'package:ticketing_2/model/ticket.dart';
-import 'util/constants.dart';
-import 'bottom_navbar.dart';
-import 'standard_card.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:ticketing_app/model/ticket.dart';
 
-class TicketDetailPage extends StatefulWidget {
-  TicketDetailPage({Key key, this.ticket}) : super(key: key);
+
+class TicketDetailScreen extends StatefulWidget {
+  TicketDetailScreen({Key key, this.ticket}) : super(key: key);
 
   final Ticket ticket;
 
   @override
-  _TicketDetailPageState createState() => _TicketDetailPageState();
+  _TicketDetailScreenState createState() => _TicketDetailScreenState();
 }
 
-class _TicketDetailPageState extends State<TicketDetailPage> {
+class _TicketDetailScreenState extends State<TicketDetailScreen> {
   final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
 
   @override
@@ -83,7 +79,6 @@ class _TicketDetailPageState extends State<TicketDetailPage> {
                   ),
                 ],
               ),
-
             ),),
       );
     }
