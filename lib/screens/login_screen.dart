@@ -45,7 +45,8 @@ class _LoginScreenState extends State<LoginScreen> {
     if (token == "1") {
       //final decodedtoken = jsonDecode(token);
       //print(decodedtoken['token']);
-      Navigator.pushNamed(context, '/home');
+//      Navigator.pushNamed(context, '/home');
+      Navigator.pushReplacementNamed(context, '/home');
       _hideLoading();
     } else {
       print('authentication failed');

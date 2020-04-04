@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:ticketing_app/util/constants.dart';
 
-class StandardCard extends StatelessWidget {
-  StandardCard({this.cardName, this.cardDesc, this.icon, this.onPress});
+class TicketCard extends StatelessWidget {
+  TicketCard({this.cardName, this.cardDesc1, this.cardDesc2, this.icon, this.onPress});
 
   final String cardName;
-  final String cardDesc;
+  final String cardDesc1;
+  final String cardDesc2;
   final IconData icon;
   final Function onPress;
 
@@ -19,21 +20,27 @@ class StandardCard extends StatelessWidget {
         child: ListTile(
             onTap: onPress,
             contentPadding:
-            EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+                EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
             leading: Container(
               padding: EdgeInsets.only(right: 12.0),
               decoration: new BoxDecoration(
                   border: new Border(
                       right:
-                      new BorderSide(width: 1.0, color: Colors.white24))),
+                          new BorderSide(width: 1.0, color: Colors.white24))),
               child: Icon(icon, color: Colors.white),
             ),
             title: Text(
-              cardName,
-              style:
-              TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+              '$cardName',
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(color: Colors.white),
             ),
-            subtitle: Text(cardDesc, style: TextStyle(color: Colors.white)),
+            subtitle: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text('Service Type: $cardDesc1', style: TextStyle(color: Colors.white)),
+                Text('Status: $cardDesc2', style: TextStyle(color: Colors.white)),
+              ],
+            ),
             trailing: Icon(Icons.keyboard_arrow_right,
                 color: Colors.white, size: 30.0)),
       ),

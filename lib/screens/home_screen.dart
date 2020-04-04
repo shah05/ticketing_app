@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:ticketing_app/screens/settings_screen.dart';
 import 'package:ticketing_app/util/constants.dart';
 import 'package:ticketing_app/widgets/bottom_navbar.dart';
-import 'package:ticketing_app/widgets/standard_card.dart';
+import 'package:ticketing_app/widgets/menu_card.dart';
+import 'package:ticketing_app/widgets/ticket_card.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:ticketing_app/screens/create_new_ticket_screen.dart';
 import 'package:ticketing_app/screens/track_ticket_status_screen.dart';
@@ -37,7 +38,7 @@ class MenuListTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListView(
       children: <Widget>[
-        StandardCard(
+        MenuCard(
             cardName: 'New Tickets',
             cardDesc: 'Create & submit a new ticket',
             icon: FontAwesomeIcons.infoCircle,
@@ -47,7 +48,7 @@ class MenuListTile extends StatelessWidget {
                   MaterialPageRoute(
                       builder: (context) => CreateNewTicketScreen()));
             }),
-        StandardCard(
+        MenuCard(
             cardName: 'Track Tickets',
             cardDesc: 'Check status of your tickets',
             icon: FontAwesomeIcons.tasks,
@@ -57,11 +58,11 @@ class MenuListTile extends StatelessWidget {
                   MaterialPageRoute(
                       builder: (context) => TrackTicketStatusScreen()));
             }),
-        StandardCard(
+        MenuCard(
             cardName: 'Equipment check',
             cardDesc: 'Get equipment details ',
             icon: FontAwesomeIcons.searchPlus),
-        StandardCard(
+        MenuCard(
             cardName: 'Settings',
             cardDesc: 'Change account settings',
             icon: FontAwesomeIcons.tasks,

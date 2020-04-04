@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:ticketing_app/model/list_ticket.dart';
 import 'package:ticketing_app/model/ticket.dart';
 import 'package:ticketing_app/screens/ticket_detail_screen.dart';
+import 'package:ticketing_app/service/rest_api.dart';
 import 'package:ticketing_app/util/constants.dart';
-import '../widgets/standard_card.dart';
+import '../widgets/ticket_card.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import '../widgets/bottom_navbar.dart';
-import 'create_new_ticket_screen.dart';
 
 class TrackTicketStatusScreen extends StatelessWidget {
-  final Ticket _ticket = Ticket();
+  final List<Ticketlist> listClosedTickets = [];
+  final List<Ticketlist> listOpenTickets = [];
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -31,63 +32,32 @@ class TrackTicketStatusScreen extends StatelessWidget {
               ],
             ),
           ),
-          body: TabBarView(
-            children: <Widget>[
-              ListView(
-                children: <Widget>[
-                  StandardCard(
-                      cardName: _ticket.getTickets()[0].partNum,
-                      cardDesc: _ticket.getTickets()[0].serialNum,
-                      icon: FontAwesomeIcons.infoCircle,
-                      onPress: () {
-                        print(_ticket.getTickets()[0]);
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => TicketDetailScreen(
-                                    ticket: _ticket.getTickets()[0])));
-                      }),
-                  StandardCard(
-                    cardName: 'New Tickets',
-                    cardDesc: 'Create & submit a new ticket',
-                    icon: FontAwesomeIcons.infoCircle,
-                      onPress: () {
-                        print(_ticket.getTickets()[0]);
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => CreateNewTicketScreen()));
-                      }
-                  )
-                ],
-              ), //open
-              ListView(
-                children: <Widget>[
-                  StandardCard(
-                    cardName: 'New Tickets',
-                    cardDesc: 'Create & submit a new ticket',
-                    icon: FontAwesomeIcons.infoCircle,
-//            onPress: (){
-//              Navigator.push(
-//                  context,
-//                  MaterialPageRoute(
-//                      builder: (context) => TicketListPage()));
-//            }
-                  ),
-                  StandardCard(
-                    cardName: 'New Tickets',
-                    cardDesc: 'Create & submit a new ticket',
-                    icon: FontAwesomeIcons.infoCircle,
-//            onPress: (){
-//              Navigator.push(
-//                  context,
-//                  MaterialPageRoute(
-//                      builder: (context) => TicketListPage()));
-//            }
-                  )
-                ],
-              ) //closed
-            ],
+          body: FutureBuilder(
+            future: ApiService.getListTicketStatus(), // call API to get list of tickets
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                ListTicket listTicket = snapshot.data;
+                for (var l in listTicket.ticketlist){
+//                  print('all status: ${l.status}');
+                  if(l.status.trim()=="Closed" || l.status.trim()=="Cancelled"){
+//                    print('Closed Ticket:${l.status}');
+                    listClosedTickets.add(l);
+                  }
+                  else{
+                    listOpenTickets.add(l);
+//                    print('Open Ticket:${l.status}');
+                  }
+                }
+
+                return buildTicketList(listOpenTickets,listClosedTickets);
+              } else if (snapshot.hasError) {
+                return Text('Please Refresh');
+              }
+              return Container(
+                alignment: FractionalOffset.center,
+                child: CircularProgressIndicator(),
+              );
+            },
           ),
 //          bottomNavigationBar: BottomNavBar(),
         ),
@@ -95,3 +65,49 @@ class TrackTicketStatusScreen extends StatelessWidget {
     );
   }
 }
+
+Widget buildTicketList(List<Ticketlist> open, List<Ticketlist> closed) {
+  return TabBarView(
+    children: <Widget>[
+      ListView.builder(
+        itemCount: open.length,
+        itemBuilder: (context, index) {
+          return TicketCard(
+              cardName: open[index].uuid,
+              cardDesc1: open[index].svctype,
+              cardDesc2: open[index].status,
+              icon: FontAwesomeIcons.infoCircle,
+              onPress: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => TicketDetailScreen(
+                          uuid: open[index].uuid)),
+                );
+              });
+          return null;
+        },
+      ), //open
+      ListView.builder(
+        itemCount: closed.length,
+        itemBuilder: (context, index) {
+          return TicketCard(
+              cardName: closed[index].uuid,
+              cardDesc1: closed[index].svctype,
+              cardDesc2: closed[index].status,
+              icon: FontAwesomeIcons.infoCircle,
+              onPress: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => TicketDetailScreen(
+                          uuid: closed[index].uuid)),
+                );
+              });
+          return null;
+        },
+      )//closed
+    ],
+  );
+}
+
