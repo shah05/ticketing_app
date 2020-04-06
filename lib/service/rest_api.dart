@@ -10,7 +10,7 @@ import 'package:ticketing_app/model/ticket.dart';
 class URLS {
   // the URL of the Web Server
 //  static const String BASE_URL = 'https://tisapi.azurewebsites.net';
-  static const String BASE_URL = 'https://webapi168.azurewebsites.net/api';
+  static const String BASE_URL = 'https://webapi168.azurewebsites.net';
 
   // the storage key for the token
   static const String _storageKeyMobileToken = "token";
@@ -38,10 +38,10 @@ class ApiService {
   /// ----------------------------------------------------------
   /// Method that do an authentication
   /// ----------------------------------------------------------
-  static Future<String> doAuthentication(useremail, userpass) async {
+  static Future<String> doAuthentication(userEmail, userPass) async {
     String _status = "ERROR";
 
-    Map params = {"UserName": useremail, "Password": userpass};
+    Map params = {"UserName": userEmail, "Password": userPass};
 
     //encode params to JSON
     var body = json.encode(params);
@@ -98,8 +98,8 @@ class ApiService {
   static Future<ListTicket> getListTicketStatus() async {
     print('here getListTicketStatus');
     String token = await _getMobileToken();
-    token =
-        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ2YS52aWN0b3J3YW5AZ21haWwuY29tIiwianRpIjoiZDBiYmQ1YTYtYmVlYS00OTAwLWIxNWItNDkxNDgwMjA3N2Y3IiwidW5pcXVlX25hbWUiOiJ2YS52aWN0b3J3YW5AZ21haWwuY29tIiwiZW1haWwiOiJ2YS52aWN0b3J3YW5AZ21haWwuY29tIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoiQ3VzdG9tZXJSZXAiLCJleHAiOjE1ODYwMTQ0NTksImlzcyI6Ik1WUyIsImF1ZCI6IkFwaVVzZXIifQ.ytKIP8o-49sPUfwvkgNiaikCwBW_TmoESqYSlNPQirU';
+//    token =
+//        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ2YS52aWN0b3J3YW5AZ21haWwuY29tIiwianRpIjoiZDBiYmQ1YTYtYmVlYS00OTAwLWIxNWItNDkxNDgwMjA3N2Y3IiwidW5pcXVlX25hbWUiOiJ2YS52aWN0b3J3YW5AZ21haWwuY29tIiwiZW1haWwiOiJ2YS52aWN0b3J3YW5AZ21haWwuY29tIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoiQ3VzdG9tZXJSZXAiLCJleHAiOjE1ODYwMTQ0NTksImlzcyI6Ik1WUyIsImF1ZCI6IkFwaVVzZXIifQ.ytKIP8o-49sPUfwvkgNiaikCwBW_TmoESqYSlNPQirU';
 
     var url = Uri.parse(
         'https://webapi168.azurewebsites.net/api/ticket/GetTicketListByStatus');
@@ -109,17 +109,6 @@ class ApiService {
 
     var streamedResponse = await request.send();
     var response = await http.Response.fromStream(streamedResponse);
-//    print(response.body);
-//    FormData formData = FormData.fromMap({"statustype": "All Status"});
-////    FormData formData = FormData.fromMap({'id': 'f04b54cc-05bd-4c31-81c1-1a30e7a64188'});
-//    Dio dio = new Dio();
-//    Response response;
-//    response = await dio.post(
-//      'https://webapi168.azurewebsites.net/api/ticket/GetTicketListByStatus',
-//      data: formData,
-//      options: new Options(
-//          headers: {HttpHeaders.authorizationHeader: 'Bearer $token'}),
-//    );
 
     if (response.statusCode == 200) {
 //      print('success');
@@ -127,7 +116,6 @@ class ApiService {
 //      print('RESPONSE BODY : ${response.body}');
       final responseJson = json.decode(response.body);
 //      print('RESPONSE JSON : ${response.body}');
-
 
       return ListTicket.fromJson(responseJson);
     } else {
@@ -142,30 +130,18 @@ class ApiService {
   static Future<Ticket> getTicketDetail(String uuid) async {
     print('here getListTicketDetail');
     String token = await _getMobileToken();
-    token =
-        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ2YS52aWN0b3J3YW5AZ21haWwuY29tIiwianRpIjoiZDBiYmQ1YTYtYmVlYS00OTAwLWIxNWItNDkxNDgwMjA3N2Y3IiwidW5pcXVlX25hbWUiOiJ2YS52aWN0b3J3YW5AZ21haWwuY29tIiwiZW1haWwiOiJ2YS52aWN0b3J3YW5AZ21haWwuY29tIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoiQ3VzdG9tZXJSZXAiLCJleHAiOjE1ODYwMTQ0NTksImlzcyI6Ik1WUyIsImF1ZCI6IkFwaVVzZXIifQ.ytKIP8o-49sPUfwvkgNiaikCwBW_TmoESqYSlNPQirU';
-
-//    var url = Uri.parse( Application.backendBaseURL + route);
-
-//    final response = await http
-//        .post('https://webapi168.azurewebsites.net/api/ticket/GetTicketById', headers: {
-//      HttpHeaders.contentTypeHeader: "multipart/form-data",
-//      HttpHeaders.authorizationHeader: "Bearer $token"
-//    });
-
+//    token =
+//        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ2YS52aWN0b3J3YW5AZ21haWwuY29tIiwianRpIjoiZDBiYmQ1YTYtYmVlYS00OTAwLWIxNWItNDkxNDgwMjA3N2Y3IiwidW5pcXVlX25hbWUiOiJ2YS52aWN0b3J3YW5AZ21haWwuY29tIiwiZW1haWwiOiJ2YS52aWN0b3J3YW5AZ21haWwuY29tIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoiQ3VzdG9tZXJSZXAiLCJleHAiOjE1ODYwMTQ0NTksImlzcyI6Ik1WUyIsImF1ZCI6IkFwaVVzZXIifQ.ytKIP8o-49sPUfwvkgNiaikCwBW_TmoESqYSlNPQirU';
     var url = Uri.parse(
         'https://webapi168.azurewebsites.net/api/ticket/GetTicketById');
     var request = new http.MultipartRequest('POST', url);
     request.headers['authorization'] = 'Bearer $token';
-    print('here');
     request.fields['id'] = uuid;
-    print('here2');
 
     var streamedResponse = await request.send();
     var response = await http.Response.fromStream(streamedResponse);
 //    print(response.statusCode);
     if (response.statusCode == 200) {
-
       print('RESPONSE BODY : ${response.body}');
       // If the call to the server was successful, parse the JSON.
       print(response.body.runtimeType);
@@ -181,33 +157,6 @@ class ApiService {
       print('Failed to load post');
       return null;
     }
-//    request.send().then((response) async{
-//      print('here3');
-//      if (response.statusCode == 200) {
-//        print(response.toString());
-//          http.Response.fromStream(response)
-////        final responseStr = await response.stream.bytesToString();
-////        final responseJson = json.decode(responseStr);
-////        print(responseJson);
-//      }
-//      else{
-//        print('here4');
-//        print(response.statusCode);
-//      }
-//    }
-//
-//    );
-
-//    if (response.statusCode == 200) {
-//      // If the call to the server was successful, parse the JSON.
-//      final responseJson = json.decode(response.toString());
-//      print(responseJson);
-//      return Ticket.fromJson(responseJson);
-//    } else {
-//      // If that call was not successful, throw an error.
-//      print('Response status: ${response.statusCode}');
-//      return null;
-//    }
   }
 }
 

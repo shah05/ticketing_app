@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ticketing_app/main.dart';
 import 'package:ticketing_app/model/list_ticket.dart';
 import 'package:ticketing_app/model/ticket.dart';
 import 'package:ticketing_app/screens/ticket_detail_screen.dart';
@@ -6,10 +7,32 @@ import 'package:ticketing_app/service/rest_api.dart';
 import 'package:ticketing_app/util/constants.dart';
 import '../widgets/ticket_card.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'login_screen.dart';
 
 class TrackTicketStatusScreen extends StatelessWidget {
   final List<Ticketlist> listClosedTickets = [];
   final List<Ticketlist> listOpenTickets = [];
+
+  Future<void> _retryAuth(BuildContext context) {
+    return showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Not in stock'),
+          content: const Text('This item is no longer available'),
+          actions: <Widget>[
+            FlatButton(
+              child: Text('Ok'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -33,25 +56,49 @@ class TrackTicketStatusScreen extends StatelessWidget {
             ),
           ),
           body: FutureBuilder(
-            future: ApiService.getListTicketStatus(), // call API to get list of tickets
+            future: ApiService
+                .getListTicketStatus(), // call API to get list of tickets
             builder: (context, snapshot) {
+//              print('snapshot: ${snapshot.}');
               if (snapshot.hasData) {
+                print('here1');
                 ListTicket listTicket = snapshot.data;
-                for (var l in listTicket.ticketlist){
+                for (var l in listTicket.ticketlist) {
 //                  print('all status: ${l.status}');
-                  if(l.status.trim()=="Closed" || l.status.trim()=="Cancelled"){
+                  if (l.status.trim() == "Closed" ||
+                      l.status.trim() == "Cancelled") {
 //                    print('Closed Ticket:${l.status}');
                     listClosedTickets.add(l);
-                  }
-                  else{
+                  } else {
                     listOpenTickets.add(l);
 //                    print('Open Ticket:${l.status}');
                   }
                 }
 
-                return buildTicketList(listOpenTickets,listClosedTickets);
-              } else if (snapshot.hasError) {
-                return Text('Please Refresh');
+                return buildTicketList(listOpenTickets, listClosedTickets);
+              } else {
+
+                return Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                    Text('Token Expired'),
+                    FlatButton(
+                      child: new Text('click to signin'),
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            new MaterialPageRoute<String>(
+                              builder: (BuildContext context) => new MyApp(),
+                              fullscreenDialog: true,
+                            ));
+                      },
+                    ),
+                  ],)
+
+                );
+
+                return Text('Please refresh');
               }
               return Container(
                 alignment: FractionalOffset.center,
@@ -81,8 +128,8 @@ Widget buildTicketList(List<Ticketlist> open, List<Ticketlist> closed) {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => TicketDetailScreen(
-                          uuid: open[index].uuid)),
+                      builder: (context) =>
+                          TicketDetailScreen(uuid: open[index].uuid)),
                 );
               });
           return null;
@@ -100,14 +147,13 @@ Widget buildTicketList(List<Ticketlist> open, List<Ticketlist> closed) {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => TicketDetailScreen(
-                          uuid: closed[index].uuid)),
+                      builder: (context) =>
+                          TicketDetailScreen(uuid: closed[index].uuid)),
                 );
               });
           return null;
         },
-      )//closed
+      ) //closed
     ],
   );
 }
-

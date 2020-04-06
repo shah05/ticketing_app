@@ -53,24 +53,22 @@ class MenuListTile extends StatelessWidget {
             cardDesc: 'Check status of your tickets',
             icon: FontAwesomeIcons.tasks,
             onPress: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => TrackTicketStatusScreen()));
+              Navigator.pushNamed(context, '/trackticket');
             }),
         MenuCard(
             cardName: 'Equipment check',
-            cardDesc: 'Get equipment details ',
-            icon: FontAwesomeIcons.searchPlus),
+            cardDesc: 'Get equipment details',
+            icon: FontAwesomeIcons.searchPlus,
+            onPress: (){
+              Navigator.pushNamed(context, '/equipment');
+            },
+        ),
         MenuCard(
             cardName: 'Settings',
             cardDesc: 'Change account settings',
             icon: FontAwesomeIcons.tasks,
             onPress: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => SettingsScreen()));
+              Navigator.pushNamed(context, '/settings');
             }),
       ],
     );
