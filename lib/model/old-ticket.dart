@@ -1,10 +1,10 @@
 import 'package:ticketing_app/model/attachment.dart';
 
 class Ticket {
-  String _naCode;
-  int _contractUUID;
-  Null _contract;
   int _svcTypeId;
+  String _naCode;
+  Null _contract;
+  int _contractUUID;
   Null _svcType;
   int _srsStatusId;
   Null _srsStatus;

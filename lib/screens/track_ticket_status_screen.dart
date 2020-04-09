@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ticketing_app/main.dart';
 import 'package:ticketing_app/model/list_ticket.dart';
-import 'package:ticketing_app/model/ticket.dart';
+import 'package:ticketing_app/model/old-ticket.dart';
 import 'package:ticketing_app/screens/ticket_detail_screen.dart';
 import 'package:ticketing_app/service/rest_api.dart';
 import 'package:ticketing_app/util/constants.dart';

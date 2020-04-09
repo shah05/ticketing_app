@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:ticketing_app/model/ticket.dart';
+import 'package:ticketing_app/model/ticket_by_id.dart';
 import 'package:ticketing_app/service/rest_api.dart';
 
 class TicketDetailScreen extends StatelessWidget {
@@ -19,9 +19,11 @@ class TicketDetailScreen extends StatelessWidget {
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             print('HERE IN FUTURE BUILDER TICKETDETAIL');
-            print(snapshot.data);
-            return buildTicketDisplay(snapshot.data, uuid);
+            print(uuid);
+            print(snapshot.data.ticket.naCode);
+            return buildTicketDisplay(snapshot.data.ticket, uuid);
           } else if (snapshot.hasError) {
+            print(uuid);
             return Text('Please Refresh');
           }
           return Container(
@@ -40,46 +42,55 @@ Widget buildTicketDisplay(Ticket ticket, String uuid) {
         padding: const EdgeInsets.symmetric(horizontal: 16.0),
         children: <Widget>[
           TextFormField(
+            initialValue: ticket.title,
+            maxLines: 3,
+            enabled: false,
+            decoration: InputDecoration(
+              labelText: 'Title',
+              icon: Icon(Icons.person),
+            ),
+          ),
+          TextFormField(
             initialValue: ticket.description,
-            maxLines: 4,
+            maxLines: 3,
             enabled: false,
             decoration: InputDecoration(
               labelText: 'Problem Description',
               icon: Icon(Icons.person),
             ),
           ),
-//          TextFormField(
-//            initialValue: widget.ticket.partNum,
-//            enabled: false,
-//            decoration: InputDecoration(
-//              labelText: 'Part No',
-//              icon: Icon(Icons.subdirectory_arrow_right),
-//            ),
-//          ),
-//          TextFormField(
-//            initialValue: widget.ticket.partNum,
-//            enabled: false,
-//            decoration: InputDecoration(
-//              labelText: 'Serial No',
-//              icon: Icon(Icons.flare),
-//            ),
-//          ),
-//          TextFormField(
-//            initialValue: widget.ticket.partNum,
-//            enabled: false,
-//            decoration: InputDecoration(
-//              labelText: 'Preferred Service Date/Time',
-//              icon: Icon(Icons.calendar_today),
-//            ),
-//          ),
-//          TextFormField(
-//            initialValue: widget.ticket.partNum,
-//            enabled: false,
-//            decoration: InputDecoration(
-//              labelText: 'Contact Details',
-//              icon: Icon(Icons.phone),
-//            ),
-//          ),
+          TextFormField(
+            initialValue: ticket.clientRef1,
+            enabled: false,
+            decoration: InputDecoration(
+              labelText: 'Client Reference 1',
+              icon: Icon(Icons.subdirectory_arrow_right),
+            ),
+          ),
+          TextFormField(
+            initialValue: ticket.clientRef2,
+            enabled: false,
+            decoration: InputDecoration(
+              labelText: 'Client Reference 2',
+              icon: Icon(Icons.flare),
+            ),
+          ),
+          TextFormField(
+            initialValue: ticket.eqLoc,
+            enabled: false,
+            decoration: InputDecoration(
+              labelText: 'Equipment Location',
+              icon: Icon(Icons.calendar_today),
+            ),
+          ),
+          TextFormField(
+            initialValue: ticket.dcAccessCode,
+            enabled: false,
+            decoration: InputDecoration(
+              labelText: 'Postal Code',
+              icon: Icon(Icons.phone),
+            ),
+          ),
 //          SizedBox(
 //            height: 10.0,
 //          ),

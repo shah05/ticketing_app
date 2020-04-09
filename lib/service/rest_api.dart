@@ -5,7 +5,8 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ticketing_app/model/list_ticket.dart';
 import 'package:dio/dio.dart';
-import 'package:ticketing_app/model/ticket.dart';
+import 'package:ticketing_app/model/old-ticket.dart';
+import 'package:ticketing_app/model/ticket_by_id.dart';
 
 class URLS {
   // the URL of the Web Server
@@ -127,7 +128,7 @@ class ApiService {
     }
   }
 
-  static Future<Ticket> getTicketDetail(String uuid) async {
+  static Future<TicketById> getTicketDetail(String uuid) async {
     print('here getListTicketDetail');
     String token = await _getMobileToken();
 //    token =
@@ -145,11 +146,14 @@ class ApiService {
       print('RESPONSE BODY : ${response.body}');
       // If the call to the server was successful, parse the JSON.
       print(response.body.runtimeType);
-//      final responseJson = json.decode(response.body);
-      Map<String, dynamic> map = jsonDecode(response.body);
-      print(map);
+      final responseJson = json.decode(response.body);
+//      print(responseJson['ticket']['uuid']);
+
 //      print('RESPONSE JSON : ${responseJson}');
-//      return Ticket.fromJson(responseJson);
+//      print(responseJson);
+      TicketById t1 = TicketById.fromJson(responseJson);
+      print(t1.ticket.naCode);
+      return TicketById.fromJson(responseJson);
     } else {
       // If that call was not successful, throw an error.
       print('Response status: ${response.statusCode}');
