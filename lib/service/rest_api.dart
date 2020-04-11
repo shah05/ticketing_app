@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ticketing_app/model/list_ticket.dart';
 import 'package:dio/dio.dart';
-import 'package:ticketing_app/model/old-ticket.dart';
+
 import 'package:ticketing_app/model/ticket_by_id.dart';
 
 class URLS {
@@ -97,7 +97,6 @@ class ApiService {
   /// ----------------------------------------------------------
 
   static Future<ListTicket> getListTicketStatus() async {
-    print('here getListTicketStatus');
     String token = await _getMobileToken();
 //    token =
 //        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ2YS52aWN0b3J3YW5AZ21haWwuY29tIiwianRpIjoiZDBiYmQ1YTYtYmVlYS00OTAwLWIxNWItNDkxNDgwMjA3N2Y3IiwidW5pcXVlX25hbWUiOiJ2YS52aWN0b3J3YW5AZ21haWwuY29tIiwiZW1haWwiOiJ2YS52aWN0b3J3YW5AZ21haWwuY29tIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoiQ3VzdG9tZXJSZXAiLCJleHAiOjE1ODYwMTQ0NTksImlzcyI6Ik1WUyIsImF1ZCI6IkFwaVVzZXIifQ.ytKIP8o-49sPUfwvkgNiaikCwBW_TmoESqYSlNPQirU';
@@ -129,7 +128,7 @@ class ApiService {
   }
 
   static Future<TicketById> getTicketDetail(String uuid) async {
-    print('here getListTicketDetail');
+//    print('here getListTicketDetail');
     String token = await _getMobileToken();
 //    token =
 //        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ2YS52aWN0b3J3YW5AZ21haWwuY29tIiwianRpIjoiZDBiYmQ1YTYtYmVlYS00OTAwLWIxNWItNDkxNDgwMjA3N2Y3IiwidW5pcXVlX25hbWUiOiJ2YS52aWN0b3J3YW5AZ21haWwuY29tIiwiZW1haWwiOiJ2YS52aWN0b3J3YW5AZ21haWwuY29tIiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoiQ3VzdG9tZXJSZXAiLCJleHAiOjE1ODYwMTQ0NTksImlzcyI6Ik1WUyIsImF1ZCI6IkFwaVVzZXIifQ.ytKIP8o-49sPUfwvkgNiaikCwBW_TmoESqYSlNPQirU';
@@ -143,16 +142,22 @@ class ApiService {
     var response = await http.Response.fromStream(streamedResponse);
 //    print(response.statusCode);
     if (response.statusCode == 200) {
-      print('RESPONSE BODY : ${response.body}');
+//      print('RESPONSE BODY : ${response.body}');
       // If the call to the server was successful, parse the JSON.
-      print(response.body.runtimeType);
       final responseJson = json.decode(response.body);
-//      print(responseJson['ticket']['uuid']);
 
 //      print('RESPONSE JSON : ${responseJson}');
-//      print(responseJson);
+//      print('==JSON BODY==');
+//      print(responseJson['status']);
+//      print(responseJson['ticket']);
+//      print(responseJson['ticket']['naCode']);
+//      print(responseJson['ticket']['contractId']);
+//      print(responseJson['ticket']['contract']);
       TicketById t1 = TicketById.fromJson(responseJson);
-      print(t1.ticket.naCode);
+//      print('==JSON OBJECT==');
+//      print(t1.status);
+//      print(t1.ticket);
+//      print(t1.ticket.contractId);
       return TicketById.fromJson(responseJson);
     } else {
       // If that call was not successful, throw an error.

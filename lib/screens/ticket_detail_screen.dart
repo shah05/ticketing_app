@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:ticketing_app/model/ticket_by_id.dart';
+import 'package:flutter/widgets.dart';
+import 'package:ticketing_app/model/msglogs.dart';
+import 'package:ticketing_app/model/ticket.dart';
 import 'package:ticketing_app/service/rest_api.dart';
 
 class TicketDetailScreen extends StatelessWidget {
@@ -18,12 +20,12 @@ class TicketDetailScreen extends StatelessWidget {
 //      future: null,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            print('HERE IN FUTURE BUILDER TICKETDETAIL');
-            print(uuid);
-            print(snapshot.data.ticket.naCode);
+//            print('HERE IN FUTURE BUILDER TICKETDETAIL');
+//            print(uuid);
+//            print(snapshot.data.ticket.naCode);
             return buildTicketDisplay(snapshot.data.ticket, uuid);
           } else if (snapshot.hasError) {
-            print(uuid);
+//            print(uuid);
             return Text('Please Refresh');
           }
           return Container(
@@ -36,82 +38,246 @@ class TicketDetailScreen extends StatelessWidget {
   }
 }
 
-Widget buildTicketDisplay(Ticket ticket, String uuid) {
-  return SafeArea(
-      child: ListView(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0),
-        children: <Widget>[
-          TextFormField(
-            initialValue: ticket.title,
-            maxLines: 3,
-            enabled: false,
-            decoration: InputDecoration(
-              labelText: 'Title',
-              icon: Icon(Icons.person),
-            ),
-          ),
-          TextFormField(
-            initialValue: ticket.description,
-            maxLines: 3,
-            enabled: false,
-            decoration: InputDecoration(
-              labelText: 'Problem Description',
-              icon: Icon(Icons.person),
-            ),
-          ),
-          TextFormField(
-            initialValue: ticket.clientRef1,
-            enabled: false,
-            decoration: InputDecoration(
-              labelText: 'Client Reference 1',
-              icon: Icon(Icons.subdirectory_arrow_right),
-            ),
-          ),
-          TextFormField(
-            initialValue: ticket.clientRef2,
-            enabled: false,
-            decoration: InputDecoration(
-              labelText: 'Client Reference 2',
-              icon: Icon(Icons.flare),
-            ),
-          ),
-          TextFormField(
-            initialValue: ticket.eqLoc,
-            enabled: false,
-            decoration: InputDecoration(
-              labelText: 'Equipment Location',
-              icon: Icon(Icons.calendar_today),
-            ),
-          ),
-          TextFormField(
-            initialValue: ticket.dcAccessCode,
-            enabled: false,
-            decoration: InputDecoration(
-              labelText: 'Postal Code',
-              icon: Icon(Icons.phone),
-            ),
-          ),
-//          SizedBox(
-//            height: 10.0,
-//          ),
-//          Row(
-//            children: <Widget>[
-//              Icon(Icons.camera),
-//              SizedBox(
-//                width: 15.0,
-//              ),
-//              Text('Attachement'),
-//            ],
-//          ),
-//          SizedBox(
-//            height: 10.0,
-//          ),
-//          Image(
-//            image:
-//                NetworkImage('https://www.w3schools.com/html/pic_trulli.jpg'),
-//          ),
-        ],
-      ),
-    );
+String dateConverter(String dateString) {
+  if (dateString == null) return 'NA';
+  DateTime temp = DateTime.parse(dateString);
+  return '${temp.day}/${temp.month}/${temp.year}';
 }
 
+String getTicketStatus(int statusId) {
+  if (statusId == null) return 'NA';
+  switch (statusId) {
+    case 1:
+      return 'New';
+    case 2:
+      return 'Assigned';
+    case 3:
+      return 'Pending';
+    case 4:
+      return 'Cancelled';
+    case 5:
+      return 'Closed';
+    default:
+      return 'NA';
+  }
+}
+
+List<Widget> buildMsgLogsCol(List<String> msg) {
+  return List<Widget>.generate(msg.length, (int index) {
+    return Text(msg[index]);
+  });
+}
+
+Widget buildMsgLogCard(List<MsgLogs> msgLogs) {
+  List<String> msg = ['adam', 'luke', 'bryan', 'harry'];
+  if (msgLogs.length == 0) {
+    return Card(
+      child: ListTile(
+        title: Text('Message Logs'),
+        subtitle: Text('NA'),
+      ),
+    );
+  } else {
+    List<Widget> msLogContainer = [];
+    for (int i = 0; i < msgLogs.length; i++) {
+      String msgDate = dateConverter(msgLogs[i].createdon);
+      msLogContainer.add(Container(
+        padding: EdgeInsets.only(top:5.0, bottom: 5.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text('Message : ${msgLogs[i].message}'),
+            Text('Action : ${msgLogs[i].action}'),
+            Text('Action : ${msgLogs[i].remarks}'),
+            Text('Created by : ${msgLogs[i].createdby}'),
+            Text('Date : $msgDate'),
+          ],
+        ),
+      ));
+    }
+    return Card(
+      child: ListTile(
+        title: Text('Message Logs'),
+        subtitle: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: msLogContainer,
+        ),
+      ),
+    );
+  }
+}
+
+Widget buildTicketDisplay(Ticket ticket, String uuid) {
+  return SafeArea(
+    child: ListView(
+//      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      children: <Widget>[
+        Card(
+          child: ListTile(
+            title: Text('Title'),
+            subtitle: Text(ticket.title),
+          ),
+        ),
+//        Divider(),
+        Card(
+          child: ListTile(
+            title: Text('Description'),
+            subtitle: Text(ticket.description),
+          ),
+        ),
+        Card(
+          child: ListTile(
+            title: Text('NA Code'),
+            subtitle: Text(ticket.naCode),
+          ),
+        ),
+        Card(
+          child: ListTile(
+            title: Text('Organisation'),
+            subtitle: Text(ticket.contract.organisation != null
+                ? ticket.contract.organisation
+                : 'NA'),
+          ),
+        ),
+        Card(
+          child: ListTile(
+            title: Text('Contract Number'),
+            subtitle: Text(ticket.contract.contractNo != null
+                ? ticket.contract.contractNo
+                : 'NA'),
+          ),
+        ),
+        Card(
+          child: ListTile(
+            title: Text('Maintenance Program'),
+            subtitle: Text(ticket.contract.maintProgram != null
+                ? ticket.contract.maintProgram
+                : 'NA'),
+          ),
+        ),
+        Card(
+          child: ListTile(
+            title: Text('Requestor ID'),
+            subtitle:
+                Text(ticket.requestorId != null ? ticket.requestorId : 'NA'),
+          ),
+        ),
+        Card(
+          child: ListTile(
+            title: Text('Maintenance Program'),
+            subtitle: Text(ticket.contract.maintProgram != null
+                ? ticket.contract.maintProgram
+                : 'NA'),
+          ),
+        ),
+        Card(
+          child: ListTile(
+            title: Text('Submit Date'),
+            subtitle: Text(dateConverter(ticket.srSdateTime)),
+          ),
+        ),
+        Card(
+          child: ListTile(
+            title: Text('Reach Date'),
+            subtitle: Text(dateConverter(ticket.srsReachdateTime)),
+          ),
+        ),
+        Card(
+          child: ListTile(
+            title: Text('Start Date'),
+            subtitle: Text(dateConverter(ticket.srsStartdateTime)),
+          ),
+        ),
+        Card(
+          child: ListTile(
+            title: Text('End Date'),
+            subtitle: Text(dateConverter(ticket.srsEnddateTime)),
+          ),
+        ),
+        Card(
+          child: ListTile(
+            title: Text('Status'),
+            subtitle: Text(
+              getTicketStatus(ticket.srsStatusId),
+            ),
+          ),
+        ),
+        Card(
+          child: ListTile(
+            title: Text('Client Reference 1'),
+            subtitle:
+                Text(ticket.clientRef1 != null ? ticket.clientRef1 : 'NA'),
+          ),
+        ),
+        Card(
+          child: ListTile(
+            title: Text('Client Reference 2'),
+            subtitle:
+                Text(ticket.clientRef2 != null ? ticket.clientRef2 : 'NA'),
+          ),
+        ),
+        Card(
+          child: ListTile(
+            title: Text('Client Reference 2'),
+            subtitle:
+                Text(ticket.clientRef2 != null ? ticket.clientRef2 : 'NA'),
+          ),
+        ),
+        Card(
+          child: ListTile(
+            title: Text('Brand Model'),
+            subtitle:
+                Text(ticket.brandModel != null ? ticket.brandModel : 'NA'),
+          ),
+        ),
+        Card(
+          child: ListTile(
+            title: Text('Equipment Serial Number'),
+            subtitle:
+                Text(ticket.eqSerialNo != null ? ticket.eqSerialNo : 'NA'),
+          ),
+        ),
+        Card(
+          child: ListTile(
+            title: Text('Part Number'),
+            subtitle: Text(ticket.partno != null ? ticket.partno : 'NA'),
+          ),
+        ),
+        Card(
+          child: ListTile(
+            title: Text('Equipment Location'),
+            subtitle: Text(ticket.eqLoc != null ? ticket.eqLoc : 'NA'),
+          ),
+        ),
+        Card(
+          child: ListTile(
+            title: Text('Location Contact'),
+            subtitle:
+                Text(ticket.locContact != null ? ticket.locContact : 'NA'),
+          ),
+        ),
+        Card(
+          child: ListTile(
+            title: Text('Site Address'),
+            subtitle:
+                Text(ticket.siteAddress != null ? ticket.siteAddress : 'NA'),
+          ),
+        ),
+        Card(
+          child: ListTile(
+            title: Text('Postal Code'),
+            subtitle:
+                Text(ticket.dcAccessCode != null ? ticket.dcAccessCode : 'NA'),
+          ),
+        ),
+        Card(
+          child: ListTile(
+            title: Text('Message'),
+            subtitle: Text(ticket.tMsg != null ? ticket.tMsg : 'NA'),
+          ),
+        ),
+        buildMsgLogCard(ticket.msgLogs),
+      ],
+    ),
+  );
+}

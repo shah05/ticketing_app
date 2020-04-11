@@ -23,8 +23,6 @@ class _CreateNewTicketScreenState extends State<CreateNewTicketScreen> {
   DateTime date;
   String contactNum;
 
-
-
   Future getImage() async {
     var image = await ImagePicker.pickImage(source: ImageSource.gallery);
     setState(() {
@@ -48,7 +46,22 @@ class _CreateNewTicketScreenState extends State<CreateNewTicketScreen> {
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             children: <Widget>[
               TextFormField(
-                maxLines: 4,
+                decoration: InputDecoration(
+                  labelText: 'Title',
+                  icon: Icon(Icons.person),
+                ),
+                validator: (value) {
+                  if (value.isEmpty) {
+                    return 'Please add a title to your issue';
+                  }
+                  return null;
+                },
+                onSaved: (value) {
+                  probDesc = value;
+                },
+              ),
+              TextFormField(
+                maxLines: 2,
                 decoration: InputDecoration(
                   labelText: 'Problem Description',
                   icon: Icon(Icons.person),
@@ -59,24 +72,75 @@ class _CreateNewTicketScreenState extends State<CreateNewTicketScreen> {
                   }
                   return null;
                 },
-                onSaved: (value){
+                onSaved: (value) {
                   probDesc = value;
                 },
               ),
               TextFormField(
                 decoration: InputDecoration(
-                  labelText: 'Part No',
+                  labelText: 'Cleint Reference 1',
                   icon: Icon(Icons.subdirectory_arrow_right),
                 ),
               ),
               TextFormField(
                 decoration: InputDecoration(
-                  labelText: 'Serial No',
+                  labelText: 'Client Reference 2',
+                  icon: Icon(Icons.flare),
+                ),
+              ),
+              TextFormField(
+                decoration: InputDecoration(
+                  labelText: 'Postal Code',
+                  icon: Icon(Icons.flare),
+                ),
+              ),
+              TextFormField(
+                decoration: InputDecoration(
+                  labelText: 'Equipment Location',
+                  icon: Icon(Icons.flare),
+                ),
+              ),
+              TextFormField(
+                decoration: InputDecoration(
+                  labelText: 'Equipment Number',
+                  icon: Icon(Icons.flare),
+                ),
+              ),
+              TextFormField(
+                decoration: InputDecoration(
+                  labelText: 'Equipment Serial Number',
+                  icon: Icon(Icons.flare),
+                ),
+              ),
+              TextFormField(
+                decoration: InputDecoration(
+                  labelText: 'Part Number',
+                  icon: Icon(Icons.flare),
+                ),
+              ),
+              TextFormField(
+                decoration: InputDecoration(
+                  labelText: 'Brand Model',
+                  icon: Icon(Icons.flare),
+                ),
+              ),
+              TextFormField(
+                decoration: InputDecoration(
+                  labelText: 'Contact Details',
+                  icon: Icon(Icons.flare),
+                ),
+              ),
+              TextFormField(
+                decoration: InputDecoration(
+                  labelText: 'Remarks',
                   icon: Icon(Icons.flare),
                 ),
               ),
               DateTimeField(
-                decoration: InputDecoration(icon: Icon(Icons.calendar_today)),
+                decoration: InputDecoration(
+                  labelText: 'Service Date',
+                  icon: Icon(Icons.calendar_today),
+                ),
                 format: format,
                 onShowPicker: (context, currentValue) {
                   return showDatePicker(
@@ -117,8 +181,8 @@ class _CreateNewTicketScreenState extends State<CreateNewTicketScreen> {
                     // If the form is valid, display a snackbar. In the real world,
                     // you'd often call a server or save the information in a database.
 
-                   print('Rest api call');
-                   print(probDesc);
+                    print('Rest api call');
+                    print(probDesc);
                   }
                 },
                 child: Text('Submit'),
