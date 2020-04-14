@@ -2,9 +2,11 @@ import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:ticketing_app/model/ticket.dart';
 import 'dart:io';
 
 import 'package:ticketing_app/util/constants.dart';
+import 'package:ticketing_app/screens/create_ticket_status_screen.dart';
 
 class CreateNewTicketScreen extends StatefulWidget {
 //  TicketFormPage({this.title,this.canEdit});
@@ -22,6 +24,10 @@ class _CreateNewTicketScreenState extends State<CreateNewTicketScreen> {
   String serialNo;
   DateTime date;
   String contactNum;
+  Ticket ticket = new Ticket();
+  final format = DateFormat("yyyy-MM-dd");
+  bool _autoValidate = true;
+  final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
 
   Future getImage() async {
     var image = await ImagePicker.pickImage(source: ImageSource.gallery);
@@ -30,8 +36,24 @@ class _CreateNewTicketScreenState extends State<CreateNewTicketScreen> {
     });
   }
 
-  final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
-  final format = DateFormat("yyyy-MM-dd");
+  void validateInputs() {
+    if (_formKey.currentState.validate()) {
+      _formKey.currentState.save();
+      print(ticket.brandModel);
+      Navigator.push(
+        context,
+        new MaterialPageRoute<String>(
+          builder: (BuildContext context) =>
+              CreateTicketStatusScreen(ticket: ticket),
+          fullscreenDialog: true,
+        ),
+      );
+    } else {
+      setState(() {
+        _autoValidate = true;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,6 +64,7 @@ class _CreateNewTicketScreenState extends State<CreateNewTicketScreen> {
       body: new SafeArea(
         child: Form(
           key: _formKey,
+          autovalidate: _autoValidate,
           child: ListView(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             children: <Widget>[
@@ -51,13 +74,14 @@ class _CreateNewTicketScreenState extends State<CreateNewTicketScreen> {
                   icon: Icon(Icons.person),
                 ),
                 validator: (value) {
+                  print(value);
                   if (value.isEmpty) {
                     return 'Please add a title to your issue';
                   }
                   return null;
                 },
                 onSaved: (value) {
-                  probDesc = value;
+                  ticket.title = value;
                 },
               ),
               TextFormField(
@@ -73,7 +97,7 @@ class _CreateNewTicketScreenState extends State<CreateNewTicketScreen> {
                   return null;
                 },
                 onSaved: (value) {
-                  probDesc = value;
+                  ticket.description = value;
                 },
               ),
               TextFormField(
@@ -81,18 +105,27 @@ class _CreateNewTicketScreenState extends State<CreateNewTicketScreen> {
                   labelText: 'Cleint Reference 1',
                   icon: Icon(Icons.subdirectory_arrow_right),
                 ),
+                onSaved: (value) {
+                  ticket.clientRef1 = value;
+                },
               ),
               TextFormField(
                 decoration: InputDecoration(
                   labelText: 'Client Reference 2',
                   icon: Icon(Icons.flare),
                 ),
+                onSaved: (value) {
+                  ticket.clientRef2 = value;
+                },
               ),
               TextFormField(
                 decoration: InputDecoration(
                   labelText: 'Postal Code',
                   icon: Icon(Icons.flare),
                 ),
+                onSaved: (value) {
+                  ticket.dcAccessCode = value;
+                },
               ),
               TextFormField(
                 decoration: InputDecoration(
@@ -111,31 +144,46 @@ class _CreateNewTicketScreenState extends State<CreateNewTicketScreen> {
                   labelText: 'Equipment Serial Number',
                   icon: Icon(Icons.flare),
                 ),
+                onSaved: (value) {
+                  ticket.eqSerialNo = value;
+                },
               ),
               TextFormField(
                 decoration: InputDecoration(
                   labelText: 'Part Number',
                   icon: Icon(Icons.flare),
                 ),
+                onSaved: (value) {
+                  ticket.partno = value;
+                },
               ),
               TextFormField(
                 decoration: InputDecoration(
                   labelText: 'Brand Model',
                   icon: Icon(Icons.flare),
                 ),
+                onSaved: (value) {
+                  ticket.brandModel = value;
+                },
               ),
               TextFormField(
                 decoration: InputDecoration(
                   labelText: 'Contact Details',
                   icon: Icon(Icons.flare),
                 ),
+                onSaved: (value) {
+                  ticket.locContact = value;
+                },
               ),
-              TextFormField(
-                decoration: InputDecoration(
-                  labelText: 'Remarks',
-                  icon: Icon(Icons.flare),
-                ),
-              ),
+//              TextFormField(
+//                decoration: InputDecoration(
+//                  labelText: 'Remarks',
+//                  icon: Icon(Icons.flare),
+//                ),
+//                onSaved: (value) {
+//                  ticket.remarks = value;
+//                },
+//              ),
               DateTimeField(
                 decoration: InputDecoration(
                   labelText: 'Service Date',
@@ -176,14 +224,8 @@ class _CreateNewTicketScreenState extends State<CreateNewTicketScreen> {
                 color: kSubmitButton,
                 textColor: kTextButton,
                 onPressed: () {
-                  // Validate returns true if the form is valid, otherwise false.
-                  if (_formKey.currentState.validate()) {
-                    // If the form is valid, display a snackbar. In the real world,
-                    // you'd often call a server or save the information in a database.
-
-                    print('Rest api call');
-                    print(probDesc);
-                  }
+                  print('clicked');
+                  validateInputs();
                 },
                 child: Text('Submit'),
               ),

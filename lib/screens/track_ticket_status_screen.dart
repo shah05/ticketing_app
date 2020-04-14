@@ -9,28 +9,22 @@ import '../widgets/ticket_card.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'login_screen.dart';
 
-class TrackTicketStatusScreen extends StatelessWidget {
+class TrackTicketStatusScreen extends StatefulWidget {
+  @override
+  _TrackTicketStatusScreenState createState() =>
+      _TrackTicketStatusScreenState();
+}
+
+class _TrackTicketStatusScreenState extends State<TrackTicketStatusScreen> {
   final List<Ticketlist> listClosedTickets = [];
+
   final List<Ticketlist> listOpenTickets = [];
 
-  Future<void> _retryAuth(BuildContext context) {
-    return showDialog<void>(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Not in stock'),
-          content: const Text('This item is no longer available'),
-          actions: <Widget>[
-            FlatButton(
-              child: Text('Ok'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
+  Future<ListTicket> listTicket;
+  @override
+  void initState() {
+    super.initState();
+    listTicket = ApiService.getListTicketStatus();
   }
 
   @override
@@ -56,34 +50,37 @@ class TrackTicketStatusScreen extends StatelessWidget {
             ),
           ),
           body: FutureBuilder(
-            future: ApiService
-                .getListTicketStatus(), // call API to get list of tickets
+            future: listTicket, // call API to get list of tickets
             builder: (context, snapshot) {
-//              print('snapshot: ${snapshot.}');
-              if (snapshot.hasData) {
+              ListTicket listTicket = snapshot.data;
+              if (listTicket == null) {
+                return Container(
+                  alignment: FractionalOffset.center,
+                  child: CircularProgressIndicator(),
+                );
+              }
+              if (listTicket.httpCode == 200) {
+                print('in hasData: ${snapshot.data}');
                 ListTicket listTicket = snapshot.data;
                 for (var l in listTicket.ticketlist) {
-//                  print('all status: ${l.status}');
                   if (l.status.trim() == "Closed" ||
                       l.status.trim() == "Cancelled") {
-//                    print('Closed Ticket:${l.status}');
                     listClosedTickets.add(l);
                   } else {
                     listOpenTickets.add(l);
-//                    print('Open Ticket:${l.status}');
                   }
                 }
-
                 return buildTicketList(listOpenTickets, listClosedTickets);
-              } else {
-
-                return Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                    Text('Token Expired'),
+              }
+//              else if (listTicket.httpCode == 401) {
+//                print('in data null: ${snapshot.data}');
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text('Access Expired..'),
                     FlatButton(
-                      child: new Text('click to signin'),
+                      child: Text('Sign In'),
                       onPressed: () {
                         Navigator.push(
                             context,
@@ -93,16 +90,10 @@ class TrackTicketStatusScreen extends StatelessWidget {
                             ));
                       },
                     ),
-                  ],)
-
-                );
-
-                return Text('Please refresh');
-              }
-              return Container(
-                alignment: FractionalOffset.center,
-                child: CircularProgressIndicator(),
+                  ],
+                ),
               );
+//              }
             },
           ),
 //          bottomNavigationBar: BottomNavBar(),

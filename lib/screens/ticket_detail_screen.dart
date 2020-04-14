@@ -2,35 +2,67 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:ticketing_app/model/msglogs.dart';
 import 'package:ticketing_app/model/ticket.dart';
+import 'package:ticketing_app/model/ticket_by_id.dart';
 import 'package:ticketing_app/service/rest_api.dart';
+import 'package:ticketing_app/main.dart';
 
-class TicketDetailScreen extends StatelessWidget {
+class TicketDetailScreen extends StatefulWidget {
   final String uuid;
-
+  Future<TicketById> ticket;
   TicketDetailScreen({this.uuid});
+
+  @override
+  _TicketDetailScreenState createState() => _TicketDetailScreenState();
+}
+
+class _TicketDetailScreenState extends State<TicketDetailScreen> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    widget.ticket = ApiService.getTicketDetail(widget.uuid);
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('$uuid'),
+        title: Text('${widget.uuid}'),
       ),
       body: FutureBuilder(
-        future: ApiService.getTicketDetail(uuid), //api
+        future: widget.ticket,
 //      future: null,
         builder: (context, snapshot) {
-          if (snapshot.hasData) {
-//            print('HERE IN FUTURE BUILDER TICKETDETAIL');
-//            print(uuid);
-//            print(snapshot.data.ticket.naCode);
-            return buildTicketDisplay(snapshot.data.ticket, uuid);
-          } else if (snapshot.hasError) {
-//            print(uuid);
-            return Text('Please Refresh');
+          TicketById ticket = snapshot.data;
+
+          if (ticket == null) {
+            return Container(
+              alignment: FractionalOffset.center,
+              child: CircularProgressIndicator(),
+            );
           }
-          return Container(
-            alignment: FractionalOffset.center,
-            child: CircularProgressIndicator(),
+          if (ticket.httpCode == 200) {
+            return buildTicketDisplay(snapshot.data.ticket, widget.uuid);
+          }
+
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text('Access Expired..'),
+                FlatButton(
+                  child: Text('Sign In'),
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        new MaterialPageRoute<String>(
+                          builder: (BuildContext context) => new MyApp(),
+                          fullscreenDialog: true,
+                        ));
+                  },
+                ),
+              ],
+            ),
           );
         },
       ),
@@ -82,7 +114,7 @@ Widget buildMsgLogCard(List<MsgLogs> msgLogs) {
     for (int i = 0; i < msgLogs.length; i++) {
       String msgDate = dateConverter(msgLogs[i].createdon);
       msLogContainer.add(Container(
-        padding: EdgeInsets.only(top:5.0, bottom: 5.0),
+        padding: EdgeInsets.only(top: 5.0, bottom: 5.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[

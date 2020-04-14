@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 class ListTicket {
+  int _httpCode;
   int _status;
   List<Ticketlist> _ticketlist;
 
@@ -9,6 +10,8 @@ class ListTicket {
     this._ticketlist = ticketlist;
   }
 
+  int get httpCode => _httpCode;
+  set httpCode(int httpCode) => _httpCode = httpCode;
   int get status => _status;
   set status(int status) => _status = status;
   List<Ticketlist> get ticketlist => _ticketlist;
