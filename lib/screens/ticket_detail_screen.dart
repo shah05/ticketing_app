@@ -5,6 +5,7 @@ import 'package:ticketing_app/model/ticket.dart';
 import 'package:ticketing_app/model/ticket_by_id.dart';
 import 'package:ticketing_app/service/rest_api.dart';
 import 'package:ticketing_app/main.dart';
+import 'package:ticketing_app/widgets/redirect_to_login.dart';
 
 class TicketDetailScreen extends StatefulWidget {
   final String uuid;
@@ -34,7 +35,6 @@ class _TicketDetailScreenState extends State<TicketDetailScreen> {
 //      future: null,
         builder: (context, snapshot) {
           TicketById ticket = snapshot.data;
-
           if (ticket == null) {
             return Container(
               alignment: FractionalOffset.center,
@@ -44,26 +44,7 @@ class _TicketDetailScreenState extends State<TicketDetailScreen> {
           if (ticket.httpCode == 200) {
             return buildTicketDisplay(snapshot.data.ticket, widget.uuid);
           }
-
-          return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                Text('Access Expired..'),
-                FlatButton(
-                  child: Text('Sign In'),
-                  onPressed: () {
-                    Navigator.push(
-                        context,
-                        new MaterialPageRoute<String>(
-                          builder: (BuildContext context) => new MyApp(),
-                          fullscreenDialog: true,
-                        ));
-                  },
-                ),
-              ],
-            ),
-          );
+          return RedirectToLogin();
         },
       ),
     );

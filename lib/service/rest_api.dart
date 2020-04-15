@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:ticketing_app/model/equipment.dart';
 import 'package:ticketing_app/model/list_ticket.dart';
 import 'package:dio/dio.dart';
 import 'package:ticketing_app/model/customer.dart';
@@ -93,6 +94,35 @@ class ApiService {
       Customer c = Customer();
       c.httpCode = response.statusCode;
       return c;
+    }
+  }
+
+  /// ----------------------------------------------------------
+  /// Method that retrieve equipment info based on contract.
+  /// ----------------------------------------------------------
+  static Future<Equipment> getEquipmentInfo(
+      String contractID, String serialNo) async {
+    String token = await _getMobileToken();
+    Equipment e;
+    var url = Uri.parse(
+        'https://webapi168.azurewebsites.net/api/ticket/ContractEquipCheck');
+    var request = new http.MultipartRequest('POST', url);
+    request.headers['authorization'] = 'Bearer $token';
+    request.fields['contractUUID'] = contractID;
+    request.fields['serialno'] = serialNo;
+
+    var streamedResponse = await request.send();
+    var response = await http.Response.fromStream(streamedResponse);
+
+    if (response.statusCode == 200) {
+      final responseJson = json.decode(response.body);
+      e = Equipment.fromJson(responseJson);
+      e.httpCode = response.statusCode;
+      return e;
+    } else {
+      e = Equipment();
+      e.httpCode = response.statusCode;
+      return e;
     }
   }
 

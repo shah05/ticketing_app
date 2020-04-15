@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:ticketing_app/model/customer.dart';
+import 'package:ticketing_app/screens/equipment_result_screen.dart';
 import 'package:ticketing_app/service/rest_api.dart';
 import 'package:ticketing_app/main.dart';
 
@@ -80,7 +81,9 @@ class BuildEquipmentCheck extends StatefulWidget {
 class _BuildEquipmentCheckState extends State<BuildEquipmentCheck> {
   GlobalKey<FormState> _formKey;
   List<String> contractOptions = [];
-  String selectedUser;
+  String selectedContract;
+  String dropdownError;
+  String serialNoInput;
 
   @override
   void initState() {
@@ -90,7 +93,7 @@ class _BuildEquipmentCheckState extends State<BuildEquipmentCheck> {
     widget.customer.contractdetails.forEach((c) {
       contractOptions.add(c.contractUUID);
     });
-    selectedUser = '';
+    selectedContract = null;
   }
 
   @override
@@ -106,51 +109,49 @@ class _BuildEquipmentCheckState extends State<BuildEquipmentCheck> {
               child: DropdownButton<String>(
                 underline: Container(
                   decoration: const BoxDecoration(
-                    border: Border(bottom: BorderSide(color: Colors.grey),),
+                    border: Border(
+                      bottom: BorderSide(color: Colors.grey),
+                    ),
                   ),
                 ),
                 isExpanded: true,
-                hint: Text('Please select contract ID'),
+                hint: selectedContract == null
+                    ? Text('Please select contract ID')
+                    : Text(
+                        selectedContract,
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(color: Colors.black),
+                      ),
                 items: contractOptions.map((String contractId) {
                   return new DropdownMenuItem<String>(
                     value: contractId,
                     child: new Text(contractId),
-
                   );
                 }).toList(),
-                onChanged: (_) {},
+                onChanged: (value) {
+                  setState(() {
+                    selectedContract = value;
+                    dropdownError = null;
+                  });
+                },
               ),
             ),
           ),
-
-//          DropdownButton<String>(
-//            hint: Text('Select Contract ID'),
-//            value: selectedUser,
-//            onChanged: (String value) {
-//              setState(() {
-//                selectedUser = value;
-//              });
-//            },
-//            items: contractOptions.map((String contractID) {
-//              return DropdownMenuItem<String>(
-//                value: contractID,
-//                child: Text(contractID),
-//              );
-//            }),
-//          ),
+          dropdownError == null
+              ? SizedBox.shrink()
+              : Text(dropdownError ?? "", style: TextStyle(color: Colors.red)),
           SizedBox(
             height: 10.0,
           ),
           TextFormField(
             decoration: InputDecoration(
               labelText: 'Equipment Serial Number',
-              icon: Icon(Icons.search),
             ),
             validator: (value) {
               if (value.isEmpty) {
                 return 'Enter correct serial number e.g (1234)';
               }
-              return null;
+              serialNoInput = value;
             },
           ),
           Padding(
@@ -159,12 +160,31 @@ class _BuildEquipmentCheckState extends State<BuildEquipmentCheck> {
               onPressed: () {
                 // Validate returns true if the form is valid, or false
                 // otherwise.
-                if (_formKey.currentState.validate()) {
-                  for (var i in widget.customer.contractdetails) {
-                    print(i.contractUUID);
-                  }
-                  print(widget.customer.usertype);
+                bool isValid = _formKey.currentState.validate();
+
+                if (selectedContract == null) {
+                  setState(() {
+                    dropdownError = 'Please select an option';
+                    isValid = false;
+                  });
                 }
+
+                if (isValid) {
+                  //navigate to new page
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => EquipmentResultScreen(
+                                contractId: selectedContract,
+                                serialNo: serialNoInput,
+                              )));
+                }
+//                if (_formKey.currentState.validate()) {
+//                  for (var i in widget.customer.contractdetails) {
+//                    print(i.contractUUID);
+//                  }
+//                  print(widget.customer.usertype);
+//                }
               },
               child: Text('Submit'),
             ),

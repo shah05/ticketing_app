@@ -3,7 +3,6 @@ import 'package:ticketing_app/widgets/settings_list.dart';
 import 'package:ticketing_app/widgets/settings_section.dart';
 import 'package:ticketing_app/widgets/settings_tile.dart';
 
-
 class SettingsScreen extends StatefulWidget {
   @override
   _SettingsScreenState createState() => _SettingsScreenState();
