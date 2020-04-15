@@ -4,6 +4,7 @@ import 'package:ticketing_app/model/customer.dart';
 import 'package:ticketing_app/screens/equipment_result_screen.dart';
 import 'package:ticketing_app/service/rest_api.dart';
 import 'package:ticketing_app/main.dart';
+import 'package:ticketing_app/util/constants.dart';
 
 class EquipmentCheckScreen extends StatefulWidget {
   @override
@@ -146,14 +147,14 @@ class _BuildEquipmentCheckState extends State<BuildEquipmentCheck> {
           dropdownError == null
               ? SizedBox.shrink()
               : Text(dropdownError ?? "",
-                  style: TextStyle(fontSize: 12.0, color: Colors.red)),
+                  style: kErrorTextStyle),
           SizedBox(
             height: 10.0,
           ),
           TextFormField(
             decoration: InputDecoration(
                 labelText: 'Equipment Serial Number',
-                errorStyle: TextStyle(fontSize: 12.0, color: Colors.red)),
+                errorStyle: kErrorTextStyle),
             validator: (value) {
               if (value.isEmpty) {
                 return 'Enter correct serial number e.g (1234)';
@@ -187,12 +188,6 @@ class _BuildEquipmentCheckState extends State<BuildEquipmentCheck> {
                                 serialNo: serialNoInput,
                               )));
                 }
-//                if (_formKey.currentState.validate()) {
-//                  for (var i in widget.customer.contractdetails) {
-//                    print(i.contractUUID);
-//                  }
-//                  print(widget.customer.usertype);
-//                }
               },
               child: Text('Submit'),
             ),

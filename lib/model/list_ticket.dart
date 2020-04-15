@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+///Model of JSON response for API route : /api/ticket/GetTicketListByStatus
 class ListTicket {
   int _httpCode;
   int _status;
@@ -38,6 +38,7 @@ class ListTicket {
 
 }
 
+/// Model of JSON response under 'ticketlist' attribute for API route : /api/ticket/GetTicketListByStatus
 class Ticketlist {
   int _id;
   String _uuid;

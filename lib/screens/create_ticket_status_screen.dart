@@ -3,10 +3,17 @@ import 'package:ticketing_app/screens/track_ticket_status_screen.dart';
 import 'package:ticketing_app/service/rest_api.dart';
 import 'package:ticketing_app/model/ticket.dart';
 
-class CreateTicketStatusScreen extends StatelessWidget {
+class CreateTicketStatusScreen extends StatefulWidget {
   final Ticket ticket;
 
   CreateTicketStatusScreen({this.ticket});
+
+  @override
+  _CreateTicketStatusScreenState createState() => _CreateTicketStatusScreenState();
+}
+
+class _CreateTicketStatusScreenState extends State<CreateTicketStatusScreen> {
+//  Future<>
 
   Widget buildTicketResult(BuildContext context, bool result) {
     return Center(
@@ -57,7 +64,7 @@ class CreateTicketStatusScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: FutureBuilder(
-        future: ApiService.createTicket(ticket),
+        future: ApiService.createTicket(widget.ticket),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
 //            print(snapshot)

@@ -217,19 +217,7 @@ class ApiService {
 //      print('RESPONSE BODY : ${response.body}');
       // If the call to the server was successful, parse the JSON.
       final responseJson = json.decode(response.body);
-
-//      print('RESPONSE JSON : ${responseJson}');
-//      print('==JSON BODY==');
-//      print(responseJson['status']);
-//      print(responseJson['ticket']);
-//      print(responseJson['ticket']['naCode']);
-//      print(responseJson['ticket']['contractId']);
-//      print(responseJson['ticket']['contract']);
       TicketById t1 = TicketById.fromJson(responseJson);
-//      print('==JSON OBJECT==');
-//      print(t1.status);
-//      print(t1.ticket);
-//      print(t1.ticket.contractId);
       return TicketById.fromJson(responseJson);
     } else {
       // If that call was not successful, throw an error.
@@ -239,31 +227,4 @@ class ApiService {
       return null;
     }
   }
-
-//  /// ----------------------------------------------------------
-//  /// Method that retrieve contract id by customer.
-//  /// ----------------------------------------------------------
-//
-//  static Future<TicketById> getContracts(Ticket ticket) async {
-//    String token = await _getMobileToken();
-//
-//    final response = await http
-//        .get('https://tisapi.azurewebsites.net/api/customer/GetContractsbyUser', headers: {
-//      HttpHeaders.contentTypeHeader: "application/json",
-//      HttpHeaders.authorizationHeader: "Bearer $token"
-//    });
-//
-//    if (response.statusCode == 201) {
-//      // If the call to the server was successful, parse the JSON.
-//      final responseJson = json.decode(response.body);
-//      return Customer.fromJson(responseJson);
-//    } else {
-//      // If that call was not successful, throw an error.
-//      print('Response status: ${response.statusCode}');
-//      print('Response body: ${response.body}');
-//      print('Failed to load post');
-//      return null;
-//    }
-//
-//  }
 }

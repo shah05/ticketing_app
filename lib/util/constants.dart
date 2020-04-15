@@ -4,6 +4,7 @@ const kAppBackgroundColor = Color.fromRGBO(58, 66, 86, 1.0);
 const kCardBackgroundColor = Color.fromRGBO(64, 75, 96, .9);
 const kSubmitButton = Color.fromRGBO(64, 75, 96, .9);
 const kTextButton = Colors.white;
+const kErrorTextStyle = TextStyle(fontSize: 12.0, color: Colors.red);
 
 const Color mediumGrayColor = Color(0xFFC7C7CC);
 const Color itemPressedColor = Color(0xFFD9D9D9);
