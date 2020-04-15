@@ -5,8 +5,10 @@ import 'package:ticketing_app/widgets/redirect_to_login.dart';
 
 class EquipmentResultScreen extends StatefulWidget {
   Future<Equipment> equipment;
-  @required String contractId;
-  @required String serialNo;
+  @required
+  String contractId;
+  @required
+  String serialNo;
 
   EquipmentResultScreen({this.contractId, this.serialNo});
 
@@ -39,7 +41,7 @@ class _EquipmentResultScreenState extends State<EquipmentResultScreen> {
             );
           }
           if (equipment.httpCode == 200) {
-            return buildEquimentDisplay(
+            return buildEquipmentDisplay(
                 widget.contractId, widget.serialNo, equipment);
           }
 
@@ -49,7 +51,7 @@ class _EquipmentResultScreenState extends State<EquipmentResultScreen> {
     );
   }
 
-  Widget buildEquimentDisplay(
+  Widget buildEquipmentDisplay(
       String contractId, String serialNo, Equipment equipment) {
     return SafeArea(
       child: ListView(
@@ -74,8 +76,8 @@ class _EquipmentResultScreenState extends State<EquipmentResultScreen> {
           ),
           Card(
             child: ListTile(
-              title: Text('Sla'),
-              subtitle: Text(equipment.sla==null ? 'NA' : equipment.sla),
+              title: Text('SLA'),
+              subtitle: Text(equipment.sla == null ? 'NA' : equipment.sla),
             ),
           ),
         ],

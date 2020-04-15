@@ -84,6 +84,7 @@ class _BuildEquipmentCheckState extends State<BuildEquipmentCheck> {
   String selectedContract;
   String dropdownError;
   String serialNoInput;
+  bool a = false;
 
   @override
   void initState() {
@@ -103,14 +104,19 @@ class _BuildEquipmentCheckState extends State<BuildEquipmentCheck> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
+          SizedBox(
+            height: 10.0,
+          ),
           Container(
             child: ButtonTheme(
               alignedDropdown: true,
               child: DropdownButton<String>(
                 underline: Container(
-                  decoration: const BoxDecoration(
+                  decoration: BoxDecoration(
                     border: Border(
-                      bottom: BorderSide(color: Colors.grey),
+                      bottom: BorderSide(
+                          color:
+                              dropdownError == null ? Colors.grey : Colors.red),
                     ),
                   ),
                 ),
@@ -139,19 +145,21 @@ class _BuildEquipmentCheckState extends State<BuildEquipmentCheck> {
           ),
           dropdownError == null
               ? SizedBox.shrink()
-              : Text(dropdownError ?? "", style: TextStyle(color: Colors.red)),
+              : Text(dropdownError ?? "",
+                  style: TextStyle(fontSize: 12.0, color: Colors.red)),
           SizedBox(
             height: 10.0,
           ),
           TextFormField(
             decoration: InputDecoration(
-              labelText: 'Equipment Serial Number',
-            ),
+                labelText: 'Equipment Serial Number',
+                errorStyle: TextStyle(fontSize: 12.0, color: Colors.red)),
             validator: (value) {
               if (value.isEmpty) {
                 return 'Enter correct serial number e.g (1234)';
               }
               serialNoInput = value;
+              return null;
             },
           ),
           Padding(
