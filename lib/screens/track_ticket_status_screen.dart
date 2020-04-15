@@ -60,7 +60,6 @@ class _TrackTicketStatusScreenState extends State<TrackTicketStatusScreen> {
                 );
               }
               if (listTicket.httpCode == 200) {
-                print('in hasData: ${snapshot.data}');
                 ListTicket listTicket = snapshot.data;
                 for (var l in listTicket.ticketlist) {
                   if (l.status.trim() == "Closed" ||

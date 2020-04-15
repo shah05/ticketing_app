@@ -21,7 +21,7 @@ class URLS {
 
 class ApiService {
   /// ----------------------------------------------------------
-  /// Method that returns the token from Shared Preferences
+  /// Method that returns the token from Shared Preferences.
   /// ----------------------------------------------------------
   static Future<SharedPreferences> _prefs = SharedPreferences.getInstance();
 
@@ -31,7 +31,7 @@ class ApiService {
   }
 
   /// ----------------------------------------------------------
-  /// Method that saves the token in Shared Preferences
+  /// Method that saves the token in Shared Preferences.
   /// ----------------------------------------------------------
   static Future<bool> _setMobileToken(String token) async {
     final SharedPreferences prefs = await _prefs;
@@ -39,7 +39,7 @@ class ApiService {
   }
 
   /// ----------------------------------------------------------
-  /// Method that do an authentication
+  /// Method that perform authentication operation.
   /// ----------------------------------------------------------
   static Future<String> doAuthentication(userEmail, userPass) async {
     String _status = "ERROR";
@@ -70,32 +70,34 @@ class ApiService {
   }
 
   /// ----------------------------------------------------------
-  /// Method that retrieve customer info
+  /// Method that retrieve customer and contract info.
   /// ----------------------------------------------------------
-  static Future<Customer> getCustomer() async {
+  static Future<Customer> getContracts() async {
     String token = await _getMobileToken();
 
-    final response = await http
-        .get('https://tisapi.azurewebsites.net/api/customer', headers: {
-      HttpHeaders.contentTypeHeader: "application/json",
-      HttpHeaders.authorizationHeader: "Bearer $token"
-    });
-
+    final response = await http.get(
+        'https://webapi168.azurewebsites.net/api/customer/GetContractsbyUser',
+        headers: {
+          HttpHeaders.contentTypeHeader: "application/json",
+          HttpHeaders.authorizationHeader: "Bearer $token"
+        });
+    print('getcontracts');
     if (response.statusCode == 201) {
       // If the call to the server was successful, parse the JSON.
       final responseJson = json.decode(response.body);
-      return Customer.fromJson(responseJson);
+      Customer c = Customer.fromJson(responseJson);
+      c.httpCode = response.statusCode;
+      return c;
     } else {
       // If that call was not successful, throw an error.
-      print('Response status: ${response.statusCode}');
-      print('Response body: ${response.body}');
-      print('Failed to load post');
-      return null;
+      Customer c = Customer();
+      c.httpCode = response.statusCode;
+      return c;
     }
   }
 
   /// ----------------------------------------------------------
-  /// Method that retrieve list of tickets by status
+  /// Method that retrieve list of tickets by status.
   /// ----------------------------------------------------------
 
   static Future<ListTicket> getListTicketStatus() async {
@@ -133,7 +135,7 @@ class ApiService {
   }
 
   /// ----------------------------------------------------------
-  /// Method that retrieve ticket details by Id
+  /// Method that retrieve ticket details by Id.
   /// ----------------------------------------------------------
 
   static Future<TicketById> getTicketDetail(String uuid) async {
@@ -167,7 +169,7 @@ class ApiService {
   }
 
   /// ----------------------------------------------------------
-  /// Method that create a new ticket
+  /// Method that creates a new ticket.
   /// ----------------------------------------------------------
 
   static Future<TicketById> createTicket(Ticket ticket) async {
@@ -207,4 +209,31 @@ class ApiService {
       return null;
     }
   }
+
+//  /// ----------------------------------------------------------
+//  /// Method that retrieve contract id by customer.
+//  /// ----------------------------------------------------------
+//
+//  static Future<TicketById> getContracts(Ticket ticket) async {
+//    String token = await _getMobileToken();
+//
+//    final response = await http
+//        .get('https://tisapi.azurewebsites.net/api/customer/GetContractsbyUser', headers: {
+//      HttpHeaders.contentTypeHeader: "application/json",
+//      HttpHeaders.authorizationHeader: "Bearer $token"
+//    });
+//
+//    if (response.statusCode == 201) {
+//      // If the call to the server was successful, parse the JSON.
+//      final responseJson = json.decode(response.body);
+//      return Customer.fromJson(responseJson);
+//    } else {
+//      // If that call was not successful, throw an error.
+//      print('Response status: ${response.statusCode}');
+//      print('Response body: ${response.body}');
+//      print('Failed to load post');
+//      return null;
+//    }
+//
+//  }
 }

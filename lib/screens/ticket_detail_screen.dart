@@ -94,14 +94,7 @@ String getTicketStatus(int statusId) {
   }
 }
 
-List<Widget> buildMsgLogsCol(List<String> msg) {
-  return List<Widget>.generate(msg.length, (int index) {
-    return Text(msg[index]);
-  });
-}
-
 Widget buildMsgLogCard(List<MsgLogs> msgLogs) {
-  List<String> msg = ['adam', 'luke', 'bryan', 'harry'];
   if (msgLogs.length == 0) {
     return Card(
       child: ListTile(

@@ -1,26 +1,29 @@
 class Contractdetail {
-  final String companyName;
-  final String contractUUID;
-  final String rolename;
-  final bool usetoken;
-  final String startd;
-  final String endd;
+  String _companyName;
+  String _contractUUID;
+  String _rolename;
+  bool _usetoken;
+  String _startd;
+  String _endd;
 
   Contractdetail(
-      {this.companyName,
-        this.contractUUID,
-        this.rolename,
-        this.usetoken,
-        this.startd,
-        this.endd});
+      {String companyName,
+      String contractUUID,
+      String rolename,
+      bool usetoken,
+      String startd,
+      String endd});
 
-  factory Contractdetail.fromJson(Map<String, dynamic> parsedJson) {
-    return Contractdetail(
-        companyName: parsedJson['companyName'],
-        contractUUID: parsedJson['contractUUID'],
-        rolename: parsedJson['rolename'],
-        usetoken: parsedJson['usetoken'],
-        startd: parsedJson['startd'],
-        endd: parsedJson['endd']);
+  String get companyName => _companyName;
+  String get contractUUID => _contractUUID;
+
+
+  Contractdetail.fromJson(Map<String, dynamic> json) {
+    _companyName = json['companyName'];
+    _contractUUID = json['contractUUID'];
+    _rolename = json['rolename'];
+    _usetoken = json['usetoken'];
+    _startd = json['startd'];
+    _endd = json['endd'];
   }
 }

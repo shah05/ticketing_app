@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
           '/createticket': (context) => CreateNewTicketScreen(),
           '/trackticket': (context) => TrackTicketStatusScreen(),
           '/settings': (context) => SettingsScreen(),
-          '/equipment': (context) => EquipmentCheckSreen(),
+          '/equipment': (context) => EquipmentCheckScreen(),
         });
   }
 }
