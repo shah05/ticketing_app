@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ticketing_app/screens/create_ticket_form.dart';
 import 'package:ticketing_app/screens/settings_screen.dart';
 import 'package:ticketing_app/util/constants.dart';
 import 'package:ticketing_app/widgets/bottom_navbar.dart';
@@ -48,7 +49,7 @@ class MenuListTile extends StatelessWidget {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => CreateNewTicketScreen()));
+                      builder: (context) => CreateTicketForm()));
             }),
         MenuCard(
             cardName: 'Track Tickets',

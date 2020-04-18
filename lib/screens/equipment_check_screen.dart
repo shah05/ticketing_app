@@ -98,7 +98,7 @@ class _BuildEquipmentCheckState extends State<BuildEquipmentCheck> {
           ),
           Container(
             child: ButtonTheme(
-              alignedDropdown: true,
+//              alignedDropdown: true,
               child: DropdownButton<String>(
                 underline: Container(
                   decoration: BoxDecoration(

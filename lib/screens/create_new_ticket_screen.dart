@@ -76,7 +76,7 @@ class _CreateNewTicketScreenState extends State<CreateNewTicketScreen> {
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             children: <Widget>[
               TextFormField(
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   labelText: 'Title',
                   labelStyle: TextStyle(color: kTextPrimary),
                   errorStyle: kErrorTextStyle,
@@ -88,7 +88,6 @@ class _CreateNewTicketScreenState extends State<CreateNewTicketScreen> {
                   return null;
                 },
                 onSaved: (value) {
-                  print('title: $value');
                   ticket.title = value;
                 },
               ),
@@ -184,96 +183,89 @@ class _CreateNewTicketScreenState extends State<CreateNewTicketScreen> {
                   if (value.isEmpty) {
                     return 'Please key in Equipment Serial Number';
                   }
-                  return null;
+//                  return null;
                 },
                 onSaved: (value) {
                   ticket.eqSerialNo = value;
                 },
               ),
-//              TextFormField(
-//                decoration: InputDecoration(
-//                  labelText: 'Part Number',
-//                  labelStyle: TextStyle(color: kTextPrimary),
-//                  errorStyle: kErrorTextStyle,
-//                ),
-//                validator: (value) {
-//                  if (value.isEmpty) {
-//                    return 'Please key in Part Number';
-//                  }
-//                  return null;
-//                },
-//                onSaved: (value) {
-//                  ticket.partno = value;
-//                },
-//              ),
-//              TextFormField(
-//                decoration: InputDecoration(
-//                  labelText: 'Brand Model',
-//                  labelStyle: TextStyle(color: kTextPrimary),
-//                  errorStyle: kErrorTextStyle,
-//                ),
-//                validator: (value) {
-//                  if (value.isEmpty) {
-//                    return 'Please key in Brand Model';
-//                  }
-//                  return null;
-//                },
-//                onSaved: (value) {
-//                  ticket.brandModel = value;
-//                },
-//              ),
-//              TextFormField(
-//                decoration: InputDecoration(
-//                  labelText: 'Contact Details',
-//                  labelStyle: TextStyle(color: kTextPrimary),
-//                  errorStyle: kErrorTextStyle,
-//                ),
-//                validator: (value) {
-//                  if (value.isEmpty) {
-//                    return 'Please key in Contact Details';
-//                  }
-//                  return null;
-//                },
-//                onSaved: (value) {
-//                  ticket.locContact = value;
-//                },
-//              ),
-//              DateTimeField(
-//                decoration: InputDecoration(
-//                  labelText: 'Service Date',
-//                  labelStyle: TextStyle(color: kTextPrimary),
-//                  errorStyle: kErrorTextStyle,
-//                ),
-//                format: format,
-//                onShowPicker: (context, currentValue) {
-//                  return showDatePicker(
-//                      context: context,
-//                      firstDate: DateTime(1900),
-//                      initialDate: currentValue ?? DateTime.now(),
-//                      lastDate: DateTime(2100));
-//                },
-//                validator: (value) {
-//                  /// Need to compare if picked date is earlier. Only validate selected current date onwards.
-//                  DateTime now = DateTime.now();
-//                  DateTime currentDate = DateTime(now.year, now.month, now.day);
-//                  if (value == null) {
-//                    return 'Please pick a date';
-//                  } else if (value.isBefore(currentDate)) {
-//                    return 'Please pick a date later than today';
-//                  }
-//                  return null;
-//                },
-//                onSaved: (value) {
-//                  ticket.srSdateTime = value.toString();
-//                },
-//              ),
-//              TextFormField(
-//                decoration: InputDecoration(
-//                  labelText: 'Contact Details',
-//                  labelStyle: TextStyle(color: kTextPrimary),
-//                  errorStyle: kErrorTextStyle,
-//                ),
-//              ),
+              TextFormField(
+                decoration: InputDecoration(
+                  labelText: 'Part Number',
+                  labelStyle: TextStyle(color: kTextPrimary),
+                  errorStyle: kErrorTextStyle,
+                ),
+                validator: (value) {
+                  if (value.isEmpty) {
+                    return 'Please key in Part Number';
+                  }
+                  return null;
+                },
+                onSaved: (value) {
+                  ticket.partno = value;
+                },
+              ),
+              TextFormField(
+                decoration: InputDecoration(
+                  labelText: 'Brand Model',
+                  labelStyle: TextStyle(color: kTextPrimary),
+                  errorStyle: kErrorTextStyle,
+                ),
+                validator: (value) {
+                  if (value.isEmpty) {
+                    return 'Please key in Brand Model';
+                  }
+                  return null;
+                },
+                onSaved: (value) {
+                  ticket.brandModel = value;
+                },
+              ),
+              DateTimeField(
+                decoration: InputDecoration(
+                  labelText: 'Service Date',
+                  labelStyle: TextStyle(color: kTextPrimary),
+                  errorStyle: kErrorTextStyle,
+                ),
+                format: format,
+                onShowPicker: (context, currentValue) {
+                  return showDatePicker(
+                      context: context,
+                      firstDate: DateTime(1900),
+                      initialDate: currentValue ?? DateTime.now(),
+                      lastDate: DateTime(2100));
+                },
+                validator: (value) {
+                  /// Need to compare if picked date is earlier. Only validate selected current date onwards.
+                  DateTime now = DateTime.now();
+                  DateTime currentDate = DateTime(now.year, now.month, now.day);
+                  if (value == null) {
+                    return 'Please pick a date';
+                  } else if (value.isBefore(currentDate)) {
+                    return 'Please pick a date later than today';
+                  }
+                  return null;
+                },
+                onSaved: (value) {
+                  ticket.srSdateTime = value.toString();
+                },
+              ),
+              TextFormField(
+                decoration: InputDecoration(
+                  labelText: 'Contact Details',
+                  labelStyle: TextStyle(color: kTextPrimary),
+                  errorStyle: kErrorTextStyle,
+                ),
+                validator: (value) {
+                  if (value.isEmpty) {
+                    return 'Please add a contact';
+                  }
+                  return null;
+                },
+                onSaved: (value) {
+                  ticket.locContact = value;
+                },
+              ),
               SizedBox(
                 height: 10.0,
               ),
