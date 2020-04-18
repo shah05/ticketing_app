@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ticketing_app/model/equipment.dart';
 import 'package:ticketing_app/service/rest_api.dart';
+import 'package:ticketing_app/util/constants.dart';
 import 'package:ticketing_app/widgets/redirect_to_login.dart';
 
 class EquipmentResultScreen extends StatefulWidget {
@@ -28,7 +29,12 @@ class _EquipmentResultScreenState extends State<EquipmentResultScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Result'),
+        title: Text('Result',style: TextStyle(color: kTextTitle),),
+        backgroundColor: kAppBarColor,
+        iconTheme: IconThemeData(
+            color: kIconTitle
+        ),
+
       ),
       body: FutureBuilder(
         future: widget.equipment,

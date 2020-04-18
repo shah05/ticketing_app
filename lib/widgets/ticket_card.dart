@@ -26,23 +26,23 @@ class TicketCard extends StatelessWidget {
               decoration: new BoxDecoration(
                   border: new Border(
                       right:
-                          new BorderSide(width: 1.0, color: Colors.white24))),
-              child: Icon(icon, color: Colors.white),
+                          new BorderSide(width: 1.0, color: kDivider))),
+              child: Icon(icon, color: kIconBody),
             ),
             title: Text(
               '$cardName',
               overflow: TextOverflow.ellipsis,
-              style: TextStyle(color: Colors.white),
+              style: TextStyle(color: kTextPrimary),
             ),
             subtitle: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Text('Service Type: $cardDesc1', style: TextStyle(color: Colors.white)),
-                Text('Status: $cardDesc2', style: TextStyle(color: Colors.white)),
+                Text('Service Type: $cardDesc1', style: TextStyle(color: kTextSecondary)),
+                Text('Status: $cardDesc2', style: TextStyle(color: kTextSecondary)),
               ],
             ),
             trailing: Icon(Icons.keyboard_arrow_right,
-                color: Colors.white, size: 30.0)),
+                color: kIconBody, size: 30.0)),
       ),
     );
   }

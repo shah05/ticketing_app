@@ -25,17 +25,17 @@ class MenuCard extends StatelessWidget {
               decoration: new BoxDecoration(
                   border: new Border(
                       right:
-                          new BorderSide(width: 1.0, color: Colors.white24))),
-              child: Icon(icon, color: Colors.white),
+                          new BorderSide(width: 1.0, color: kDivider))),
+              child: Icon(icon, color: kIconBody),
             ),
             title: Text(
               '$cardName',
               overflow: TextOverflow.ellipsis,
-              style: TextStyle(color: Colors.white),
+              style: TextStyle(color: kTextPrimary),
             ),
-            subtitle: Text('$cardDesc', style: TextStyle(color: Colors.white)),
+            subtitle: Text('$cardDesc', style: TextStyle(color: kTextSecondary)),
             trailing: Icon(Icons.keyboard_arrow_right,
-                color: Colors.white, size: 30.0)),
+                color: kIconBody, size: 30.0)),
       ),
     );
   }

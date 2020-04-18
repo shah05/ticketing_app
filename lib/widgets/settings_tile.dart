@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:ticketing_app/util/constants.dart';
 
 
 enum _SettingsTileType { simple, switchTile }
@@ -43,7 +44,7 @@ class SettingsTile extends StatelessWidget {
       title: Text(title),
       subtitle: subtitle != null ? Text(subtitle) : null,
       leading: leading,
-      trailing: Icon(Icons.chevron_right),
+      trailing: Icon(Icons.chevron_right, color: kIconBody,),
       onTap: onTap,
     );
   }

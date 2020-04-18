@@ -13,6 +13,8 @@ class CreateTicket {
     this._ticket = ticket;
   }
 
+  int get httpCode => _httpCode;
+  set httpCode(int httpCode) => _httpCode = httpCode;
   int get status => _status;
   set status(int status) => _status = status;
   String get message => _message;

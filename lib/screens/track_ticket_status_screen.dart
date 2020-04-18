@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:ticketing_app/main.dart';
 import 'package:ticketing_app/model/list_ticket.dart';
-import 'package:ticketing_app/model/ticket.dart';
 import 'package:ticketing_app/screens/ticket_detail_screen.dart';
 import 'package:ticketing_app/service/rest_api.dart';
 import 'package:ticketing_app/util/constants.dart';
+import 'package:ticketing_app/widgets/redirect_to_login.dart';
 import '../widgets/ticket_card.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'login_screen.dart';
 
 class TrackTicketStatusScreen extends StatefulWidget {
   @override
@@ -36,8 +35,11 @@ class _TrackTicketStatusScreenState extends State<TrackTicketStatusScreen> {
           backgroundColor: kAppBackgroundColor,
           appBar: AppBar(
             elevation: 0.1,
-            backgroundColor: kAppBackgroundColor,
-            title: Text('Track Tickets'),
+            backgroundColor: kAppBarColor,
+            title: Text(
+              'Track Tickets',
+              style: TextStyle(color: kTextTitle),
+            ),
             leading: IconButton(
               icon: Icon(Icons.arrow_back),
               onPressed: () => Navigator.pop(context, false),
@@ -60,7 +62,6 @@ class _TrackTicketStatusScreenState extends State<TrackTicketStatusScreen> {
                 );
               }
               if (listTicket.httpCode == 200) {
-                ListTicket listTicket = snapshot.data;
                 for (var l in listTicket.ticketlist) {
                   if (l.status.trim() == "Closed" ||
                       l.status.trim() == "Cancelled") {
@@ -73,25 +74,7 @@ class _TrackTicketStatusScreenState extends State<TrackTicketStatusScreen> {
               }
 //              else if (listTicket.httpCode == 401) {
 //                print('in data null: ${snapshot.data}');
-              return Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Text('Access Expired..'),
-                    FlatButton(
-                      child: Text('Sign In'),
-                      onPressed: () {
-                        Navigator.push(
-                            context,
-                            new MaterialPageRoute<String>(
-                              builder: (BuildContext context) => new MyApp(),
-                              fullscreenDialog: true,
-                            ));
-                      },
-                    ),
-                  ],
-                ),
-              );
+              return RedirectToLogin();
 //              }
             },
           ),

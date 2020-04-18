@@ -3,9 +3,9 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:ticketing_app/model/create_ticket.dart';
 import 'package:ticketing_app/model/equipment.dart';
 import 'package:ticketing_app/model/list_ticket.dart';
-import 'package:dio/dio.dart';
 import 'package:ticketing_app/model/customer.dart';
 import 'package:ticketing_app/model/ticket.dart';
 
@@ -202,29 +202,63 @@ class ApiService {
   /// Method that creates a new ticket.
   /// ----------------------------------------------------------
 
-  static Future<TicketById> createTicket(Ticket ticket) async {
+  static Future<CreateTicket> createTicket(Ticket ticket) async {
+    print('title : ${ticket.title}');
+    CreateTicket t;
     String token = await _getMobileToken();
     var url = Uri.parse(
         'https://webapi168.azurewebsites.net/api/ticket/CreateTicket');
     var request = new http.MultipartRequest('POST', url);
     request.headers['authorization'] = 'Bearer $token';
-//    request.fields['id'] = uuid;
+    request.fields['statusid'] = "1";
+    if (ticket.title != null) {
+      request.fields['subject'] = ticket.title;
+    }
+    if (ticket.clientRef1 != null) {
+      request.fields['ref1'] = ticket.clientRef1;
+    }
+    if (ticket.clientRef2 != null) {
+      request.fields['ref2'] = ticket.clientRef2;
+    }
+    if (ticket.dcAccessCode != null) {
+      request.fields['postalcode'] = ticket.dcAccessCode;
+    }
+    if (ticket.description != null) {
+      request.fields['description'] = ticket.description;
+    }
+    if (ticket.eqLoc != null) {
+      request.fields['eqloc'] = ticket.eqLoc;
+    }
+    if (ticket.eqSerialNo != null) {
+      request.fields['eqserialno'] = ticket.eqSerialNo;
+    }
+    if (ticket.locContact != null) {
+      request.fields['contactdetails'] = ticket.locContact;
+    }
+    if (ticket.partno != null) {
+      request.fields['partno'] = ticket.partno;
+    }
+    if (ticket.srSdateTime != null) {
+      request.fields['svcdate'] = ticket.srSdateTime;
+    }
+    if (ticket.brandModel != null) {
+      request.fields['brandmodel'] = ticket.brandModel;
+    }
 
     var streamedResponse = await request.send();
     var response = await http.Response.fromStream(streamedResponse);
-//    print(response.statusCode);
     if (response.statusCode == 200) {
-//      print('RESPONSE BODY : ${response.body}');
-      // If the call to the server was successful, parse the JSON.
       final responseJson = json.decode(response.body);
-      TicketById t1 = TicketById.fromJson(responseJson);
-      return TicketById.fromJson(responseJson);
+      t = CreateTicket.fromJson(responseJson);
+      t.httpCode = response.statusCode;
+      return t;
     } else {
-      // If that call was not successful, throw an error.
-      print('Response status: ${response.statusCode}');
-//      print('Response body: ${response.body}');
-      print('Failed to load post');
-      return null;
+      /// Response code = 400 : Bad Request (errors in the fields)
+      /// Response code = 401 : Bad Authorization (Token expired)
+      print(response.body);
+      t = CreateTicket();
+      t.httpCode = response.statusCode;
+      return t;
     }
   }
 }

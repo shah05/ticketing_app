@@ -5,6 +5,7 @@ import 'package:ticketing_app/screens/equipment_result_screen.dart';
 import 'package:ticketing_app/service/rest_api.dart';
 import 'package:ticketing_app/main.dart';
 import 'package:ticketing_app/util/constants.dart';
+import 'package:ticketing_app/widgets/redirect_to_login.dart';
 
 class EquipmentCheckScreen extends StatefulWidget {
   @override
@@ -25,7 +26,12 @@ class _EquipmentCheckScreenState extends State<EquipmentCheckScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Equipment Check'),
+        title: Text(
+          'Equipment Check',
+          style: TextStyle(color: kTextTitle),
+        ),
+        backgroundColor: kAppBarColor,
+        iconTheme: IconThemeData(color: kIconTitle),
       ),
       body: SafeArea(
         child: Padding(
@@ -43,25 +49,7 @@ class _EquipmentCheckScreenState extends State<EquipmentCheckScreen> {
               if (customer.httpCode == 201) {
                 return BuildEquipmentCheck(customer: customer);
               }
-              return Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Text('Access Expired..'),
-                    FlatButton(
-                      child: Text('Sign In'),
-                      onPressed: () {
-                        Navigator.push(
-                            context,
-                            new MaterialPageRoute<String>(
-                              builder: (BuildContext context) => new MyApp(),
-                              fullscreenDialog: true,
-                            ));
-                      },
-                    ),
-                  ],
-                ),
-              );
+              return RedirectToLogin();
             },
           ),
         ),
@@ -123,7 +111,7 @@ class _BuildEquipmentCheckState extends State<BuildEquipmentCheck> {
                 ),
                 isExpanded: true,
                 hint: selectedContract == null
-                    ? Text('Please select contract ID')
+                    ? Text('Please select contract ID', style: TextStyle(color: kTextPrimary),)
                     : Text(
                         selectedContract,
                         overflow: TextOverflow.ellipsis,
@@ -146,14 +134,14 @@ class _BuildEquipmentCheckState extends State<BuildEquipmentCheck> {
           ),
           dropdownError == null
               ? SizedBox.shrink()
-              : Text(dropdownError ?? "",
-                  style: kErrorTextStyle),
+              : Text(dropdownError ?? "", style: kErrorTextStyle),
           SizedBox(
             height: 10.0,
           ),
           TextFormField(
             decoration: InputDecoration(
                 labelText: 'Equipment Serial Number',
+                labelStyle: TextStyle(color: kTextPrimary),
                 errorStyle: kErrorTextStyle),
             validator: (value) {
               if (value.isEmpty) {
@@ -165,31 +153,38 @@ class _BuildEquipmentCheckState extends State<BuildEquipmentCheck> {
           ),
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 16.0),
-            child: RaisedButton(
-              onPressed: () {
-                // Validate returns true if the form is valid, or false
-                // otherwise.
-                bool isValid = _formKey.currentState.validate();
+            child: SizedBox(
+              width: double.infinity,
+              child: RaisedButton(
+                color: kSubmitButton,
+                child: Text(
+                  'Submit',
+                  style: TextStyle(color: kTextButton),
+                ),
+                onPressed: () {
+                  // Validate returns true if the form is valid, or false
+                  // otherwise.
+                  bool isValid = _formKey.currentState.validate();
 
-                if (selectedContract == null) {
-                  setState(() {
-                    dropdownError = 'Please select an option';
-                    isValid = false;
-                  });
-                }
+                  if (selectedContract == null) {
+                    setState(() {
+                      dropdownError = 'Please select an option';
+                      isValid = false;
+                    });
+                  }
 
-                if (isValid) {
-                  //navigate to new page
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => EquipmentResultScreen(
-                                contractId: selectedContract,
-                                serialNo: serialNoInput,
-                              )));
-                }
-              },
-              child: Text('Submit'),
+                  if (isValid) {
+                    //navigate to new page
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => EquipmentResultScreen(
+                                  contractId: selectedContract,
+                                  serialNo: serialNoInput,
+                                )));
+                  }
+                },
+              ),
             ),
           ),
         ],

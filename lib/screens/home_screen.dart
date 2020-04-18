@@ -19,12 +19,14 @@ class HomeScreen extends StatelessWidget {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         elevation: 0.1,
-        backgroundColor: kAppBackgroundColor,
+        backgroundColor: kAppBarColor,
 //    centerTitle: true,
-        title: Text('Network Architect'),
+        title: Text(
+          'TIS Network Architect',
+          style: TextStyle(color: kTextTitle),
+        ),
       ),
       body: MenuListTile(),
-//      bottomNavigationBar: BottomNavBar(),
     );
   }
 }
@@ -56,12 +58,12 @@ class MenuListTile extends StatelessWidget {
               Navigator.pushNamed(context, '/trackticket');
             }),
         MenuCard(
-            cardName: 'Equipment check',
-            cardDesc: 'Get equipment details',
-            icon: FontAwesomeIcons.searchPlus,
-            onPress: (){
-              Navigator.pushNamed(context, '/equipment');
-            },
+          cardName: 'Equipment check',
+          cardDesc: 'Get equipment details',
+          icon: FontAwesomeIcons.searchPlus,
+          onPress: () {
+            Navigator.pushNamed(context, '/equipment');
+          },
         ),
         MenuCard(
             cardName: 'Settings',

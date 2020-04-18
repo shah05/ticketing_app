@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:ticketing_app/model/create_ticket.dart';
+import 'package:ticketing_app/screens/create_new_ticket_screen.dart';
+import 'package:ticketing_app/screens/home_screen.dart';
 import 'package:ticketing_app/screens/track_ticket_status_screen.dart';
 import 'package:ticketing_app/service/rest_api.dart';
 import 'package:ticketing_app/model/ticket.dart';
+import 'package:ticketing_app/widgets/redirect_to_login.dart';
 
 class CreateTicketStatusScreen extends StatefulWidget {
   final Ticket ticket;
@@ -9,26 +13,24 @@ class CreateTicketStatusScreen extends StatefulWidget {
   CreateTicketStatusScreen({this.ticket});
 
   @override
-  _CreateTicketStatusScreenState createState() => _CreateTicketStatusScreenState();
+  _CreateTicketStatusScreenState createState() =>
+      _CreateTicketStatusScreenState();
 }
 
 class _CreateTicketStatusScreenState extends State<CreateTicketStatusScreen> {
 //  Future<>
 
-  Widget buildTicketResult(BuildContext context, bool result) {
+  Widget buildTicketSuccess(BuildContext context) {
     return Center(
       child: Column(
         children: <Widget>[
-          result
-              ? Text('Ticket Submitted Sucessfully')
-              : Text('Ticket Submission Fail'),
+          Text('Ticket Submitted Sucessfully'),
           RaisedButton(
             onPressed: () {
               Navigator.push(
                   context,
                   new MaterialPageRoute<String>(
-                    builder: (BuildContext context) =>
-                        TrackTicketStatusScreen(),
+                    builder: (BuildContext context) => HomeScreen(),
                     fullscreenDialog: true,
                   ));
             },
@@ -50,7 +52,7 @@ class _CreateTicketStatusScreenState extends State<CreateTicketStatusScreen> {
                   context,
                   new MaterialPageRoute<String>(
                     builder: (BuildContext context) =>
-                        TrackTicketStatusScreen(),
+                        CreateNewTicketScreen(),
                     fullscreenDialog: true,
                   ));
             },
@@ -63,20 +65,29 @@ class _CreateTicketStatusScreenState extends State<CreateTicketStatusScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text('Text'),
+      ),
       body: FutureBuilder(
         future: ApiService.createTicket(widget.ticket),
         builder: (context, snapshot) {
-          if (snapshot.hasData) {
-//            print(snapshot)
-            return buildTicketResult(context, true);
-          } else if (snapshot.hasError) {
+          CreateTicket resultTicket = snapshot.data;
 
-            return buildTicketResult(context, false);
+          if (resultTicket == null) {
+            return Container(
+              alignment: FractionalOffset.center,
+              child: CircularProgressIndicator(),
+            );
           }
-          return Container(
-            alignment: FractionalOffset.center,
-            child: CircularProgressIndicator(),
-          );
+
+          if (resultTicket.httpCode == 200) {
+            return buildTicketSuccess(context);
+          } else if (resultTicket.httpCode == 400) {
+            return buildTicketFail(context);
+          } else {
+            return RedirectToLogin();
+          }
+
         },
       ),
     );

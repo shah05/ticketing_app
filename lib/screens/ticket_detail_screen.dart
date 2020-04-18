@@ -5,6 +5,7 @@ import 'package:ticketing_app/model/ticket.dart';
 import 'package:ticketing_app/model/ticket_by_id.dart';
 import 'package:ticketing_app/service/rest_api.dart';
 import 'package:ticketing_app/main.dart';
+import 'package:ticketing_app/util/constants.dart';
 import 'package:ticketing_app/widgets/redirect_to_login.dart';
 
 class TicketDetailScreen extends StatefulWidget {
@@ -29,6 +30,7 @@ class _TicketDetailScreenState extends State<TicketDetailScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('${widget.uuid}'),
+        backgroundColor: kAppBarColor,
       ),
       body: FutureBuilder(
         future: widget.ticket,

@@ -1,5 +1,7 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:ticketing_app/main.dart';
+import 'package:ticketing_app/util/constants.dart';
 
 class RedirectToLogin extends StatelessWidget {
   const RedirectToLogin({
@@ -13,8 +15,9 @@ class RedirectToLogin extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Text('Access Expired..'),
-          FlatButton(
-            child: Text('Sign In'),
+          RaisedButton(
+            color: kSubmitButton,
+            child: Text('Sign In', style: TextStyle(color: kTextButton),),
             onPressed: () {
               Navigator.push(
                   context,

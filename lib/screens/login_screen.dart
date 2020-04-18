@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ticketing_app/service/rest_api.dart';
+import 'package:ticketing_app/util/constants.dart';
 //import 'rest_api.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -42,7 +43,6 @@ class _LoginScreenState extends State<LoginScreen> {
     final token = await ApiService.doAuthentication(
         _emailController.text, _passwordController.text);
 
-//    final String token = '1';
     if (token == "1") {
       Navigator.pushReplacementNamed(context, '/home');
       _hideLoading();
@@ -73,7 +73,6 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-        //appBar: new AppBar(title: new Text('Demo')),
         body: SingleChildScrollView(
             child: new Material(
       child: _isLoading ? _loadingScreen() : _loginScreen(),
@@ -85,6 +84,7 @@ class _LoginScreenState extends State<LoginScreen> {
         margin: const EdgeInsets.only(top: 100.0),
         child: new Center(
             child: new Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             new CircularProgressIndicator(strokeWidth: 4.0),
             new Container(
@@ -106,7 +106,6 @@ class _LoginScreenState extends State<LoginScreen> {
 
     return new Container(
         padding: const EdgeInsets.all(30.0),
-        color: Colors.white,
         child: new Container(
           child: new Center(
               child: new Column(children: [
@@ -177,8 +176,6 @@ class _LoginScreenState extends State<LoginScreen> {
       child: InkWell(
         // borderRadius: BorderRadius.circular(20),
         onTap: () {
-//          _emailController.text = 'va.victorwan@gmail.com';
-//          _passwordController.text ="NA12345";
           print(_emailController.text);
           print(_passwordController.text);
           _doAuthenticate();
@@ -188,37 +185,17 @@ class _LoginScreenState extends State<LoginScreen> {
           // width: 240,
           decoration: BoxDecoration(
             // borderRadius: BorderRadius.circular(20),
+            color: kSubmitButton,
             border: Border.all(color: Colors.grey),
           ),
           child: Center(
-            child: Text("LOGIN"),
+            child: Text(
+              "LOGIN",
+              style: TextStyle(color: kTextButton),
+            ),
           ),
         ),
       ),
     );
   }
 }
-
-//class SnackBarPage extends StatelessWidget {
-//  @override
-//  Widget build(BuildContext context) {
-//    return RaisedButton(
-//      onPressed: () {
-//        final snackBar = SnackBar(
-//          content: Text('Login'),
-//          action: SnackBarAction(
-//            label: 'Undo',
-//            onPressed: () {
-//
-//            },
-//          ),
-//        );
-//
-//        // Find the Scaffold in the widget tree and use
-//        // it to show a SnackBar.
-//        Scaffold.of(context).showSnackBar(snackBar);
-//      },
-//      child: Text('Login'),
-//    );
-//  }
-//}

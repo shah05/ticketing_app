@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:ticketing_app/util/constants.dart';
 import 'package:ticketing_app/widgets/settings_tile.dart';
 
 // ignore: must_be_immutable
@@ -25,7 +26,7 @@ class SettingsSection extends StatelessWidget {
                 child: Text(
                   title,
                   style: TextStyle(
-                      color: Theme.of(context).accentColor,
+                      color: kTextPrimary,
                       fontWeight: FontWeight.bold),
                 ),
               ),
