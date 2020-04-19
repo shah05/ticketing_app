@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:ticketing_app/screens/create_ticket_form.dart';
+import 'package:ticketing_app/screens/create_ticket/create_ticket_form_screen.dart';
+import 'package:ticketing_app/screens/create_ticket/select_contract_screen.dart';
 import 'package:ticketing_app/screens/settings_screen.dart';
 import 'package:ticketing_app/util/constants.dart';
 import 'package:ticketing_app/widgets/bottom_navbar.dart';
 import 'package:ticketing_app/widgets/menu_card.dart';
 import 'package:ticketing_app/widgets/ticket_card.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:ticketing_app/screens/create_new_ticket_screen.dart';
-import 'package:ticketing_app/screens/track_ticket_status_screen.dart';
+import 'package:ticketing_app/screens/track_ticket/track_ticket_status_screen.dart';
 
 class HomeScreen extends StatelessWidget {
 //  ListPage({this.title});
@@ -49,7 +49,7 @@ class MenuListTile extends StatelessWidget {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => CreateTicketForm()));
+                      builder: (context) => SelectContractScreen()));
             }),
         MenuCard(
             cardName: 'Track Tickets',

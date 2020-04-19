@@ -2,6 +2,7 @@ import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:ticketing_app/model/attachments.dart';
+import 'package:ticketing_app/model/contract.dart';
 import 'package:ticketing_app/model/ticket.dart';
 import 'package:intl/intl.dart';
 import 'package:ticketing_app/util/constants.dart';
@@ -9,12 +10,17 @@ import 'package:flutter/services.dart';
 
 import 'create_ticket_status_screen.dart';
 
-class CreateTicketForm extends StatefulWidget {
+class CreateTicketFormScreen extends StatefulWidget {
+  @required
+  String contractId;
+
+  CreateTicketFormScreen({this.contractId});
+
   @override
-  _CreateTicketFormState createState() => _CreateTicketFormState();
+  _CreateTicketFormScreenState createState() => _CreateTicketFormScreenState();
 }
 
-class _CreateTicketFormState extends State<CreateTicketForm> {
+class _CreateTicketFormScreenState extends State<CreateTicketFormScreen> {
   List<Attachments> attachments = [];
   String _fileName;
   Ticket ticket = new Ticket();
@@ -49,9 +55,13 @@ class _CreateTicketFormState extends State<CreateTicketForm> {
   }
 
   void validateFormFields() {
-
     if (_formKey.currentState.validate()) {
+      /// Set Contract UUID
+      Contract c = Contract();
+      c.uuid = widget.contractId;
+      ticket.contract = c;
       _formKey.currentState.save();
+      print('title : ${ticket.contract.uuid}');
       print('title : ${ticket.title}');
       print('description : ${ticket.description}');
       print('ref1 : ${ticket.clientRef1}');
@@ -68,7 +78,7 @@ class _CreateTicketFormState extends State<CreateTicketForm> {
 //        for(int i = 0; i<attachments.length;i++){
 //          print(attachments[i].fileName);
 //        }
-        ticket.attachments=attachments;
+        ticket.attachments = attachments;
       }
       Navigator.push(
         context,
@@ -91,7 +101,7 @@ class _CreateTicketFormState extends State<CreateTicketForm> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Create New Ticket',
+          'Create New Ticket (2/2)',
           style: TextStyle(color: kTextTitle),
         ),
         backgroundColor: kAppBarColor,

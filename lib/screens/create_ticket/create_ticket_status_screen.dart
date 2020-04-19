@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ticketing_app/model/create_ticket.dart';
-import 'package:ticketing_app/screens/create_new_ticket_screen.dart';
+import 'package:ticketing_app/screens/create_ticket/select_contract_screen.dart';
 import 'package:ticketing_app/screens/home_screen.dart';
 import 'package:ticketing_app/service/rest_api.dart';
 import 'package:ticketing_app/model/ticket.dart';
@@ -24,8 +24,12 @@ class _CreateTicketStatusScreenState extends State<CreateTicketStatusScreen> {
     return Center(
       child: Column(
         children: <Widget>[
-          Text('Ticket Submitted Sucessfully'),
+          Text(
+            'Ticket Submitted Sucessfully',
+            style: TextStyle(color: kTextPrimary),
+          ),
           RaisedButton(
+            child: Text('Return Home'),
             onPressed: () {
               Navigator.push(
                   context,
@@ -44,14 +48,17 @@ class _CreateTicketStatusScreenState extends State<CreateTicketStatusScreen> {
     return Center(
       child: Column(
         children: <Widget>[
-          Text('Ticket Submission Fail'),
+          Text(
+            'Ticket Submission Fail',
+            style: TextStyle(color: kTextPrimary),
+          ),
           RaisedButton(
             child: Text('Retry'),
             onPressed: () {
               Navigator.push(
                   context,
                   new MaterialPageRoute<String>(
-                    builder: (BuildContext context) => CreateNewTicketScreen(),
+                    builder: (BuildContext context) => SelectContractScreen(),
                     fullscreenDialog: true,
                   ));
             },

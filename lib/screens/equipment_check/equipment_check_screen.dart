@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:ticketing_app/model/customer.dart';
-import 'package:ticketing_app/screens/equipment_result_screen.dart';
+import 'package:ticketing_app/screens/equipment_check/equipment_result_screen.dart';
 import 'package:ticketing_app/service/rest_api.dart';
 import 'package:ticketing_app/main.dart';
 import 'package:ticketing_app/util/constants.dart';
@@ -34,25 +34,45 @@ class _EquipmentCheckScreenState extends State<EquipmentCheckScreen> {
         iconTheme: IconThemeData(color: kIconTitle),
       ),
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-          child: FutureBuilder(
-            future: customerApiResult,
-            builder: (context, snapshot) {
-              Customer customer = snapshot.data;
-              if (customer == null) {
-                return Container(
-                  alignment: FractionalOffset.center,
-                  child: CircularProgressIndicator(),
-                );
-              }
-              if (customer.httpCode == 201) {
-                return BuildEquipmentCheck(customer: customer);
-              }
-              return RedirectToLogin();
-            },
-          ),
-        ),
+        child : Column(
+          children: <Widget>[
+//            Center(
+//              child: ClipRect(
+//                child: Banner(
+////                  message: "hello",
+////                  location: BannerLocation.topEnd,
+//                  color: Colors.red,
+//                  child: Container(
+//                    margin: const EdgeInsets.all(10.0),
+//                    color: Colors.yellow,
+//                    height: 100,
+//                    child: Center(child: Text("Hello, banner!"),),
+//                  ),
+//                ),
+//              ),
+//            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: FutureBuilder(
+                future: customerApiResult,
+                builder: (context, snapshot) {
+                  Customer customer = snapshot.data;
+                  if (customer == null) {
+                    return Container(
+                      alignment: FractionalOffset.center,
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                  if (customer.httpCode == 201) {
+                    return BuildEquipmentCheck(customer: customer);
+                  }
+                  return RedirectToLogin();
+                },
+              ),
+            ),
+          ],
+        )
+//        child:
       ),
     );
   }

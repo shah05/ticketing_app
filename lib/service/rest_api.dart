@@ -224,12 +224,15 @@ class ApiService {
         'https://webapi168.azurewebsites.net/api/ticket/CreateTicket');
     var request = new http.MultipartRequest('POST', url);
     request.headers['authorization'] = 'Bearer $token';
-    request.fields['statusid'] = "1";
+    request.fields['svctypeid'] = "1";
+    request.fields['contractUUID'] = ticket.contract.uuid;
     if (ticket.title != null) {
       request.fields['subject'] = ticket.title;
+//      request.fields['subject'] = "Subject";
     }
     if (ticket.clientRef1 != null) {
       request.fields['ref1'] = ticket.clientRef1;
+//      request.fields['ref1'] = "shahidan";
     }
     if (ticket.clientRef2 != null) {
       request.fields['ref2'] = ticket.clientRef2;
@@ -260,7 +263,7 @@ class ApiService {
     }
 //    if(ticket.attachments!=null){
 //      for (var a in ticket.attachments){
-//        request.files.add(http.MultipartFile.fromPath(field, filePath));
+//        request.files.add(await http.MultipartFile.fromPath(a.fileName, a.fileName));
 //      }
 //    }
 
