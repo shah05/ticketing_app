@@ -1,10 +1,13 @@
 import 'package:datetime_picker_formfield/datetime_picker_formfield.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:ticketing_app/model/attachments.dart';
 import 'package:ticketing_app/model/ticket.dart';
 import 'package:intl/intl.dart';
 import 'package:ticketing_app/util/constants.dart';
 import 'package:flutter/services.dart';
+
+import 'create_ticket_status_screen.dart';
 
 class CreateTicketForm extends StatefulWidget {
   @override
@@ -12,6 +15,7 @@ class CreateTicketForm extends StatefulWidget {
 }
 
 class _CreateTicketFormState extends State<CreateTicketForm> {
+  List<Attachments> attachments = [];
   String _fileName;
   Ticket ticket = new Ticket();
   final format = DateFormat("dd-MM-yyyy");
@@ -21,25 +25,31 @@ class _CreateTicketFormState extends State<CreateTicketForm> {
 //  bool _autoValidate = true;
   final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
 
-  void _openFileExplorer() async {
+  void selectAttachment() async {
     setState(() => _loadingPath = true);
     try {
-      _path = null;
-      _paths = await FilePicker.getMultiFilePath(
-          type: FileType.custom, allowedExtensions: ['doc', 'pdf', 'xlsx']);
+      _path = await FilePicker.getFilePath(
+          type: FileType.custom,
+          allowedExtensions: ['doc', 'pdf', 'xlsx', 'jpg']);
     } on PlatformException catch (e) {
       print("Unsupported operation" + e.toString());
     }
     if (!mounted) return;
     setState(() {
       _loadingPath = false;
-      _fileName = _path != null
-          ? _path.split('/').last
-          : _paths != null ? _paths.keys.toString() : '...';
+      if (_path != null) {
+        _fileName = _path.split('/').last;
+        attachments.add(Attachments(fileName: _fileName));
+      }
+
+//      _fileName = _path != null
+//          ? _path.split('/').last
+//          : _paths != null ? _paths.keys.toString() : '...';
     });
   }
 
   void validateFormFields() {
+
     if (_formKey.currentState.validate()) {
       _formKey.currentState.save();
       print('title : ${ticket.title}');
@@ -53,37 +63,27 @@ class _CreateTicketFormState extends State<CreateTicketForm> {
       print('brand model : ${ticket.brandModel}');
       print('contact details : ${ticket.locContact}');
       print('svc date : ${ticket.srSdateTime}');
-//      Navigator.push(
-//        context,
-//        new MaterialPageRoute<String>(
-//          builder: (BuildContext context) =>
-//              CreateTicketStatusScreen(ticket: ticket),
-//          fullscreenDialog: true,
-//        ),
-//      );
+      print('svc date : ${ticket.srSdateTime}');
+      if (attachments.isNotEmpty) {
+//        for(int i = 0; i<attachments.length;i++){
+//          print(attachments[i].fileName);
+//        }
+        ticket.attachments=attachments;
+      }
+      Navigator.push(
+        context,
+        new MaterialPageRoute<String>(
+          builder: (BuildContext context) =>
+              CreateTicketStatusScreen(ticket: ticket),
+          fullscreenDialog: true,
+        ),
+      );
     }
 //    else {
 //      setState(() {
 //        _autoValidate = true;
 //      });
 //    }
-  }
-
-  List<Widget> buildAttachments(Map<String, String> paths) {
-    List<Widget> attachments = [];
-
-    attachments.add(Card(
-      child: ListTile(
-        leading: Text('hello'),
-        trailing: GestureDetector(
-            onTap: (){setState(() {
-              print('here');
-              attachments.removeAt(0);
-            });},
-            child: Icon(Icons.close)),
-      ),
-    ));
-    return attachments;
   }
 
   @override
@@ -104,6 +104,7 @@ class _CreateTicketFormState extends State<CreateTicketForm> {
           child: SingleChildScrollView(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 TextFormField(
                   decoration: InputDecoration(
@@ -186,17 +187,6 @@ class _CreateTicketFormState extends State<CreateTicketForm> {
                 ),
                 TextFormField(
                   decoration: InputDecoration(
-                    labelText: 'Equipment Serial No',
-                    hintText: 'Key in equipment serial no',
-                    labelStyle: TextStyle(color: kTextPrimary),
-                    errorStyle: kErrorTextStyle,
-                  ),
-                  validator: (val) =>
-                      val.isEmpty ? 'Please add equipment serial no' : null,
-                  onSaved: (val) => ticket.eqSerialNo = val,
-                ),
-                TextFormField(
-                  decoration: InputDecoration(
                     labelText: 'Part No',
                     hintText: 'Key in part no',
                     labelStyle: TextStyle(color: kTextPrimary),
@@ -257,70 +247,60 @@ class _CreateTicketFormState extends State<CreateTicketForm> {
                   onSaved: (val) => ticket.srSdateTime = val.toString(),
                 ),
                 SizedBox(
-                  width: double.infinity,
+//                  width: double.infinity,
                   child: RaisedButton(
                     color: kSubmitButton,
                     textColor: kTextButton,
-                    onPressed: () => _openFileExplorer(),
+                    onPressed: () => selectAttachment(),
                     child: Text('Attach files'),
                   ),
                 ),
+                attachments.isNotEmpty
+                    ? Text('Swipe to right to remove attachment in the list',
+                        style: kErrorTextStyle)
+                    : Container(),
                 Builder(
-                    builder: (BuildContext context) => _loadingPath
-                        ? Padding(
-                            padding: const EdgeInsets.only(bottom: 10.0),
-                            child: const CircularProgressIndicator())
-                        : _paths != null
-                            ? Container(
-                                padding: const EdgeInsets.only(bottom: 30.0),
-                                child: Column(
-                                  children: buildAttachments(_paths),
+                  builder: (BuildContext context) => _loadingPath
+                      ? Center(
+                          child: Padding(
+                              padding: const EdgeInsets.only(bottom: 10.0),
+                              child: const CircularProgressIndicator()),
+                        )
+                      : attachments != null
+                          ? Container(
+                              padding: const EdgeInsets.only(bottom: 30.0),
+                              height: MediaQuery.of(context).size.height * 0.30,
+                              decoration: BoxDecoration(
+                                border: Border.all(color: kSubmitButton),
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: Scrollbar(
+                                child: ListView.builder(
+                                  itemCount: attachments.length,
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
+                                    return Dismissible(
+                                      key: Key(attachments[index].fileName),
+                                      onDismissed: (direction) {
+                                        setState(() {
+                                          attachments.removeAt(index);
+                                        });
+                                      },
+                                      direction: DismissDirection.startToEnd,
+                                      child: ListTile(
+                                        title: Text(
+                                          attachments[index].fileName,
+                                          style: TextStyle(fontSize: 12.0),
+                                        ),
+//                                      trailing: Icon(Icons.close),
+                                      ),
+                                    );
+                                  },
                                 ),
-                              )
-                            : Container()),
-//                new Builder(
-//                  builder: (BuildContext context) => _loadingPath
-//                      ? Padding(
-//                          padding: const EdgeInsets.only(bottom: 10.0),
-//                          child: const CircularProgressIndicator())
-//                      : _path != null || _paths != null
-//                          ? new Container(
-//                              padding: const EdgeInsets.only(bottom: 30.0),
-//                              height: MediaQuery.of(context).size.height * 0.20,
-//                              child: new Scrollbar(
-//                                  child: new ListView.separated(
-//                                itemCount: _paths != null && _paths.isNotEmpty
-//                                    ? _paths.length
-//                                    : 1,
-//                                itemBuilder: (BuildContext context, int index) {
-//                                  final bool isMultiPath =
-//                                      _paths != null && _paths.isNotEmpty;
-////                                  final String name = 'File $index: ' +
-//                                  final String name = (isMultiPath
-//                                      ? _paths.keys.toList()[index]
-//                                      : _fileName ?? '...');
-//                                  final path = isMultiPath
-//                                      ? _paths.values.toList()[index].toString()
-//                                      : _path;
-//
-//                                  return new ListTile(
-//                                    title: new Text(
-//                                      name,
-//                                      style: TextStyle(fontSize: 12.0),
-//                                    ),
-//                                    trailing: Icon(Icons.close),
-////                                    subtitle: new Text(path),
-//                                  );
-//                                },
-//                                separatorBuilder:
-//                                    (BuildContext context, int index) =>
-//                                        new Divider(
-//                                  color: Colors.redAccent,
-//                                ),
-//                              )),
-//                            )
-//                          : new Container(),
-//                ),
+                              ),
+                            )
+                          : new Container(),
+                ),
                 SizedBox(
                   height: 10.0,
                 ),

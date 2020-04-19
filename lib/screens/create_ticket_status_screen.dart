@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:ticketing_app/model/create_ticket.dart';
 import 'package:ticketing_app/screens/create_new_ticket_screen.dart';
 import 'package:ticketing_app/screens/home_screen.dart';
-import 'package:ticketing_app/screens/track_ticket_status_screen.dart';
 import 'package:ticketing_app/service/rest_api.dart';
 import 'package:ticketing_app/model/ticket.dart';
+import 'package:ticketing_app/util/constants.dart';
 import 'package:ticketing_app/widgets/redirect_to_login.dart';
 
 class CreateTicketStatusScreen extends StatefulWidget {
@@ -51,8 +51,7 @@ class _CreateTicketStatusScreenState extends State<CreateTicketStatusScreen> {
               Navigator.push(
                   context,
                   new MaterialPageRoute<String>(
-                    builder: (BuildContext context) =>
-                        CreateNewTicketScreen(),
+                    builder: (BuildContext context) => CreateNewTicketScreen(),
                     fullscreenDialog: true,
                   ));
             },
@@ -66,7 +65,12 @@ class _CreateTicketStatusScreenState extends State<CreateTicketStatusScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Text'),
+        title: Text(
+          'Ticket Submission',
+          style: TextStyle(color: kTextTitle),
+        ),
+        backgroundColor: kAppBarColor,
+        iconTheme: IconThemeData(color: kIconTitle),
       ),
       body: FutureBuilder(
         future: ApiService.createTicket(widget.ticket),
@@ -87,7 +91,6 @@ class _CreateTicketStatusScreenState extends State<CreateTicketStatusScreen> {
           } else {
             return RedirectToLogin();
           }
-
         },
       ),
     );

@@ -203,7 +203,21 @@ class ApiService {
   /// ----------------------------------------------------------
 
   static Future<CreateTicket> createTicket(Ticket ticket) async {
+
     print('title : ${ticket.title}');
+    print('description : ${ticket.description}');
+    print('ref1 : ${ticket.clientRef1}');
+    print('ref2 : ${ticket.clientRef2}');
+    print('postal : ${ticket.dcAccessCode}');
+    print('equipment loc : ${ticket.eqLoc}');
+    print('equipment serialno : ${ticket.eqSerialNo}');
+    print('Part no : ${ticket.partno}');
+    print('brand model : ${ticket.brandModel}');
+    print('contact details : ${ticket.locContact}');
+    print('svc date : ${ticket.srSdateTime}');
+    print('svc date : ${ticket.srSdateTime}');
+    print('Attachments : ${ticket.attachments}');
+
     CreateTicket t;
     String token = await _getMobileToken();
     var url = Uri.parse(
@@ -244,6 +258,11 @@ class ApiService {
     if (ticket.brandModel != null) {
       request.fields['brandmodel'] = ticket.brandModel;
     }
+//    if(ticket.attachments!=null){
+//      for (var a in ticket.attachments){
+//        request.files.add(http.MultipartFile.fromPath(field, filePath));
+//      }
+//    }
 
     var streamedResponse = await request.send();
     var response = await http.Response.fromStream(streamedResponse);
