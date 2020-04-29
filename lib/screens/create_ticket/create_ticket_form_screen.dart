@@ -46,12 +46,8 @@ class _CreateTicketFormScreenState extends State<CreateTicketFormScreen> {
       _loadingPath = false;
       if (_path != null) {
         _fileName = _path.split('/').last;
-        attachments.add(Attachments(fileName: _fileName));
+        attachments.add(Attachments(fileName: _fileName,filePath:_path));
       }
-
-//      _fileName = _path != null
-//          ? _path.split('/').last
-//          : _paths != null ? _paths.keys.toString() : '...';
     });
   }
 
@@ -76,10 +72,11 @@ class _CreateTicketFormScreenState extends State<CreateTicketFormScreen> {
       print('svc date : ${ticket.srSdateTime}');
       print('svc date : ${ticket.srSdateTime}');
       if (attachments.isNotEmpty) {
-//        for(int i = 0; i<attachments.length;i++){
-//          print(attachments[i].fileName);
-//        }
         ticket.attachments = attachments;
+        for(var attachment in ticket.attachments){
+          print('filename: ${attachment.fileName}');
+          print('filename: ${attachment.filePath}');
+        }
       }
       Navigator.push(
         context,
@@ -90,11 +87,7 @@ class _CreateTicketFormScreenState extends State<CreateTicketFormScreen> {
         ),
       );
     }
-//    else {
-//      setState(() {
-//        _autoValidate = true;
-//      });
-//    }
+
   }
 
   @override

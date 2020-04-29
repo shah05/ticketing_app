@@ -24,6 +24,8 @@ dependencies:
   datetime_picker_formfield: ^1.0.0
   image_picker: ^0.6.3+4
   font_awesome_flutter: ^8.7.0
+  http_parser: ^3.1.4
+  mime: ^0.9.6+3
   flutter:
     sdk: flutter
 

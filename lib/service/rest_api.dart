@@ -2,12 +2,15 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:http/http.dart' as http;
+import 'package:http_parser/http_parser.dart';
+import 'package:mime/mime.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ticketing_app/model/create_ticket.dart';
 import 'package:ticketing_app/model/equipment.dart';
 import 'package:ticketing_app/model/list_ticket.dart';
 import 'package:ticketing_app/model/customer.dart';
 import 'package:ticketing_app/model/ticket.dart';
+import 'package:path/path.dart' as fileUtil;
 
 import 'package:ticketing_app/model/ticket_by_id.dart';
 
@@ -203,20 +206,23 @@ class ApiService {
   /// ----------------------------------------------------------
 
   static Future<CreateTicket> createTicket(Ticket ticket) async {
-
-    print('title : ${ticket.title}');
-    print('description : ${ticket.description}');
-    print('ref1 : ${ticket.clientRef1}');
-    print('ref2 : ${ticket.clientRef2}');
-    print('postal : ${ticket.dcAccessCode}');
-    print('equipment loc : ${ticket.eqLoc}');
-    print('equipment serialno : ${ticket.eqSerialNo}');
-    print('Part no : ${ticket.partno}');
-    print('brand model : ${ticket.brandModel}');
-    print('contact details : ${ticket.locContact}');
-    print('svc date : ${ticket.srSdateTime}');
-    print('svc date : ${ticket.srSdateTime}');
-    print('Attachments : ${ticket.attachments}');
+//    print('title : ${ticket.title}');
+//    print('description : ${ticket.description}');
+//    print('ref1 : ${ticket.clientRef1}');
+//    print('ref2 : ${ticket.clientRef2}');
+//    print('postal : ${ticket.dcAccessCode}');
+//    print('equipment loc : ${ticket.eqLoc}');
+//    print('equipment serialno : ${ticket.eqSerialNo}');
+//    print('Part no : ${ticket.partno}');
+//    print('brand model : ${ticket.brandModel}');
+//    print('contact details : ${ticket.locContact}');
+//    print('svc date : ${ticket.srSdateTime}');
+//    print('svc date : ${ticket.srSdateTime}');
+//    print('Attachments : ${ticket.attachments}');
+//    for(var a in ticket.attachments){
+//      print(a.fileName);
+//      print(a.filePath);
+//    }
 
     CreateTicket t;
     String token = await _getMobileToken();
@@ -228,6 +234,7 @@ class ApiService {
     request.fields['contractUUID'] = ticket.contract.uuid;
     if (ticket.title != null) {
       request.fields['subject'] = ticket.title;
+      print('here');
 //      request.fields['subject'] = "Subject";
     }
     if (ticket.clientRef1 != null) {
@@ -261,11 +268,36 @@ class ApiService {
     if (ticket.brandModel != null) {
       request.fields['brandmodel'] = ticket.brandModel;
     }
-    if(ticket.attachments!=null){
-      for (var a in ticket.attachments){
-        request.files.add(await http.MultipartFile.fromPath(a.fileName, a.fileName));
+    if (ticket.attachments != null) {
+      for (var a in ticket.attachments) {
+//        final mimeTypeData =
+//        request.files.add(await http.MultipartFile.fromPath('image', a.filePath,filename: a.fileName, contentType: MediaType('image','jpeg')));
+//        request.files.add(await http.MultipartFile.fromPath(fileUtil.basename(a.filePath), a.filePath));
+        File f = File(a.filePath);
+//            request.files.add(
+//           http.MultipartFile.fromBytes(fileUtil.basename(a.filePath),f.readAsBytesSync(),filename: a.fileName));
+//        print('filepath: ${a.filePath}');
+//      }
+        print('adding file..');
+//        request.files.add(new http.MultipartFile.fromBytes(
+//            'image', await File.fromUri(Uri.file(a.fileName)).readAsBytes(),
+//            contentType: new MediaType('image', 'jpeg')));
+//      request.files.add(http.MultipartFile.fromBytes(
+//          'files',
+//          f.readAsBytesSync(),
+//          contentType: MediaType('image', 'jpeg'),
+//          filename: a.fileName,
+//      ));
+//        final mimeTypeData = lookupMimeType(a.filePath, headerBytes: [0xFF, 0xD8]).split('/');
+//        request.files.add(await http.MultipartFile.fromPath('image', a.filePath,filename: a.fileName, contentType: MediaType(mimeTypeData[0], mimeTypeData[1])));
+        request.files.add(new http.MultipartFile.fromBytes(
+            'files', await File.fromUri(Uri.parse(a.filePath)).readAsBytes(),
+            contentType: new MediaType('image', 'jpeg'), filename: a.fileName));
+        print('finish adding file..');
       }
     }
+    print('attachment to rest api call');
+    print(request.files);
 
     var streamedResponse = await request.send();
     var response = await http.Response.fromStream(streamedResponse);
@@ -282,5 +314,6 @@ class ApiService {
       t.httpCode = response.statusCode;
       return t;
     }
+//  return CreateTicket();
   }
 }

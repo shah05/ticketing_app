@@ -13,6 +13,7 @@ class Attachments {
   String _modifiedby;
   String _modifiedon;
   bool _deleted;
+  String _filePath;
 
   Attachments(
       {String fileName,
@@ -28,7 +29,9 @@ class Attachments {
         String createdon,
         String modifiedby,
         String modifiedon,
-        bool deleted}) {
+        bool deleted,
+        String filePath
+      }) {
     this._fileName = fileName;
     this._fileType = fileType;
     this._fileUri = fileUri;
@@ -43,6 +46,7 @@ class Attachments {
     this._modifiedby = modifiedby;
     this._modifiedon = modifiedon;
     this._deleted = deleted;
+    this._filePath = filePath;
   }
 
   String get fileName => _fileName;
@@ -73,6 +77,8 @@ class Attachments {
   set modifiedon(String modifiedon) => _modifiedon = modifiedon;
   bool get deleted => _deleted;
   set deleted(bool deleted) => _deleted = deleted;
+  String get filePath => _filePath;
+  set filePath(String filePath) => _filePath = filePath;
 
   Attachments.fromJson(Map<String, dynamic> json) {
     _fileName = json['fileName'];

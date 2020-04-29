@@ -6,10 +6,11 @@ import 'package:ticketing_app/service/rest_api.dart';
 import 'package:ticketing_app/model/ticket.dart';
 import 'package:ticketing_app/util/constants.dart';
 import 'package:ticketing_app/widgets/redirect_to_login.dart';
+import 'package:ticketing_app/widgets/top_banner.dart';
 
 class CreateTicketStatusScreen extends StatefulWidget {
   final Ticket ticket;
-
+  Future<CreateTicket> createTicket;
   CreateTicketStatusScreen({this.ticket});
 
   @override
@@ -19,6 +20,13 @@ class CreateTicketStatusScreen extends StatefulWidget {
 
 class _CreateTicketStatusScreenState extends State<CreateTicketStatusScreen> {
 //  Future<>
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    widget.createTicket = ApiService.createTicket(widget.ticket);
+  }
 
   Widget buildTicketSuccess(BuildContext context) {
     return Center(
@@ -71,34 +79,43 @@ class _CreateTicketStatusScreenState extends State<CreateTicketStatusScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'Ticket Submission',
-          style: TextStyle(color: kTextTitle),
+//      appBar: AppBar(
+//        title: Text(
+//          'Ticket Submission',
+//          style: TextStyle(color: kTextTitle),
+//        ),
+//        backgroundColor: kAppBarColor,
+//        iconTheme: IconThemeData(color: kIconTitle),
+//      ),
+      body: SafeArea(
+        child: Column(
+          children: <Widget>[
+            TopBanner(isBack: false,),
+            Expanded(
+              child: FutureBuilder(
+                future: widget.createTicket,
+                builder: (context, snapshot) {
+                  CreateTicket resultTicket = snapshot.data;
+
+                  if (resultTicket == null) {
+                    return Container(
+                      alignment: FractionalOffset.center,
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+
+                  if (resultTicket.httpCode == 200) {
+                    return buildTicketSuccess(context);
+                  } else if (resultTicket.httpCode == 400) {
+                    return buildTicketFail(context);
+                  } else {
+                    return RedirectToLogin();
+                  }
+                },
+              ),
+            ),
+          ],
         ),
-        backgroundColor: kAppBarColor,
-        iconTheme: IconThemeData(color: kIconTitle),
-      ),
-      body: FutureBuilder(
-        future: ApiService.createTicket(widget.ticket),
-        builder: (context, snapshot) {
-          CreateTicket resultTicket = snapshot.data;
-
-          if (resultTicket == null) {
-            return Container(
-              alignment: FractionalOffset.center,
-              child: CircularProgressIndicator(),
-            );
-          }
-
-          if (resultTicket.httpCode == 200) {
-            return buildTicketSuccess(context);
-          } else if (resultTicket.httpCode == 400) {
-            return buildTicketFail(context);
-          } else {
-            return RedirectToLogin();
-          }
-        },
       ),
     );
   }
