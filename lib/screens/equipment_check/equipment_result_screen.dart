@@ -3,6 +3,7 @@ import 'package:ticketing_app/model/equipment.dart';
 import 'package:ticketing_app/service/rest_api.dart';
 import 'package:ticketing_app/util/constants.dart';
 import 'package:ticketing_app/widgets/redirect_to_login.dart';
+import 'package:ticketing_app/widgets/top_banner.dart';
 
 class EquipmentResultScreen extends StatefulWidget {
   Future<Equipment> equipment;
@@ -28,31 +29,40 @@ class _EquipmentResultScreenState extends State<EquipmentResultScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Result',style: TextStyle(color: kTextTitle),),
-        backgroundColor: kAppBarColor,
-        iconTheme: IconThemeData(
-            color: kIconTitle
+//      appBar: AppBar(
+//        title: Text('Result',style: TextStyle(color: kTextTitle),),
+//        backgroundColor: kAppBarColor,
+//        iconTheme: IconThemeData(
+//            color: kIconTitle
+//        ),
+//
+//      ),
+      body: SafeArea(
+        child: Column(
+          children: <Widget>[
+            TopBanner(isBack: true,),
+            Expanded(
+              child: FutureBuilder(
+                future: widget.equipment,
+                builder: (context, snapshot) {
+                  Equipment equipment = snapshot.data;
+                  if (equipment == null) {
+                    return Container(
+                      alignment: FractionalOffset.center,
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                  if (equipment.httpCode == 200) {
+                    return buildEquipmentDisplay(
+                        widget.contractId, widget.serialNo, equipment);
+                  }
+
+                  return RedirectToLogin();
+                },
+              ),
+            ),
+          ],
         ),
-
-      ),
-      body: FutureBuilder(
-        future: widget.equipment,
-        builder: (context, snapshot) {
-          Equipment equipment = snapshot.data;
-          if (equipment == null) {
-            return Container(
-              alignment: FractionalOffset.center,
-              child: CircularProgressIndicator(),
-            );
-          }
-          if (equipment.httpCode == 200) {
-            return buildEquipmentDisplay(
-                widget.contractId, widget.serialNo, equipment);
-          }
-
-          return RedirectToLogin();
-        },
       ),
     );
   }

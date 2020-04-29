@@ -7,6 +7,7 @@ import 'package:ticketing_app/service/rest_api.dart';
 import 'package:ticketing_app/main.dart';
 import 'package:ticketing_app/util/constants.dart';
 import 'package:ticketing_app/widgets/redirect_to_login.dart';
+import 'package:ticketing_app/widgets/top_banner.dart';
 
 class SelectContractScreen extends StatefulWidget {
   @override
@@ -26,49 +27,37 @@ class _SelectContractScreenState extends State<SelectContractScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'Create New Ticket (1/2)',
-          style: TextStyle(color: kTextTitle),
-        ),
-        backgroundColor: kAppBarColor,
-        iconTheme: IconThemeData(color: kIconTitle),
-      ),
+//      appBar: AppBar(
+//        title: Text(
+//          'Create New Ticket (1/2)',
+//          style: TextStyle(color: kTextTitle),
+//        ),
+//        backgroundColor: kAppBarColor,
+//        iconTheme: IconThemeData(color: kIconTitle),
+//      ),
       body: SafeArea(
           child: Column(
         children: <Widget>[
-//            Center(
-//              child: ClipRect(
-//                child: Banner(
-////                  message: "hello",
-////                  location: BannerLocation.topEnd,
-//                  color: Colors.red,
-//                  child: Container(
-//                    margin: const EdgeInsets.all(10.0),
-//                    color: Colors.yellow,
-//                    height: 100,
-//                    child: Center(child: Text("Hello, banner!"),),
-//                  ),
-//                ),
-//              ),
-//            ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            child: FutureBuilder(
-              future: customerApiResult,
-              builder: (context, snapshot) {
-                Customer customer = snapshot.data;
-                if (customer == null) {
-                  return Container(
-                    alignment: FractionalOffset.center,
-                    child: CircularProgressIndicator(),
-                  );
-                }
-                if (customer.httpCode == 201) {
-                  return BuildEquipmentCheck(customer: customer);
-                }
-                return RedirectToLogin();
-              },
+          TopBanner(isBack: true,),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: FutureBuilder(
+                future: customerApiResult,
+                builder: (context, snapshot) {
+                  Customer customer = snapshot.data;
+                  if (customer == null) {
+                    return Container(
+                      alignment: FractionalOffset.center,
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                  if (customer.httpCode == 201) {
+                    return BuildEquipmentCheck(customer: customer);
+                  }
+                  return RedirectToLogin();
+                },
+              ),
             ),
           ),
         ],

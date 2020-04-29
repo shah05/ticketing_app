@@ -9,6 +9,7 @@ import 'package:ticketing_app/widgets/menu_card.dart';
 import 'package:ticketing_app/widgets/ticket_card.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:ticketing_app/screens/track_ticket/track_ticket_status_screen.dart';
+import 'package:ticketing_app/widgets/top_banner.dart';
 
 class HomeScreen extends StatelessWidget {
 //  ListPage({this.title});
@@ -17,123 +18,20 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        backgroundColor: kAppBackgroundColor,
-//      appBar: AppBar(
-//        automaticallyImplyLeading: false,
-//        elevation: 0.1,
-//        backgroundColor: kAppBarColor,
-////    centerTitle: true,
-//        title: Text(
-//          'TIS Network Architect',
-//          style: TextStyle(color: kTextTitle),
-//        ),
-//      ),
-        body: SafeArea(
-          child: Column(
-            children: <Widget>[
-              Stack(
-                children: <Widget>[
-                  Container(
-                    height: 150.0,
-                    color: Color(0xFFFCFC00),
-                    width: double.infinity,
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 30.0),
-                      child: Column(
-                        children: <Widget>[
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Container(
-                                  height: 80.0,
-                                  width: 80.0,
-                                  decoration: BoxDecoration(
-                                      image: DecorationImage(
-                                          image: AssetImage(
-                                            'assets/network-architect-logo.png',
-                                          ),
-                                          fit: BoxFit.fill))
-                                  ),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: <Widget>[
-                                  Text(
-                                    'Network Architects',
-                                    style: TextStyle(
-                                        color: Color(0xFF2B2DFE),
-                                        fontSize: 30.0,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  Text(
-                                    'Warranty Included!',
-                                    style: TextStyle(
-                                      color: Color(0xFFF52700),
-                                      fontWeight: FontWeight.bold
-                                    ),
-                                  )
-                                ],
-                              )
-                            ],
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: <Widget>[
-                              Text(
-                                'Singapore-Kuala Lumpur',
-                                style: TextStyle(
-                                    color: Color(0xFFF52700),
-                                    fontWeight: FontWeight.bold),
-                              ),
-                              Row(
-                                children: <Widget>[
-                                  Container(
-                                      height: 40.0,
-                                      width: 60.0,
-                                      decoration: BoxDecoration(
-                                          image: DecorationImage(
-                                              image: AssetImage(
-                                                'assets/ukas-iso-logo.png',
-                                              ),
-                                              fit: BoxFit.fill))
-//                                child: Image.asset('assets/ukas-iso-logo.png',),
-//                                decoration: BoxDecoration(),
-                                      ),
-                                  Container(
-                                      height: 40.0,
-                                      width: 40.0,
-                                      decoration: BoxDecoration(
-                                          image: DecorationImage(
-                                              image: AssetImage(
-                                                'assets/bizsafe-logo.png',
-                                              ),
-                                              fit: BoxFit.fill))
-//                                child: Image.asset('assets/ukas-iso-logo.png',),
-//                                decoration: BoxDecoration(),
-                                      )
-                                ],
-                              )
-                            ],
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
-                  Positioned(
-//                    left: 10.0,
-                    top: 0.0,
-                    child: Icon(
-                      Icons.arrow_back,
-                      size: 30.0,
-                    ),
-                  ),
-                ],
-              ),
-              Expanded(child: MenuListTile()),
-            ],
-          ),
-        ));
+      backgroundColor: kAppBackgroundColor,
+      body: SafeArea(
+        child: Column(
+          children: <Widget>[
+            TopBanner(
+              isBack: false,
+            ),
+            Expanded(
+              child: MenuListTile(),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
 
@@ -171,13 +69,13 @@ class MenuListTile extends StatelessWidget {
             Navigator.pushNamed(context, '/equipment');
           },
         ),
-        MenuCard(
-            cardName: 'Settings',
-            cardDesc: 'Change account settings',
-            icon: FontAwesomeIcons.tasks,
-            onPress: () {
-              Navigator.pushNamed(context, '/settings');
-            }),
+//        MenuCard(
+//            cardName: 'Settings',
+//            cardDesc: 'Change account settings',
+//            icon: FontAwesomeIcons.tasks,
+//            onPress: () {
+//              Navigator.pushNamed(context, '/settings');
+//            }),
       ],
     );
   }

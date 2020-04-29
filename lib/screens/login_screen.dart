@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ticketing_app/service/rest_api.dart';
 import 'package:ticketing_app/util/constants.dart';
+import 'package:ticketing_app/widgets/top_banner.dart';
 //import 'rest_api.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -104,71 +105,78 @@ class _LoginScreenState extends State<LoginScreen> {
       return new Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
     }
 
-    return new Container(
-        padding: const EdgeInsets.all(30.0),
-        child: new Container(
-          child: new Center(
-              child: new Column(children: [
-            new Padding(padding: EdgeInsets.only(top: 140.0)),
-            new Text(
-              'TIS',
-              style:
-                  new TextStyle(color: hexToColor("#F2A03D"), fontSize: 25.0),
-            ),
-            new Padding(padding: EdgeInsets.only(top: 50.0)),
-            new TextFormField(
-              decoration: new InputDecoration(
-                labelText: "Enter Email",
-                fillColor: Colors.white,
-                border: new OutlineInputBorder(
-                  borderRadius: new BorderRadius.circular(25.0),
-                  borderSide: new BorderSide(),
+    return Column(
+      children: <Widget>[
+        TopBanner(
+          isBack: false,
+        ),
+        new Container(
+          padding: const EdgeInsets.all(30.0),
+          child: new Container(
+            child: new Center(
+                child: new Column(children: [
+//              new Padding(padding: EdgeInsets.only(top: 140.0)),
+//              new Text(
+//                'TIS',
+//                style: new TextStyle(color: hexToColor("#F2A03D"), fontSize: 25.0),
+//              ),
+              new Padding(padding: EdgeInsets.only(top: 50.0)),
+              new TextFormField(
+                decoration: new InputDecoration(
+                  labelText: "Enter Email",
+                  fillColor: Colors.white,
+                  border: new OutlineInputBorder(
+                    borderRadius: new BorderRadius.circular(25.0),
+                    borderSide: new BorderSide(),
+                  ),
+                  //fillColor: Colors.green
                 ),
-                //fillColor: Colors.green
-              ),
-              controller: _emailController,
-              validator: (val) {
-                if (val.length == 0) {
-                  return "Email cannot be empty";
-                } else {
-                  return null;
-                }
-              },
-              keyboardType: TextInputType.emailAddress,
-              style: new TextStyle(
-                fontFamily: "Poppins",
-              ),
-            ),
-            new Padding(padding: EdgeInsets.only(top: 15.0)),
-            new TextFormField(
-              decoration: new InputDecoration(
-                labelText: "Enter Password",
-                fillColor: Colors.white,
-                border: new OutlineInputBorder(
-                  borderRadius: new BorderRadius.circular(25.0),
-                  borderSide: new BorderSide(),
+                controller: _emailController,
+                validator: (val) {
+                  if (val.length == 0) {
+                    return "Email cannot be empty";
+                  } else {
+                    return null;
+                  }
+                },
+                keyboardType: TextInputType.emailAddress,
+                style: new TextStyle(
+                  fontFamily: "Poppins",
                 ),
-                //fillColor: Colors.green
               ),
-              controller: _passwordController,
-              validator: (val) {
-                if (val.length == 0) {
-                  return "Email cannot be empty";
-                } else {
-                  return null;
-                }
-              },
-              keyboardType: TextInputType.text,
-              obscureText: true,
-              style: new TextStyle(
-                fontFamily: "Poppins",
+              new Padding(padding: EdgeInsets.only(top: 15.0)),
+              new TextFormField(
+                decoration: new InputDecoration(
+                  labelText: "Enter Password",
+                  fillColor: Colors.white,
+                  border: new OutlineInputBorder(
+                    borderRadius: new BorderRadius.circular(25.0),
+                    borderSide: new BorderSide(),
+                  ),
+                  //fillColor: Colors.green
+                ),
+                controller: _passwordController,
+                validator: (val) {
+                  if (val.length == 0) {
+                    return "Email cannot be empty";
+                  } else {
+                    return null;
+                  }
+                },
+                keyboardType: TextInputType.text,
+                obscureText: true,
+                style: new TextStyle(
+                  fontFamily: "Poppins",
+                ),
               ),
-            ),
-            new Padding(padding: EdgeInsets.only(top: 24.0)),
-            _customButton(),
+              new Padding(padding: EdgeInsets.only(top: 24.0)),
+              _customButton(),
 //            SnackBarPage()
-          ])),
-        ));
+            ])),
+          ),
+        ),
+      ],
+    );
   }
 
   Widget _customButton() {

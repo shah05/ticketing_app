@@ -7,6 +7,7 @@ import 'package:ticketing_app/service/rest_api.dart';
 import 'package:ticketing_app/main.dart';
 import 'package:ticketing_app/util/constants.dart';
 import 'package:ticketing_app/widgets/redirect_to_login.dart';
+import 'package:ticketing_app/widgets/top_banner.dart';
 
 class TicketDetailScreen extends StatefulWidget {
   final String uuid;
@@ -28,26 +29,35 @@ class _TicketDetailScreenState extends State<TicketDetailScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('${widget.uuid}'),
-        backgroundColor: kAppBarColor,
-      ),
-      body: FutureBuilder(
-        future: widget.ticket,
+//      appBar: AppBar(
+//        title: Text('${widget.uuid}'),
+//        backgroundColor: kAppBarColor,
+//      ),
+      body: SafeArea(
+        child: Column(
+          children: <Widget>[
+            TopBanner(isBack: true,),
+            Expanded(
+              child: FutureBuilder(
+                future: widget.ticket,
 //      future: null,
-        builder: (context, snapshot) {
-          TicketById ticket = snapshot.data;
-          if (ticket == null) {
-            return Container(
-              alignment: FractionalOffset.center,
-              child: CircularProgressIndicator(),
-            );
-          }
-          if (ticket.httpCode == 200) {
-            return buildTicketDisplay(snapshot.data.ticket, widget.uuid);
-          }
-          return RedirectToLogin();
-        },
+                builder: (context, snapshot) {
+                  TicketById ticket = snapshot.data;
+                  if (ticket == null) {
+                    return Container(
+                      alignment: FractionalOffset.center,
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                  if (ticket.httpCode == 200) {
+                    return buildTicketDisplay(snapshot.data.ticket, widget.uuid);
+                  }
+                  return RedirectToLogin();
+                },
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

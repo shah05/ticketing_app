@@ -6,6 +6,7 @@ import 'package:ticketing_app/service/rest_api.dart';
 import 'package:ticketing_app/main.dart';
 import 'package:ticketing_app/util/constants.dart';
 import 'package:ticketing_app/widgets/redirect_to_login.dart';
+import 'package:ticketing_app/widgets/top_banner.dart';
 
 class EquipmentCheckScreen extends StatefulWidget {
   @override
@@ -25,32 +26,18 @@ class _EquipmentCheckScreenState extends State<EquipmentCheckScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'Equipment Check',
-          style: TextStyle(color: kTextTitle),
-        ),
-        backgroundColor: kAppBarColor,
-        iconTheme: IconThemeData(color: kIconTitle),
-      ),
+//      appBar: AppBar(
+//        title: Text(
+//          'Equipment Check',
+//          style: TextStyle(color: kTextTitle),
+//        ),
+//        backgroundColor: kAppBarColor,
+//        iconTheme: IconThemeData(color: kIconTitle),
+//      ),
       body: SafeArea(
         child : Column(
           children: <Widget>[
-//            Center(
-//              child: ClipRect(
-//                child: Banner(
-////                  message: "hello",
-////                  location: BannerLocation.topEnd,
-//                  color: Colors.red,
-//                  child: Container(
-//                    margin: const EdgeInsets.all(10.0),
-//                    color: Colors.yellow,
-//                    height: 100,
-//                    child: Center(child: Text("Hello, banner!"),),
-//                  ),
-//                ),
-//              ),
-//            ),
+            TopBanner(isBack: true,),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: FutureBuilder(
