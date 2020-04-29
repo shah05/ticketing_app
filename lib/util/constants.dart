@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 const kAppBarColor = Color(0xFF00796B);
 const kAppBackgroundColor = Color(0xFFB2DFDB);
-const kCardBackgroundColor = Color(0xFFFFFF);
+const kCardBackgroundColor = Color(0xFFFFFFFF);
 const kSubmitButton = Color(0xFF009688);
 const kTextButton = Color(0xFFFFFFFF);
 const kCircularProgress = Color(0xFF009688);

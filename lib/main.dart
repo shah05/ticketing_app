@@ -5,9 +5,13 @@ import 'package:ticketing_app/screens/home_screen.dart';
 import 'package:ticketing_app/screens/login_screen.dart';
 import 'package:ticketing_app/screens/settings_screen.dart';
 import 'package:ticketing_app/screens/track_ticket/track_ticket_status_screen.dart';
+import 'package:ticketing_app/service/service_locator.dart';
 import 'package:ticketing_app/util/constants.dart';
 
-void main() => runApp(new MyApp());
+void main() {
+  setupServiceLocator();
+  runApp(new MyApp());
+}
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -15,8 +19,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return new MaterialApp(
         title: 'Flutter Demo',
-        theme: new ThemeData(
-            primaryColor: kAppBackgroundColor),
+        theme: new ThemeData(primaryColor: kAppBackgroundColor),
         initialRoute: '/login',
         routes: <String, WidgetBuilder>{
           '/login': (context) => LoginScreen(),
