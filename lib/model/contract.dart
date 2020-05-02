@@ -12,7 +12,7 @@ class Contract {
   String _custAddress;
   String _custContact;
   int _tokenCnt;
-  List<Attachments> _attachments;
+  List<Attachment> _attachments;
   List<String> _paymentSchedules;
   int _id;
   String _uuid;
@@ -34,7 +34,7 @@ Contract(
       String custAddress,
       String custContact,
       int tokenCnt,
-      List<Attachments> attachments,
+      List<Attachment> attachments,
       List<String> paymentSchedules,
       int id,
       String uuid,
@@ -87,8 +87,8 @@ String get custContact => _custContact;
 set custContact(String custContact) => _custContact = custContact;
 int get tokenCnt => _tokenCnt;
 set tokenCnt(int tokenCnt) => _tokenCnt = tokenCnt;
-List<Attachments> get attachments => _attachments;
-set attachments(List<Attachments> attachments) => _attachments = attachments;
+List<Attachment> get attachments => _attachments;
+set attachments(List<Attachment> attachments) => _attachments = attachments;
 List<String> get paymentSchedules => _paymentSchedules;
 set paymentSchedules(List<String> paymentSchedules) =>
     _paymentSchedules = paymentSchedules;
@@ -122,7 +122,7 @@ _tokenCnt = json['tokenCnt'];
 if (json['attachments'] != null) {
 _attachments = new List<Null>();
 json['attachments'].forEach((v) {
-_attachments.add(new Attachments.fromJson(v));
+_attachments.add(new Attachment.fromJson(v));
 });
 }
 if (json['paymentSchedules'] != null) {

@@ -30,7 +30,7 @@ class Ticket {
   String _dcAccessCode;
   String _actionTaken;
   String _tMsg;
-  List<Attachments> _attachments;
+  List<Attachment> _attachments;
   List<MsgLogs> _msgLogs;
   List<SvcStaffs> _svcStaffs;
   int _id;
@@ -68,7 +68,7 @@ class Ticket {
       String dcAccessCode,
       Null actionTaken,
       Null tMsg,
-      List<Attachments> attachments,
+      List<Attachment> attachments,
       List<MsgLogs> msgLogs,
       List<SvcStaffs> svcStaffs,
       int id,
@@ -170,8 +170,8 @@ class Ticket {
   set actionTaken(String actionTaken) => _actionTaken = actionTaken;
   String get tMsg => _tMsg;
   set tMsg(String tMsg) => _tMsg = tMsg;
-  List<Attachments> get attachments => _attachments;
-  set attachments(List<Attachments> attachments) => _attachments = attachments;
+  List<Attachment> get attachments => _attachments;
+  set attachments(List<Attachment> attachments) => _attachments = attachments;
   List<MsgLogs> get msgLogs => _msgLogs;
   set msgLogs(List<MsgLogs> msgLogs) => _msgLogs = msgLogs;
   List<SvcStaffs> get svcStaffs => _svcStaffs;
@@ -221,9 +221,9 @@ class Ticket {
     _actionTaken = json['actionTaken'];
     _tMsg = json['tMsg'];
     if (json['attachments'] != null) {
-      _attachments = new List<Attachments>();
+      _attachments = new List<Attachment>();
       json['attachments'].forEach((v) {
-        _attachments.add(new Attachments.fromJson(v));
+        _attachments.add(new Attachment.fromJson(v));
       });
     }
     if (json['msgLogs'] != null) {

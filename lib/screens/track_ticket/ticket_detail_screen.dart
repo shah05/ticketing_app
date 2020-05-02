@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:ticketing_app/model/attachments.dart';
 import 'package:ticketing_app/model/msglogs.dart';
 import 'package:ticketing_app/model/ticket.dart';
 import 'package:ticketing_app/model/ticket_by_id.dart';
@@ -18,25 +19,36 @@ class TicketDetailScreen extends StatefulWidget {
   _TicketDetailScreenState createState() => _TicketDetailScreenState();
 }
 
-class _TicketDetailScreenState extends State<TicketDetailScreen> {
+class _TicketDetailScreenState extends State<TicketDetailScreen>
+    with SingleTickerProviderStateMixin {
+  TabController _tabController;
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     widget.ticket = ApiService.getTicketDetail(widget.uuid);
+    _tabController = TabController(vsync: this, length: 3);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-//      appBar: AppBar(
-//        title: Text('${widget.uuid}'),
-//        backgroundColor: kAppBarColor,
-//      ),
+      backgroundColor: kAppBackgroundColor,
       body: SafeArea(
         child: Column(
           children: <Widget>[
-            TopBanner(isBack: true,),
+            TopBanner(
+              isBack: true,
+            ),
+            TabBar(
+              controller: _tabController,
+              tabs: [
+                Tab(text: 'Ticket Details'),
+                Tab(text: 'Attachments(s)'),
+                Tab(text: 'Message(s)')
+              ],
+            ),
             Expanded(
               child: FutureBuilder(
                 future: widget.ticket,
@@ -50,7 +62,21 @@ class _TicketDetailScreenState extends State<TicketDetailScreen> {
                     );
                   }
                   if (ticket.httpCode == 200) {
-                    return buildTicketDisplay(snapshot.data.ticket, widget.uuid);
+//                    return buildTicketDisplay(
+//                        snapshot.data.ticket, widget.uuid,_tabController);
+                    Ticket _ticket = snapshot.data.ticket;
+                    return TabBarView(
+                      controller: _tabController,
+                      children: <Widget>[
+                        BuildTicketDetailPage(ticket: _ticket),
+                        BuildAttachmentsPage(
+                          attachments: _ticket.attachments,
+                        ),
+                        BuildMsgLogsPage(
+                          msgLogs: _ticket.msgLogs,
+                        ),
+                      ],
+                    );
                   }
                   return RedirectToLogin();
                 },
@@ -87,49 +113,22 @@ String getTicketStatus(int statusId) {
   }
 }
 
-Widget buildMsgLogCard(List<MsgLogs> msgLogs) {
-  if (msgLogs.length == 0) {
-    return Card(
-      child: ListTile(
-        title: Text('Message Logs'),
-        subtitle: Text('NA'),
-      ),
-    );
-  } else {
-    List<Widget> msLogContainer = [];
-    for (int i = 0; i < msgLogs.length; i++) {
-      String msgDate = dateConverter(msgLogs[i].createdon);
-      msLogContainer.add(Container(
-        padding: EdgeInsets.only(top: 5.0, bottom: 5.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Text('Message : ${msgLogs[i].message}'),
-            Text('Action : ${msgLogs[i].action}'),
-            Text('Action : ${msgLogs[i].remarks}'),
-            Text('Created by : ${msgLogs[i].createdby}'),
-            Text('Date : $msgDate'),
-          ],
-        ),
-      ));
-    }
-    return Card(
-      child: ListTile(
-        title: Text('Message Logs'),
-        subtitle: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: msLogContainer,
-        ),
-      ),
-    );
-  }
-}
+class BuildTicketDetailPage extends StatelessWidget {
+  final Ticket ticket;
 
-Widget buildTicketDisplay(Ticket ticket, String uuid) {
-  return SafeArea(
-    child: ListView(
+  BuildTicketDetailPage({this.ticket});
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView(
 //      padding: const EdgeInsets.symmetric(horizontal: 16.0),
       children: <Widget>[
+        Card(
+          child: ListTile(
+            title: Text('NA Code'),
+            subtitle: Text(ticket.naCode),
+          ),
+        ),
         Card(
           child: ListTile(
             title: Text('Title'),
@@ -141,12 +140,6 @@ Widget buildTicketDisplay(Ticket ticket, String uuid) {
           child: ListTile(
             title: Text('Description'),
             subtitle: Text(ticket.description),
-          ),
-        ),
-        Card(
-          child: ListTile(
-            title: Text('NA Code'),
-            subtitle: Text(ticket.naCode),
           ),
         ),
         Card(
@@ -294,8 +287,72 @@ Widget buildTicketDisplay(Ticket ticket, String uuid) {
             subtitle: Text(ticket.tMsg != null ? ticket.tMsg : 'NA'),
           ),
         ),
-        buildMsgLogCard(ticket.msgLogs),
       ],
-    ),
-  );
+    );
+  }
+}
+
+//============================================
+// This widget builds the content under Message(s) tab.
+//============================================
+class BuildMsgLogsPage extends StatelessWidget {
+  final List<MsgLogs> msgLogs;
+
+  BuildMsgLogsPage({this.msgLogs});
+
+  @override
+  Widget build(BuildContext context) {
+    if (msgLogs.length == 0) {
+      return Center(
+        child: Text('No Message Logs for this ticket'),
+      );
+    }
+    return ListView.builder(
+      itemCount: msgLogs.length,
+      itemBuilder: (context, index) {
+        return Card(
+          child: ListTile(
+            title: Text(
+                '${msgLogs[index].createdon} by ${msgLogs[index].createdby}'),
+            subtitle:
+                Text('${msgLogs[index].action} ${msgLogs[index].message}'),
+          ),
+        );
+      },
+    );
+  }
+}
+
+//============================================
+// This widget builds the content under Attachement(s) tab.
+//============================================
+
+class BuildAttachmentsPage extends StatelessWidget {
+  final List<Attachment> attachments;
+
+  BuildAttachmentsPage({this.attachments});
+
+  @override
+  Widget build(BuildContext context) {
+    if (attachments.length == 0) {
+      return Center(
+        child: Text('No Attachments for this ticket'),
+      );
+    }
+    return ListView.builder(
+      itemCount: attachments.length,
+      itemBuilder: (context, index) {
+        return Card(
+          child: ListTile(
+            title: Text('${attachments[index].fileName}'),
+            subtitle: Text(
+//                'Uploaded on ${attachments[index].createdon} by ${attachments[index].createdby}'),
+                'Uploaded on ${attachments[index].createdon}'),
+            trailing:
+                GestureDetector(onTap: () {}, child: Icon(Icons.file_download)),
+          ),
+        );
+      },
+    );
+  }
 }

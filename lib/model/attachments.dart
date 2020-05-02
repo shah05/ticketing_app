@@ -1,4 +1,4 @@
-class Attachments {
+class Attachment {
   String _fileName;
   String _fileType;
   String _fileUri;
@@ -15,7 +15,7 @@ class Attachments {
   bool _deleted;
   String _filePath;
 
-  Attachments(
+  Attachment(
       {String fileName,
         String fileType,
         String fileUri,
@@ -80,7 +80,7 @@ class Attachments {
   String get filePath => _filePath;
   set filePath(String filePath) => _filePath = filePath;
 
-  Attachments.fromJson(Map<String, dynamic> json) {
+  Attachment.fromJson(Map<String, dynamic> json) {
     _fileName = json['fileName'];
     _fileType = json['fileType'];
     _fileUri = json['fileUri'];

@@ -22,7 +22,7 @@ class TicketCard extends StatelessWidget {
       return Colors.red;
     }
     else if (status== "Assigned"){
-      return Colors.deepOrange;
+      return Colors.orange;
     }
     else {
       return Colors.white;
@@ -52,6 +52,7 @@ class TicketCard extends StatelessWidget {
                   padding: EdgeInsets.all(5.0),
                   child: Text(
                     this.cardDesc1,
+                    style: TextStyle(color: this.cardDesc1=="New" || this.cardDesc1=="Assigned" ? Colors.white : Colors.black),
                   ),
                   decoration: BoxDecoration(
                       color: statusColour(this.cardDesc1),

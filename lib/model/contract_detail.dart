@@ -16,6 +16,8 @@ class Contractdetail {
 
   String get companyName => _companyName;
   String get contractUUID => _contractUUID;
+  String get startd => _startd;
+  String get endd => _endd;
 
   Contractdetail.fromJson(Map<String, dynamic> json) {
     _companyName = json['companyName'];

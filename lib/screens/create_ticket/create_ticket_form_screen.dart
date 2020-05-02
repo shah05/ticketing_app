@@ -11,9 +11,39 @@ import 'package:ticketing_app/widgets/top_banner.dart';
 
 import 'create_ticket_status_screen.dart';
 
+const List<String> dropdownTimeSlot =[
+  "00.00",
+  "01.00",
+  "02.00",
+  "03.00",
+  "04.00",
+  "05.00",
+  "06.00",
+  "07.00",
+  "08.00",
+  "09.00",
+  "10.00",
+  "11.00",
+  "12.00",
+  "13.00",
+  "14.00",
+  "15.00",
+  "16.00",
+  "17.00",
+  "18.00",
+  "19.00",
+  "20.00",
+  "21.00",
+  "22.00",
+  "23.00",
+  "24.00",
+
+];
+
+
 class CreateTicketFormScreen extends StatefulWidget {
   @required
-  String contractId;
+  final String contractId;
 
   CreateTicketFormScreen({this.contractId});
 
@@ -22,10 +52,11 @@ class CreateTicketFormScreen extends StatefulWidget {
 }
 
 class _CreateTicketFormScreenState extends State<CreateTicketFormScreen> {
-  List<Attachments> attachments = [];
+
+  List<Attachment> attachments = [];
   String _fileName;
   Ticket ticket = new Ticket();
-  final format = DateFormat("dd-MM-yyyy");
+  final format = DateFormat("dd-MM-yyyy HH:mm");
   String _path;
   Map<String, String> _paths;
   bool _loadingPath = false;
@@ -46,7 +77,7 @@ class _CreateTicketFormScreenState extends State<CreateTicketFormScreen> {
       _loadingPath = false;
       if (_path != null) {
         _fileName = _path.split('/').last;
-        attachments.add(Attachments(fileName: _fileName,filePath:_path));
+        attachments.add(Attachment(fileName: _fileName, filePath: _path));
       }
     });
   }
@@ -73,7 +104,7 @@ class _CreateTicketFormScreenState extends State<CreateTicketFormScreen> {
       print('svc date : ${ticket.srSdateTime}');
       if (attachments.isNotEmpty) {
         ticket.attachments = attachments;
-        for(var attachment in ticket.attachments){
+        for (var attachment in ticket.attachments) {
           print('filename: ${attachment.fileName}');
           print('filename: ${attachment.filePath}');
         }
@@ -87,17 +118,18 @@ class _CreateTicketFormScreenState extends State<CreateTicketFormScreen> {
         ),
       );
     }
-
   }
 
   @override
   Widget build(BuildContext context) {
+    print(widget.contractId);
     return Scaffold(
-
       body: SafeArea(
         child: Column(
           children: <Widget>[
-            TopBanner(isBack: true,),
+            TopBanner(
+              isBack: true,
+            ),
             Expanded(
               child: Form(
                 key: _formKey,
@@ -114,7 +146,8 @@ class _CreateTicketFormScreenState extends State<CreateTicketFormScreen> {
                           labelStyle: TextStyle(color: kTextPrimary),
                           errorStyle: kErrorTextStyle,
                         ),
-                        validator: (val) => val.isEmpty ? 'Please add a title' : null,
+                        validator: (val) =>
+                            val.isEmpty ? 'Please add a title' : null,
                         onSaved: (val) => ticket.title = val,
                       ),
                       TextFormField(
@@ -124,8 +157,9 @@ class _CreateTicketFormScreenState extends State<CreateTicketFormScreen> {
                           labelStyle: TextStyle(color: kTextPrimary),
                           errorStyle: kErrorTextStyle,
                         ),
+                        maxLines: 3,
                         validator: (val) =>
-                        val.isEmpty ? 'Please add a description' : null,
+                            val.isEmpty ? 'Please add a description' : null,
                         onSaved: (val) => ticket.description = val,
                       ),
                       TextFormField(
@@ -135,9 +169,11 @@ class _CreateTicketFormScreenState extends State<CreateTicketFormScreen> {
                           labelStyle: TextStyle(color: kTextPrimary),
                           errorStyle: kErrorTextStyle,
                         ),
-                        validator: (val) =>
-                        val.isEmpty ? 'Please add a reference' : null,
-                        onSaved: (val) => ticket.clientRef1 = val,
+//                        validator: (val) =>
+//                        val.isEmpty ? 'Please add a reference' : null,
+                        onSaved: (val) => val.isEmpty
+                            ? ticket.clientRef1 = null
+                            : ticket.clientRef1 = val,
                       ),
                       TextFormField(
                         decoration: InputDecoration(
@@ -146,9 +182,11 @@ class _CreateTicketFormScreenState extends State<CreateTicketFormScreen> {
                           labelStyle: TextStyle(color: kTextPrimary),
                           errorStyle: kErrorTextStyle,
                         ),
-                        validator: (val) =>
-                        val.isEmpty ? 'Please add a reference' : null,
-                        onSaved: (val) => ticket.clientRef2 = val,
+//                        validator: (val) =>
+//                        val.isEmpty ? 'Please add a reference' : null,
+                        onSaved: (val) => val.isEmpty
+                            ? ticket.clientRef2 = null
+                            : ticket.clientRef2 = val,
                       ),
                       TextFormField(
                         decoration: InputDecoration(
@@ -157,16 +195,18 @@ class _CreateTicketFormScreenState extends State<CreateTicketFormScreen> {
                           labelStyle: TextStyle(color: kTextPrimary),
                           errorStyle: kErrorTextStyle,
                         ),
-                        validator: (val) => val.isEmpty
-                            ? 'Please add a postal code (e.g 53100)'
-                            : null,
-                        onSaved: (val) => ticket.dcAccessCode = val,
+//                        validator: (val) => val.isEmpty
+//                            ? 'Please add a postal code (e.g 53100)'
+//                            : null,
+                        onSaved: (val) => val.isEmpty
+                            ? ticket.dcAccessCode = null
+                            : ticket.dcAccessCode = val,
                       ),
                       TextFormField(
                         decoration: InputDecoration(
                           labelText: 'Equipment Location',
                           hintText:
-                          'Key in equipment location (e.g 14 Robinson Road #08-01A)',
+                              'Key in equipment location (e.g 14 Robinson Road #08-01A)',
                           labelStyle: TextStyle(color: kTextPrimary),
                           errorStyle: kErrorTextStyle,
                         ),
@@ -182,9 +222,11 @@ class _CreateTicketFormScreenState extends State<CreateTicketFormScreen> {
                           labelStyle: TextStyle(color: kTextPrimary),
                           errorStyle: kErrorTextStyle,
                         ),
-                        validator: (val) =>
-                        val.isEmpty ? 'Please add equipment serial no' : null,
-                        onSaved: (val) => ticket.eqSerialNo = val,
+//                        validator: (val) =>
+//                        val.isEmpty ? 'Please add equipment serial no' : null,
+                        onSaved: (val) => val.isEmpty
+                            ? ticket.eqSerialNo = null
+                            : ticket.eqSerialNo = val,
                       ),
                       TextFormField(
                         decoration: InputDecoration(
@@ -193,7 +235,8 @@ class _CreateTicketFormScreenState extends State<CreateTicketFormScreen> {
                           labelStyle: TextStyle(color: kTextPrimary),
                           errorStyle: kErrorTextStyle,
                         ),
-                        validator: (val) => val.isEmpty ? 'Please add part no' : null,
+                        validator: (val) =>
+                            val.isEmpty ? 'Please add part no' : null,
                         onSaved: (val) => ticket.partno = val,
                       ),
                       TextFormField(
@@ -203,9 +246,11 @@ class _CreateTicketFormScreenState extends State<CreateTicketFormScreen> {
                           labelStyle: TextStyle(color: kTextPrimary),
                           errorStyle: kErrorTextStyle,
                         ),
-                        validator: (val) =>
-                        val.isEmpty ? 'Please add brand model' : null,
-                        onSaved: (val) => ticket.brandModel = val,
+//                        validator: (val) =>
+//                        val.isEmpty ? 'Please add brand model' : null,
+                        onSaved: (val) => val.isEmpty
+                            ? ticket.brandModel = null
+                            : ticket.brandModel = val,
                       ),
                       TextFormField(
                         decoration: InputDecoration(
@@ -214,10 +259,14 @@ class _CreateTicketFormScreenState extends State<CreateTicketFormScreen> {
                           labelStyle: TextStyle(color: kTextPrimary),
                           errorStyle: kErrorTextStyle,
                         ),
+                        maxLines: 3,
                         validator: (val) =>
-                        val.isEmpty ? 'Please add contact details' : null,
+                            val.isEmpty ? 'Please add contact details' : null,
                         onSaved: (val) => ticket.locContact = val,
                       ),
+//                      BasicDateField(),
+//                      BasicDateTimeField(),
+//                      Clock24Example(),
                       DateTimeField(
                         decoration: InputDecoration(
                           labelText: 'Service Date',
@@ -237,7 +286,7 @@ class _CreateTicketFormScreenState extends State<CreateTicketFormScreen> {
                           /// Need to compare if picked date is earlier. Only validate selected current date onwards.
                           DateTime now = DateTime.now();
                           DateTime currentDate =
-                          DateTime(now.year, now.month, now.day);
+                              DateTime(now.year, now.month, now.day);
                           if (value == null) {
                             return 'Please pick a date';
                           } else if (value.isBefore(currentDate)) {
@@ -247,6 +296,9 @@ class _CreateTicketFormScreenState extends State<CreateTicketFormScreen> {
                         },
                         onSaved: (val) => ticket.srSdateTime = val.toString(),
                       ),
+
+
+
                       SizedBox(
 //                  width: double.infinity,
                         child: RaisedButton(
@@ -257,50 +309,57 @@ class _CreateTicketFormScreenState extends State<CreateTicketFormScreen> {
                         ),
                       ),
                       attachments.isNotEmpty
-                          ? Text('Swipe to right to remove attachment in the list',
-                          style: kErrorTextStyle)
+                          ? Text(
+                              'Swipe to right to remove attachment in the list',
+                              style: kErrorTextStyle)
                           : Container(),
                       Builder(
                         builder: (BuildContext context) => _loadingPath
                             ? Center(
-                          child: Padding(
-                              padding: const EdgeInsets.only(bottom: 10.0),
-                              child: const CircularProgressIndicator()),
-                        )
+                                child: Padding(
+                                    padding:
+                                        const EdgeInsets.only(bottom: 10.0),
+                                    child: const CircularProgressIndicator()),
+                              )
                             : attachments != null
-                            ? Container(
-                          padding: const EdgeInsets.only(bottom: 30.0),
-                          height: MediaQuery.of(context).size.height * 0.30,
-                          decoration: BoxDecoration(
-                            border: Border.all(color: kSubmitButton),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Scrollbar(
-                            child: ListView.builder(
-                              itemCount: attachments.length,
-                              itemBuilder:
-                                  (BuildContext context, int index) {
-                                return Dismissible(
-                                  key: Key(attachments[index].fileName),
-                                  onDismissed: (direction) {
-                                    setState(() {
-                                      attachments.removeAt(index);
-                                    });
-                                  },
-                                  direction: DismissDirection.startToEnd,
-                                  child: ListTile(
-                                    title: Text(
-                                      attachments[index].fileName,
-                                      style: TextStyle(fontSize: 12.0),
+                                ? Container(
+                                    padding:
+                                        const EdgeInsets.only(bottom: 30.0),
+                                    height: MediaQuery.of(context).size.height *
+                                        0.30,
+                                    decoration: BoxDecoration(
+                                      border: Border.all(color: kSubmitButton),
+                                      borderRadius: BorderRadius.circular(10),
                                     ),
+                                    child: Scrollbar(
+                                      child: ListView.builder(
+                                        itemCount: attachments.length,
+                                        itemBuilder:
+                                            (BuildContext context, int index) {
+                                          return Dismissible(
+                                            key: Key(
+                                                attachments[index].fileName),
+                                            onDismissed: (direction) {
+                                              setState(() {
+                                                attachments.removeAt(index);
+                                              });
+                                            },
+                                            direction:
+                                                DismissDirection.startToEnd,
+                                            child: ListTile(
+                                              title: Text(
+                                                attachments[index].fileName,
+                                                style:
+                                                    TextStyle(fontSize: 12.0),
+                                              ),
 //                                      trailing: Icon(Icons.close),
-                                  ),
-                                );
-                              },
-                            ),
-                          ),
-                        )
-                            : new Container(),
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                  )
+                                : new Container(),
                       ),
                       SizedBox(
                         height: 10.0,
@@ -325,5 +384,83 @@ class _CreateTicketFormScreenState extends State<CreateTicketFormScreen> {
         ),
       ),
     );
+  }
+}
+
+class BasicDateTimeField extends StatelessWidget {
+  final format = DateFormat("yyyy-MM-dd HH:mm");
+  @override
+  Widget build(BuildContext context) {
+    return DateTimeField(
+      format: format,
+      onShowPicker: (context, currentValue) async {
+        final date = await showDatePicker(
+            context: context,
+            firstDate: DateTime(1900),
+            initialDate: currentValue ?? DateTime.now(),
+            lastDate: DateTime(2100));
+        if (date != null) {
+          final time = await showTimePicker(
+            context: context,
+            initialTime: TimeOfDay.fromDateTime(currentValue ?? DateTime.now()),
+            builder: (BuildContext context, Widget child){
+              return MediaQuery(
+                data: MediaQuery.of(context).copyWith(alwaysUse24HourFormat: true),
+                child: child,
+              );
+            }
+          );
+          return DateTimeField.combine(date, time);
+        } else {
+          return currentValue;
+        }
+      },
+    );
+  }
+}
+
+class BasicDateField extends StatelessWidget {
+  final format = DateFormat("yyyy-MM-dd");
+  @override
+  Widget build(BuildContext context) {
+    return Column(children: <Widget>[
+      Text('Basic date field (${format.pattern})'),
+      DateTimeField(
+        format: format,
+        onShowPicker: (context, currentValue) {
+          return showDatePicker(
+              context: context,
+              firstDate: DateTime(1900),
+              initialDate: currentValue ?? DateTime.now(),
+              lastDate: DateTime(2100));
+        },
+      ),
+    ]);
+  }
+}
+
+
+
+class Clock24Example extends StatelessWidget {
+  final format = DateFormat("HH");
+  @override
+  Widget build(BuildContext context) {
+    return Column(children: <Widget>[
+      Text('24 hour clock'),
+      DateTimeField(
+        format: format,
+        onShowPicker: (context, currentValue) async {
+          final time = await showTimePicker(
+            context: context,
+            initialTime: TimeOfDay.fromDateTime(currentValue ?? DateTime.now()),
+            builder: (context, child) => MediaQuery(
+                data: MediaQuery.of(context)
+                    .copyWith(alwaysUse24HourFormat: true),
+                child: child),
+          );
+          return DateTimeField.convert(time);
+        },
+      ),
+    ]);
   }
 }
