@@ -9,6 +9,7 @@ import 'package:ticketing_app/model/create_ticket.dart';
 import 'package:ticketing_app/model/equipment.dart';
 import 'package:ticketing_app/model/list_ticket.dart';
 import 'package:ticketing_app/model/customer.dart';
+import 'package:ticketing_app/model/service_type.dart';
 import 'package:ticketing_app/model/ticket.dart';
 import 'package:path/path.dart' as fileUtil;
 
@@ -97,6 +98,32 @@ class ApiService {
       Customer c = Customer();
       c.httpCode = response.statusCode;
       return c;
+    }
+  }
+
+  /// ----------------------------------------------------------
+  /// Method that retrieve service types associated to customer contracts.
+  /// ----------------------------------------------------------
+  static Future<ServiceType> getServiceType() async {
+    String token = await _getMobileToken();
+    ServiceType svcType;
+    final response = await http.get(
+        'https://webapi168.azurewebsites.net/api/customer/GetServiceType',
+        headers: {
+          HttpHeaders.contentTypeHeader: "application/json",
+          HttpHeaders.authorizationHeader: "Bearer $token"
+        });
+    if (response.statusCode == 201) {
+      // If the call to the server was successful, parse the JSON.
+      final responseJson = json.decode(response.body);
+      svcType = ServiceType.fromJson(responseJson);
+      svcType.httpCode = response.statusCode;
+      return svcType;
+    } else {
+      // If that call was not successful, throw an error.
+      svcType = ServiceType();
+      svcType.httpCode = response.statusCode;
+      return svcType;
     }
   }
 
@@ -230,7 +257,9 @@ class ApiService {
         'https://webapi168.azurewebsites.net/api/ticket/CreateTicket');
     var request = new http.MultipartRequest('POST', url);
     request.headers['authorization'] = 'Bearer $token';
-    request.fields['svctypeid'] = "1";
+
+    //Set Ticket parameters to body of the request.
+    request.fields['svctypeid'] = ticket.svcTypeId.toString();
     request.fields['contractUUID'] = ticket.contract.uuid;
     if (ticket.title != null) {
       request.fields['subject'] = ticket.title;
