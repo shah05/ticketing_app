@@ -119,7 +119,7 @@ class _ClosedTicketsState extends State<ClosedTickets> {
           cardName: widget.closed[index].nacode,
           cardDesc1: widget.closed[index].status,
           cardDesc2: widget.closed[index].svctype,
-          cardDesc3: widget.closed[index].svctype,
+          cardDesc3: widget.closed[index].svcdate,
 //            icon: FontAwesomeIcons.infoCircle,
           onPress: () {
             Navigator.push(
@@ -154,7 +154,7 @@ class _OpenTicketsState extends State<OpenTickets> {
           cardName: widget.open[index].nacode,
           cardDesc1: widget.open[index].status,
           cardDesc2: widget.open[index].svctype,
-          cardDesc3: widget.open[index].svctype,
+          cardDesc3: widget.open[index].svcdate,
 //            icon: FontAwesomeIcons.infoCircle,
           onPress: () {
             Navigator.push(

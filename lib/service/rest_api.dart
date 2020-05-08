@@ -299,29 +299,27 @@ class ApiService {
     }
     if (ticket.attachments != null) {
       for (var a in ticket.attachments) {
-//        final mimeTypeData =
-//        request.files.add(await http.MultipartFile.fromPath('image', a.filePath,filename: a.fileName, contentType: MediaType('image','jpeg')));
-//        request.files.add(await http.MultipartFile.fromPath(fileUtil.basename(a.filePath), a.filePath));
-        File f = File(a.filePath);
-//            request.files.add(
-//           http.MultipartFile.fromBytes(fileUtil.basename(a.filePath),f.readAsBytesSync(),filename: a.fileName));
-//        print('filepath: ${a.filePath}');
-//      }
         print('adding file..');
-//        request.files.add(new http.MultipartFile.fromBytes(
-//            'image', await File.fromUri(Uri.file(a.fileName)).readAsBytes(),
-//            contentType: new MediaType('image', 'jpeg')));
-//      request.files.add(http.MultipartFile.fromBytes(
-//          'files',
-//          f.readAsBytesSync(),
-//          contentType: MediaType('image', 'jpeg'),
-//          filename: a.fileName,
-//      ));
-//        final mimeTypeData = lookupMimeType(a.filePath, headerBytes: [0xFF, 0xD8]).split('/');
-//        request.files.add(await http.MultipartFile.fromPath('image', a.filePath,filename: a.fileName, contentType: MediaType(mimeTypeData[0], mimeTypeData[1])));
-        request.files.add(new http.MultipartFile.fromBytes(
-            'files', await File.fromUri(Uri.parse(a.filePath)).readAsBytes(),
-            contentType: new MediaType('image', 'jpeg'), filename: a.fileName));
+
+        String fileType = a.fileName.split('.')[1];
+        if(fileType=='jpg' || fileType=='jpeg') {
+          request.files.add(new http.MultipartFile.fromBytes(
+              'files', await File.fromUri(Uri.parse(a.filePath)).readAsBytes(),
+              contentType: new MediaType('image', 'jpeg'),
+              filename: a.fileName));
+        }
+        else if(fileType=='xlsx'){
+          request.files.add(new http.MultipartFile.fromBytes(
+              'files', await File.fromUri(Uri.parse(a.filePath)).readAsBytes(),
+              contentType: new MediaType('application', 'vnd.openxmlformats-officedocument.spreadsheetml.sheet'),
+              filename: a.fileName));
+        }
+        else if(fileType=='pdf'){
+          request.files.add(new http.MultipartFile.fromBytes(
+              'files', await File.fromUri(Uri.parse(a.filePath)).readAsBytes(),
+              contentType: new MediaType('application', 'pdf'),
+              filename: a.fileName));
+        }
         print('finish adding file..');
       }
     }

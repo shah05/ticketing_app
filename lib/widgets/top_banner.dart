@@ -9,7 +9,7 @@ class TopBanner extends StatelessWidget {
     return Stack(
       children: <Widget>[
         Container(
-          height: 130.0,
+          height: 150.0,
           color: Color(0xFFFCFC00),
           width: double.infinity,
           child: Padding(

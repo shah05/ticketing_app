@@ -33,7 +33,7 @@ class _SelectContractScreenState extends State<SelectContractScreen> {
             borderRadius: BorderRadius.circular(15.0),
             border: Border.all(color: Colors.grey)),
         padding: EdgeInsets.all(20.0),
-        height: 150.0,
+        height: 200.0,
         width: double.infinity,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -122,7 +122,7 @@ class _SelectContractScreenState extends State<SelectContractScreen> {
                                     borderRadius: BorderRadius.circular(15.0),
                                     border: Border.all(color: Colors.grey)),
                                 padding: EdgeInsets.all(20.0),
-                                height: 150.0,
+                                height: 170.0,
                                 width: double.infinity,
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.start,

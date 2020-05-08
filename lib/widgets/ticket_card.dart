@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:ticketing_app/util/constants.dart';
 
 class TicketCard extends StatelessWidget {
+
+  static const DATE_FORMAT = 'dd/MM/yyyy HH:mm';
+
 //  TicketCard({this.cardName, this.cardDesc1, this.cardDesc2, this.icon, this.onPress});
   TicketCard(
       {this.cardName,
@@ -29,8 +32,15 @@ class TicketCard extends StatelessWidget {
     }
   }
 
+  String convertDate (String svcDate){
+    var formattedDate = DateTime.parse(svcDate).toLocal();
+    print('${formattedDate.day}-${formattedDate.month}-${formattedDate.year} ${formattedDate.hour}:00');
+    return '${formattedDate.day}-${formattedDate.month}-${formattedDate.year} ${formattedDate.hour}:00';
+  }
+
   @override
   Widget build(BuildContext context) {
+    print(cardDesc3);
     return Card(
       elevation: 8.0,
       margin: new EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
@@ -42,7 +52,7 @@ class TicketCard extends StatelessWidget {
                 EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
             leading: Container(
               width: 90.0,
-              padding: EdgeInsets.only(right: 12.0),
+//              padding: EdgeInsets.only(right: 12.0),
               decoration: new BoxDecoration(
                   border: new Border(
                       right: new BorderSide(width: 1.0, color: kDivider))),
@@ -52,7 +62,7 @@ class TicketCard extends StatelessWidget {
                   padding: EdgeInsets.all(5.0),
                   child: Text(
                     this.cardDesc1,
-                    style: TextStyle(color: this.cardDesc1=="New" || this.cardDesc1=="Assigned" ? Colors.white : Colors.black),
+                    style: TextStyle(color: this.cardDesc1=="New" || this.cardDesc1=="Assigned" ? Colors.white : Colors.black, fontSize: 12.0),
                   ),
                   decoration: BoxDecoration(
                       color: statusColour(this.cardDesc1),
@@ -71,7 +81,7 @@ class TicketCard extends StatelessWidget {
               children: <Widget>[
                 Text('Service Type: $cardDesc2',
                     style: TextStyle(color: kTextSecondary)),
-                Text('Status: $cardDesc3',
+                Text('Service Date: ${convertDate(cardDesc3)}',
                     style: TextStyle(color: kTextSecondary)),
               ],
             ),
