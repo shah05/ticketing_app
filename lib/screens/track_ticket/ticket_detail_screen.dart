@@ -300,6 +300,12 @@ class BuildMsgLogsPage extends StatelessWidget {
 
   BuildMsgLogsPage({this.msgLogs});
 
+  String convertDate (String createDate){
+    var formattedDate = DateTime.parse(createDate).toLocal();
+    print('${formattedDate.day}-${formattedDate.month}-${formattedDate.year} ${formattedDate.hour}:00');
+    return '${formattedDate.day}-${formattedDate.month}-${formattedDate.year} ${formattedDate.hour}:00';
+  }
+
   @override
   Widget build(BuildContext context) {
     if (msgLogs.length == 0) {
@@ -313,7 +319,7 @@ class BuildMsgLogsPage extends StatelessWidget {
         return Card(
           child: ListTile(
             title: Text(
-                '${msgLogs[index].createdon} by ${msgLogs[index].createdby}'),
+                '${convertDate(msgLogs[index].createdon)} by ${msgLogs[index].createdby}'),
             subtitle:
                 Text('${msgLogs[index].action} ${msgLogs[index].message}'),
           ),
@@ -332,6 +338,12 @@ class BuildAttachmentsPage extends StatelessWidget {
 
   BuildAttachmentsPage({this.attachments});
 
+  String convertDate (String uploadDate){
+    var formattedDate = DateTime.parse(uploadDate).toLocal();
+    print('${formattedDate.day}-${formattedDate.month}-${formattedDate.year} ${formattedDate.hour}:00');
+    return '${formattedDate.day}-${formattedDate.month}-${formattedDate.year} ${formattedDate.hour}:00';
+  }
+
   @override
   Widget build(BuildContext context) {
     if (attachments.length == 0) {
@@ -347,7 +359,7 @@ class BuildAttachmentsPage extends StatelessWidget {
             title: Text('${attachments[index].fileName}'),
             subtitle: Text(
 //                'Uploaded on ${attachments[index].createdon} by ${attachments[index].createdby}'),
-                'Uploaded on ${attachments[index].createdon}'),
+                'Uploaded on ${convertDate(attachments[index].createdon)}'),
             trailing:
                 GestureDetector(onTap: () {}, child: Icon(Icons.file_download)),
           ),
