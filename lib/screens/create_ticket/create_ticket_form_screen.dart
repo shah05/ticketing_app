@@ -59,9 +59,7 @@ class _CreateTicketFormScreenState extends State<CreateTicketFormScreen> {
   Ticket ticket = new Ticket();
   final format = DateFormat("dd-MM-yyyy");
   String _path;
-  Map<String, String> _paths;
   bool _loadingPath = false;
-//  bool _autoValidate = true;
   final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
   String _currentSelectedValue = '00:00';
 
@@ -70,7 +68,6 @@ class _CreateTicketFormScreenState extends State<CreateTicketFormScreen> {
   String selectedSvcType;
   int svcTypeId;
   List<Svctypes> svcTypes;
-  String _myActivity;
 
   void selectAttachment() async {
     setState(() => _loadingPath = true);
@@ -92,9 +89,6 @@ class _CreateTicketFormScreenState extends State<CreateTicketFormScreen> {
   }
 
   void validateFormFields() {
-//    print('here');
-//    print(ticket.srSdateTime);
-//  print(selectedSvcType);
     bool isValid = _formKey.currentState.validate();
     if (selectedSvcType == null) {
       setState(() {
@@ -104,19 +98,14 @@ class _CreateTicketFormScreenState extends State<CreateTicketFormScreen> {
     }
 
     if (isValid) {
-      print('IN VALIDATE');
-      print('selected service: $selectedSvcType');
-      print('selected service id: $svcTypeId');
-
       /// Set Contract UUID
       Contract c = Contract();
       c.uuid = widget.contractId;
       ticket.contract = c;
-      ticket.svcTypeId=svcTypeId;
+      ticket.svcTypeId = svcTypeId;
       _formKey.currentState.save();
       if (_currentSelectedValue == '') {
         _currentSelectedValue = '00:00';
-//          TimeOfDay _timeslot = TimeOfDay(hour:int.parse(_currentSelectedValue.split(":")[0]),minute: int.parse(_currentSelectedValue.split(":")[1]));
         String temp = ticket.srSdateTime.split(' ')[0];
         ticket.srSdateTime = temp + ' ' + _currentSelectedValue;
       } else {
@@ -191,178 +180,80 @@ class _CreateTicketFormScreenState extends State<CreateTicketFormScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
-                            DropdownButton<String>(
-                              underline: Container(
-                                decoration: BoxDecoration(
-                                  border: Border(
-                                    bottom: BorderSide(
-                                        color:
-                                        dropdownError == null ? Colors.grey : Colors.red),
+                            //1. Serial Number
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 8.0),
+                              child: TextFormField(
+                                decoration: InputDecoration(
+//                                  suffixIcon: Icon(Icons.search),
+                                  labelText: 'Equipment Serial No',
+                                  hintText: 'Key in equipment serial no',
+                                  labelStyle: TextStyle(color: kTextPrimary),
+                                  errorStyle: kErrorTextStyle,
+                                ),
+                                validator: (val) => val.isEmpty
+                                    ? 'Please add equipment serial no'
+                                    : null,
+                                onSaved: (val) => val.isEmpty
+                                    ? ticket.eqSerialNo = null
+                                    : ticket.eqSerialNo = val,
+                              ),
+                            ),
+                            //2. Service Type
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 8.0),
+                              child: DropdownButton<String>(
+                                underline: Container(
+                                  decoration: BoxDecoration(
+                                    border: Border(
+                                      bottom: BorderSide(
+                                          color: dropdownError == null
+                                              ? Colors.grey
+                                              : Colors.red),
+                                    ),
                                   ),
                                 ),
-                              ),
-                              isExpanded: true,
-                              hint: selectedSvcType == null
-                                  ? Text('Please select service type', style: TextStyle(color: kTextPrimary),)
-                                  : Text(
-                                selectedSvcType,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(color: Colors.black),
-                              ),
-                              items: serviceType.svctypes.map((Svctypes svcType) {
-                                return new DropdownMenuItem<String>(
-                                  value: svcType.description,
-                                  child: new Text(svcType.description),
-                                );
-                              }).toList(),
-                              onChanged: (value) {
-                                setState(() {
-                                  selectedSvcType = value;
-                                  dropdownError = null;
-                                  //Set serviceTypeId based on selectedSvcType
-                                  for (var svc in serviceType.svctypes){
-                                    if(selectedSvcType==svc.description){
-                                      svcTypeId=svc.id;
+                                isExpanded: true,
+                                hint: selectedSvcType == null
+                                    ? Text(
+                                        'Please select service type',
+                                        style: TextStyle(color: kTextPrimary),
+                                      )
+                                    : Text(
+                                        selectedSvcType,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: TextStyle(color: Colors.black),
+                                      ),
+                                items: serviceType.svctypes
+                                    .map((Svctypes svcType) {
+                                  return new DropdownMenuItem<String>(
+                                    value: svcType.description,
+                                    child: new Text(svcType.description),
+                                  );
+                                }).toList(),
+                                onChanged: (value) {
+                                  setState(() {
+                                    selectedSvcType = value;
+                                    dropdownError = null;
+                                    //Set serviceTypeId based on selectedSvcType
+                                    for (var svc in serviceType.svctypes) {
+                                      if (selectedSvcType == svc.description) {
+                                        svcTypeId = svc.id;
+                                      }
                                     }
-                                  }
-                                  print('service type: $selectedSvcType');
-                                  print('service type id: $svcTypeId');
-                                });
-                              },
+                                    print('service type: $selectedSvcType');
+                                    print('service type id: $svcTypeId');
+                                  });
+                                },
+                              ),
                             ),
                             dropdownError == null
                                 ? SizedBox.shrink()
-                                : Text(dropdownError ?? "", style: kErrorTextStyle),
-                            TextFormField(
-                              decoration: InputDecoration(
-                                labelText: 'Title',
-                                hintText: 'Key in a title to your ticket',
-                                labelStyle: TextStyle(color: kTextPrimary),
-                                errorStyle: kErrorTextStyle,
-                              ),
-                              validator: (val) =>
-                                  val.isEmpty ? 'Please add a title' : null,
-                              onSaved: (val) => ticket.title = val,
-                            ),
-                            TextFormField(
-                              decoration: InputDecoration(
-                                labelText: 'Description',
-                                hintText: 'Key in description of the issue',
-                                labelStyle: TextStyle(color: kTextPrimary),
-                                errorStyle: kErrorTextStyle,
-                              ),
-                              maxLines: 3,
-                              validator: (val) => val.isEmpty
-                                  ? 'Please add a description'
-                                  : null,
-                              onSaved: (val) => ticket.description = val,
-                            ),
-                            TextFormField(
-                              decoration: InputDecoration(
-                                labelText: 'Client Reference 1',
-                                hintText: 'Key in a reference',
-                                labelStyle: TextStyle(color: kTextPrimary),
-                                errorStyle: kErrorTextStyle,
-                              ),
-//                        validator: (val) =>
-//                        val.isEmpty ? 'Please add a reference' : null,
-                              onSaved: (val) => val.isEmpty
-                                  ? ticket.clientRef1 = null
-                                  : ticket.clientRef1 = val,
-                            ),
-                            TextFormField(
-                              decoration: InputDecoration(
-                                labelText: 'Client Reference 2',
-                                hintText: 'Key in a reference',
-                                labelStyle: TextStyle(color: kTextPrimary),
-                                errorStyle: kErrorTextStyle,
-                              ),
-//                        validator: (val) =>
-//                        val.isEmpty ? 'Please add a reference' : null,
-                              onSaved: (val) => val.isEmpty
-                                  ? ticket.clientRef2 = null
-                                  : ticket.clientRef2 = val,
-                            ),
-                            TextFormField(
-                              decoration: InputDecoration(
-                                labelText: 'Postal code',
-                                hintText: 'Key in your postal code (e.g 53100)',
-                                labelStyle: TextStyle(color: kTextPrimary),
-                                errorStyle: kErrorTextStyle,
-                              ),
-//                        validator: (val) => val.isEmpty
-//                            ? 'Please add a postal code (e.g 53100)'
-//                            : null,
-                              onSaved: (val) => val.isEmpty
-                                  ? ticket.dcAccessCode = null
-                                  : ticket.dcAccessCode = val,
-                            ),
-                            TextFormField(
-                              decoration: InputDecoration(
-                                labelText: 'Equipment Location',
-                                hintText:
-                                    'Key in equipment location (e.g 14 Robinson Road #08-01A)',
-                                labelStyle: TextStyle(color: kTextPrimary),
-                                errorStyle: kErrorTextStyle,
-                              ),
-                              validator: (val) => val.isEmpty
-                                  ? 'Please add equipment lcoation (e.g 14 Robinson Road #08-01A)'
-                                  : null,
-                              onSaved: (val) => ticket.eqLoc = val,
-                            ),
-                            TextFormField(
-                              decoration: InputDecoration(
-                                labelText: 'Equipment Serial No',
-                                hintText: 'Key in equipment serial no',
-                                labelStyle: TextStyle(color: kTextPrimary),
-                                errorStyle: kErrorTextStyle,
-                              ),
-                        validator: (val) =>
-                        val.isEmpty ? 'Please add equipment serial no' : null,
-                              onSaved: (val) => val.isEmpty
-                                  ? ticket.eqSerialNo = null
-                                  : ticket.eqSerialNo = val,
-                            ),
-                            TextFormField(
-                              decoration: InputDecoration(
-                                labelText: 'Part No',
-                                hintText: 'Key in part no',
-                                labelStyle: TextStyle(color: kTextPrimary),
-                                errorStyle: kErrorTextStyle,
-                              ),
-                              validator: (val) =>
-                                  val.isEmpty ? 'Please add part no' : null,
-                              onSaved: (val) => ticket.partno = val,
-                            ),
-                            TextFormField(
-                              decoration: InputDecoration(
-                                labelText: 'Brand Model',
-                                hintText: 'Key in brand model',
-                                labelStyle: TextStyle(color: kTextPrimary),
-                                errorStyle: kErrorTextStyle,
-                              ),
-//                        validator: (val) =>
-//                        val.isEmpty ? 'Please add brand model' : null,
-                              onSaved: (val) => val.isEmpty
-                                  ? ticket.brandModel = null
-                                  : ticket.brandModel = val,
-                            ),
-                            TextFormField(
-                              decoration: InputDecoration(
-                                labelText: 'Contact Details',
-                                hintText: 'Key in contact details',
-                                labelStyle: TextStyle(color: kTextPrimary),
-                                errorStyle: kErrorTextStyle,
-                              ),
-                              maxLines: 3,
-                              validator: (val) => val.isEmpty
-                                  ? 'Please add contact details'
-                                  : null,
-                              onSaved: (val) => ticket.locContact = val,
-                            ),
-//                      BasicDateField(),
-//                      BasicDateTimeField(),
-//                      Clock24Example(),
+                                : Text(dropdownError ?? "",
+                                    style: kErrorTextStyle),
+                            //3. Service date
                             DateTimeField(
                               decoration: InputDecoration(
                                 labelText: 'Service Date',
@@ -393,46 +284,216 @@ class _CreateTicketFormScreenState extends State<CreateTicketFormScreen> {
                               onSaved: (val) =>
                                   ticket.srSdateTime = val.toString(),
                             ),
-
-                            FormField<String>(
-                              builder: (FormFieldState<String> state) {
-                                return InputDecorator(
-                                  decoration: InputDecoration(
-                                    labelText: 'Pick a time slot',
-                                    hintText: 'Pick a time slot',
-                                    labelStyle: TextStyle(color: kTextPrimary),
-                                    errorStyle: kErrorTextStyle,
-                                  ),
-//                            isEmpty: _currentSelectedValue == '',
-                                  child: DropdownButtonHideUnderline(
-                                    child: DropdownButton<String>(
-                                      value: _currentSelectedValue,
-                                      isDense: true,
-                                      onChanged: (String newValue) {
-                                        setState(() {
-                                          _currentSelectedValue = newValue;
-                                          state.didChange(newValue);
-                                        });
-                                      },
-                                      items: timeSlot.map((String value) {
-                                        return DropdownMenuItem<String>(
-                                          value: value,
-                                          child: Text(value),
-                                        );
-                                      }).toList(),
-                                    ),
-                                  ),
-                                );
-                              },
+                            //4. Title
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 8.0),
+                              child: TextFormField(
+                                decoration: InputDecoration(
+                                  labelText: 'Title',
+                                  hintText: 'Key in a title to your ticket',
+                                  labelStyle: TextStyle(color: kTextPrimary),
+                                  errorStyle: kErrorTextStyle,
+                                ),
+                                validator: (val) =>
+                                    val.isEmpty ? 'Please add a title' : null,
+                                onSaved: (val) => ticket.title = val,
+                              ),
                             ),
-                            SizedBox(
-                              height: 10.0,
+                            //5. Description
+                            TextFormField(
+                              decoration: InputDecoration(
+                                labelText: 'Description',
+                                hintText: 'Key in description of the issue',
+                                labelStyle: TextStyle(color: kTextPrimary),
+                                errorStyle: kErrorTextStyle,
+                              ),
+                              maxLines: 3,
+                              validator: (val) => val.isEmpty
+                                  ? 'Please add a description'
+                                  : null,
+                              onSaved: (val) => ticket.description = val,
                             ),
-                            RaisedButton(
-                              color: kSubmitButton,
-                              textColor: kTextButton,
-                              onPressed: () => selectAttachment(),
-                              child: Text('Attach files'),
+                            //6. Contact Details
+                            TextFormField(
+                              decoration: InputDecoration(
+                                labelText: 'Contact Details',
+                                hintText: 'Key in contact details',
+                                labelStyle: TextStyle(color: kTextPrimary),
+                                errorStyle: kErrorTextStyle,
+                              ),
+                              maxLines: 3,
+                              validator: (val) => val.isEmpty
+                                  ? 'Please add contact details'
+                                  : null,
+                              onSaved: (val) => ticket.locContact = val,
+                            ),
+                            //7. Equipment Location
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 8.0),
+                              child: TextFormField(
+                                decoration: InputDecoration(
+                                  labelText: 'Equipment Location',
+                                  hintText:
+                                      'Key in equipment location (e.g 14 Robinson Road #08-01A)',
+                                  labelStyle: TextStyle(color: kTextPrimary),
+                                  errorStyle: kErrorTextStyle,
+                                ),
+                                validator: (val) => val.isEmpty
+                                    ? 'Please add equipment lcoation (e.g 14 Robinson Road #08-01A)'
+                                    : null,
+                                onSaved: (val) => ticket.eqLoc = val,
+                              ),
+                            ),
+                            //8. Postal Code
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 8.0),
+                              child: TextFormField(
+                                decoration: InputDecoration(
+                                  labelText: 'Postal code',
+                                  hintText:
+                                      'Key in your postal code (e.g 53100)',
+                                  labelStyle: TextStyle(color: kTextPrimary),
+                                  errorStyle: kErrorTextStyle,
+                                ),
+//                        validator: (val) => val.isEmpty
+//                            ? 'Please add a postal code (e.g 53100)'
+//                            : null,
+                                onSaved: (val) => val.isEmpty
+                                    ? ticket.dcAccessCode = null
+                                    : ticket.dcAccessCode = val,
+                              ),
+                            ),
+                            //9. Brand Model
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 8.0),
+                              child: TextFormField(
+                                decoration: InputDecoration(
+                                  labelText: 'Brand Model',
+                                  hintText: 'Key in brand model',
+                                  labelStyle: TextStyle(color: kTextPrimary),
+                                  errorStyle: kErrorTextStyle,
+                                ),
+//                        validator: (val) =>
+//                        val.isEmpty ? 'Please add brand model' : null,
+                                onSaved: (val) => val.isEmpty
+                                    ? ticket.brandModel = null
+                                    : ticket.brandModel = val,
+                              ),
+                            ),
+                            //10. Equipment No
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 8.0),
+                              child: TextFormField(
+                                decoration: InputDecoration(
+                                  labelText: 'Equipment No',
+                                  hintText: 'Key in equipment no',
+                                  labelStyle: TextStyle(color: kTextPrimary),
+                                  errorStyle: kErrorTextStyle,
+                                ),
+                                validator: (val) =>
+                                    val.isEmpty ? 'Please add part no' : null,
+                                onSaved: (val) => ticket.partno = val,
+                              ),
+                            ),
+                            //11. Remarks
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 8.0),
+                              child: TextFormField(
+                                decoration: InputDecoration(
+                                  labelText: 'Remarks',
+                                  hintText: 'Key in remarks',
+                                  labelStyle: TextStyle(color: kTextPrimary),
+                                  errorStyle: kErrorTextStyle,
+                                ),
+//                        validator: (val) =>
+//                        val.isEmpty ? 'Please add a reference' : null,
+                                onSaved: (val) => val.isEmpty
+                                    ? ticket.remarks = null
+                                    : ticket.remarks = val,
+                              ),
+                            ),
+                            //12. Reference 1
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 8.0),
+                              child: TextFormField(
+                                decoration: InputDecoration(
+                                  labelText: 'Client Reference 1',
+                                  hintText: 'Key in a reference',
+                                  labelStyle: TextStyle(color: kTextPrimary),
+                                  errorStyle: kErrorTextStyle,
+                                ),
+//                        validator: (val) =>
+//                        val.isEmpty ? 'Please add a reference' : null,
+                                onSaved: (val) => val.isEmpty
+                                    ? ticket.clientRef1 = null
+                                    : ticket.clientRef1 = val,
+                              ),
+                            ),
+                            // 12. Reference 2
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 8.0),
+                              child: TextFormField(
+                                decoration: InputDecoration(
+                                  labelText: 'Client Reference 2',
+                                  hintText: 'Key in a reference',
+                                  labelStyle: TextStyle(color: kTextPrimary),
+                                  errorStyle: kErrorTextStyle,
+                                ),
+//                        validator: (val) =>
+//                        val.isEmpty ? 'Please add a reference' : null,
+                                onSaved: (val) => val.isEmpty
+                                    ? ticket.clientRef2 = null
+                                    : ticket.clientRef2 = val,
+                              ),
+                            ),
+//                            FormField<String>(
+//                              builder: (FormFieldState<String> state) {
+//                                return InputDecorator(
+//                                  decoration: InputDecoration(
+//                                    labelText: 'Pick a time slot',
+//                                    hintText: 'Pick a time slot',
+//                                    labelStyle: TextStyle(color: kTextPrimary),
+//                                    errorStyle: kErrorTextStyle,
+//                                  ),
+////                            isEmpty: _currentSelectedValue == '',
+//                                  child: DropdownButtonHideUnderline(
+//                                    child: DropdownButton<String>(
+//                                      value: _currentSelectedValue,
+//                                      isDense: true,
+//                                      onChanged: (String newValue) {
+//                                        setState(() {
+//                                          _currentSelectedValue = newValue;
+//                                          state.didChange(newValue);
+//                                        });
+//                                      },
+//                                      items: timeSlot.map((String value) {
+//                                        return DropdownMenuItem<String>(
+//                                          value: value,
+//                                          child: Text(value),
+//                                        );
+//                                      }).toList(),
+//                                    ),
+//                                  ),
+//                                );
+//                              },
+//                            ),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 8.0),
+                              child: RaisedButton(
+                                color: kSubmitButton,
+                                textColor: kTextButton,
+                                onPressed: () => selectAttachment(),
+                                child: Text('Attach files'),
+                              ),
                             ),
                             attachments.isNotEmpty
                                 ? Text(
@@ -525,144 +586,144 @@ class _CreateTicketFormScreenState extends State<CreateTicketFormScreen> {
   }
 }
 
-class BasicDateTimeField extends StatelessWidget {
-  final format = DateFormat("yyyy-MM-dd HH:mm");
-  @override
-  Widget build(BuildContext context) {
-    return DateTimeField(
-      format: format,
-      onShowPicker: (context, currentValue) async {
-        final date = await showDatePicker(
-            context: context,
-            firstDate: DateTime(1900),
-            initialDate: currentValue ?? DateTime.now(),
-            lastDate: DateTime(2100));
-        if (date != null) {
-          final time = await showTimePicker(
-              context: context,
-              initialTime:
-                  TimeOfDay.fromDateTime(currentValue ?? DateTime.now()),
-              builder: (BuildContext context, Widget child) {
-                return MediaQuery(
-                  data: MediaQuery.of(context)
-                      .copyWith(alwaysUse24HourFormat: true),
-                  child: child,
-                );
-              });
-          return DateTimeField.combine(date, time);
-        } else {
-          return currentValue;
-        }
-      },
-    );
-  }
-}
-
-class BasicDateField extends StatelessWidget {
-  final format = DateFormat("yyyy-MM-dd");
-  @override
-  Widget build(BuildContext context) {
-    return Column(children: <Widget>[
-      Text('Basic date field (${format.pattern})'),
-      DateTimeField(
-        format: format,
-        onShowPicker: (context, currentValue) {
-          return showDatePicker(
-              context: context,
-              firstDate: DateTime(1900),
-              initialDate: currentValue ?? DateTime.now(),
-              lastDate: DateTime(2100));
-        },
-      ),
-    ]);
-  }
-}
-
-class Clock24Example extends StatelessWidget {
-  final format = DateFormat("HH");
-  @override
-  Widget build(BuildContext context) {
-    return Column(children: <Widget>[
-      Text('24 hour clock'),
-      DateTimeField(
-        format: format,
-        onShowPicker: (context, currentValue) async {
-          final time = await showTimePicker(
-            context: context,
-            initialTime: TimeOfDay.fromDateTime(currentValue ?? DateTime.now()),
-            builder: (context, child) => MediaQuery(
-                data: MediaQuery.of(context)
-                    .copyWith(alwaysUse24HourFormat: true),
-                child: child),
-          );
-          return DateTimeField.convert(time);
-        },
-      ),
-    ]);
-  }
-}
-
-class MyStatefulWidget extends StatefulWidget {
-  MyStatefulWidget({Key key}) : super(key: key);
-
-  @override
-  _MyStatefulWidgetState createState() => _MyStatefulWidgetState();
-}
-
-class _MyStatefulWidgetState extends State<MyStatefulWidget> {
-  String dropdownValue = '00:00';
-  List<String> timeslot = [
-    "00:00",
-    "01:00",
-    "02:00",
-    "03:00",
-    "04:00",
-    "05.00",
-    "06.00",
-    "07.00",
-    "08.00",
-    "09.00",
-    "10.00",
-    "11.00",
-    "12.00",
-    "13.00",
-    "14.00",
-    "15.00",
-    "16.00",
-    "17.00",
-    "18.00",
-    "19.00",
-    "20.00",
-    "21.00",
-    "22.00",
-    "23.00",
-    "24.00",
-  ];
-
-  @override
-  Widget build(BuildContext context) {
-    return DropdownButtonFormField<String>(
-      hint: Text('Please pick a time slot'),
-      value: dropdownValue,
-      icon: Icon(Icons.arrow_downward),
-      iconSize: 24,
-      elevation: 16,
-      style: TextStyle(color: Colors.deepPurple),
-//      underline: Container(
-//        height: 2,
-//        color: Colors.deepPurpleAccent,
+//class BasicDateTimeField extends StatelessWidget {
+//  final format = DateFormat("yyyy-MM-dd HH:mm");
+//  @override
+//  Widget build(BuildContext context) {
+//    return DateTimeField(
+//      format: format,
+//      onShowPicker: (context, currentValue) async {
+//        final date = await showDatePicker(
+//            context: context,
+//            firstDate: DateTime(1900),
+//            initialDate: currentValue ?? DateTime.now(),
+//            lastDate: DateTime(2100));
+//        if (date != null) {
+//          final time = await showTimePicker(
+//              context: context,
+//              initialTime:
+//                  TimeOfDay.fromDateTime(currentValue ?? DateTime.now()),
+//              builder: (BuildContext context, Widget child) {
+//                return MediaQuery(
+//                  data: MediaQuery.of(context)
+//                      .copyWith(alwaysUse24HourFormat: true),
+//                  child: child,
+//                );
+//              });
+//          return DateTimeField.combine(date, time);
+//        } else {
+//          return currentValue;
+//        }
+//      },
+//    );
+//  }
+//}
+//
+//class BasicDateField extends StatelessWidget {
+//  final format = DateFormat("yyyy-MM-dd");
+//  @override
+//  Widget build(BuildContext context) {
+//    return Column(children: <Widget>[
+//      Text('Basic date field (${format.pattern})'),
+//      DateTimeField(
+//        format: format,
+//        onShowPicker: (context, currentValue) {
+//          return showDatePicker(
+//              context: context,
+//              firstDate: DateTime(1900),
+//              initialDate: currentValue ?? DateTime.now(),
+//              lastDate: DateTime(2100));
+//        },
 //      ),
-      onChanged: (String newValue) {
-        setState(() {
-          dropdownValue = newValue;
-        });
-      },
-      items: timeslot.map<DropdownMenuItem<String>>((String value) {
-        return DropdownMenuItem<String>(
-          value: value,
-          child: Text(value),
-        );
-      }).toList(),
-    );
-  }
-}
+//    ]);
+//  }
+//}
+//
+//class Clock24Example extends StatelessWidget {
+//  final format = DateFormat("HH");
+//  @override
+//  Widget build(BuildContext context) {
+//    return Column(children: <Widget>[
+//      Text('24 hour clock'),
+//      DateTimeField(
+//        format: format,
+//        onShowPicker: (context, currentValue) async {
+//          final time = await showTimePicker(
+//            context: context,
+//            initialTime: TimeOfDay.fromDateTime(currentValue ?? DateTime.now()),
+//            builder: (context, child) => MediaQuery(
+//                data: MediaQuery.of(context)
+//                    .copyWith(alwaysUse24HourFormat: true),
+//                child: child),
+//          );
+//          return DateTimeField.convert(time);
+//        },
+//      ),
+//    ]);
+//  }
+//}
+//
+//class MyStatefulWidget extends StatefulWidget {
+//  MyStatefulWidget({Key key}) : super(key: key);
+//
+//  @override
+//  _MyStatefulWidgetState createState() => _MyStatefulWidgetState();
+//}
+//
+//class _MyStatefulWidgetState extends State<MyStatefulWidget> {
+//  String dropdownValue = '00:00';
+//  List<String> timeslot = [
+//    "00:00",
+//    "01:00",
+//    "02:00",
+//    "03:00",
+//    "04:00",
+//    "05.00",
+//    "06.00",
+//    "07.00",
+//    "08.00",
+//    "09.00",
+//    "10.00",
+//    "11.00",
+//    "12.00",
+//    "13.00",
+//    "14.00",
+//    "15.00",
+//    "16.00",
+//    "17.00",
+//    "18.00",
+//    "19.00",
+//    "20.00",
+//    "21.00",
+//    "22.00",
+//    "23.00",
+//    "24.00",
+//  ];
+//
+//  @override
+//  Widget build(BuildContext context) {
+//    return DropdownButtonFormField<String>(
+//      hint: Text('Please pick a time slot'),
+//      value: dropdownValue,
+//      icon: Icon(Icons.arrow_downward),
+//      iconSize: 24,
+//      elevation: 16,
+//      style: TextStyle(color: Colors.deepPurple),
+////      underline: Container(
+////        height: 2,
+////        color: Colors.deepPurpleAccent,
+////      ),
+//      onChanged: (String newValue) {
+//        setState(() {
+//          dropdownValue = newValue;
+//        });
+//      },
+//      items: timeslot.map<DropdownMenuItem<String>>((String value) {
+//        return DropdownMenuItem<String>(
+//          value: value,
+//          child: Text(value),
+//        );
+//      }).toList(),
+//    );
+//  }
+//}

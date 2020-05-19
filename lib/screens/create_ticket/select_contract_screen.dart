@@ -74,6 +74,61 @@ class _SelectContractScreenState extends State<SelectContractScreen> {
     return contractWidgets;
   }
 
+  String _convertDate(String date) {
+    var formattedDate = DateTime.parse(date).toLocal();
+
+    String year;
+    String month;
+    String day;
+    year = formattedDate.year.toString();
+    formattedDate.day < 10
+        ? day = '0' + formattedDate.day.toString()
+        : day = formattedDate.day.toString();
+    formattedDate.month < 10
+        ? month = '0' + formattedDate.month.toString()
+        : month = formattedDate.month.toString();
+
+    switch (int.parse(month)) {
+      case (1):
+        month = 'Jan';
+        break;
+      case (2):
+        month = 'Feb';
+        break;
+      case (3):
+        month = 'Mar';
+        break;
+      case (4):
+        month = 'Apr';
+        break;
+      case (5):
+        month = 'May';
+        break;
+      case (6):
+        month = "Jun";
+        break;
+      case (7):
+        month = "Jul";
+        break;
+      case (8):
+        month = "Aug";
+        break;
+      case (9):
+        month = "Sep";
+        break;
+      case (10):
+        month = 'Oct';
+        break;
+      case (11):
+        month = 'Nov';
+        break;
+      case (12):
+        month = 'Dec';
+    }
+
+    return '$day-$month-$year';
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -111,10 +166,10 @@ class _SelectContractScreenState extends State<SelectContractScreen> {
                         SizedBox(
                           height: 10.0,
                         ),
-                      Expanded(
-                        child: ListView.builder(
+                        Expanded(
+                          child: ListView.builder(
                             itemCount: customer.contractdetails.length,
-                            itemBuilder: (context,index){
+                            itemBuilder: (context, index) {
                               return Container(
                                 margin: EdgeInsets.only(bottom: 10.0),
                                 decoration: BoxDecoration(
@@ -129,13 +184,17 @@ class _SelectContractScreenState extends State<SelectContractScreen> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: <Widget>[
                                     Text(
-                                      customer.contractdetails[index].companyName,
-                                      style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
+                                      customer
+                                          .contractdetails[index].companyName,
+                                      style: TextStyle(
+                                          fontSize: 20.0,
+                                          fontWeight: FontWeight.bold),
                                     ),
                                     SizedBox(
                                       height: 10.0,
                                     ),
-                                    Text('Start date: ${customer.contractdetails[index].startd}'),
+                                    Text(
+                                        'Start date: ${_convertDate(customer.contractdetails[index].startd)}'),
                                     SizedBox(
                                       height: 10.0,
                                     ),
@@ -145,8 +204,11 @@ class _SelectContractScreenState extends State<SelectContractScreen> {
                                         Navigator.push(
                                           context,
                                           MaterialPageRoute(
-                                            builder: (context) => CreateTicketFormScreen(
-                                              contractId: customer.contractdetails[index].contractUUID,
+                                            builder: (context) =>
+                                                CreateTicketFormScreen(
+                                              contractId: customer
+                                                  .contractdetails[index]
+                                                  .contractUUID,
                                             ),
                                           ),
                                         );
@@ -160,8 +222,8 @@ class _SelectContractScreenState extends State<SelectContractScreen> {
                                 ),
                               );
                             },
-                        ),
-                      )
+                          ),
+                        )
                       ],
                     );
                   }
@@ -171,9 +233,7 @@ class _SelectContractScreenState extends State<SelectContractScreen> {
             ),
           ),
         ],
-      )
-          ),
+      )),
     );
   }
 }
-

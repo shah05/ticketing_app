@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:ticketing_app/util/constants.dart';
 
 class TicketCard extends StatelessWidget {
-
   static const DATE_FORMAT = 'dd/MM/yyyy HH:mm';
 
 //  TicketCard({this.cardName, this.cardDesc1, this.cardDesc2, this.icon, this.onPress});
@@ -20,22 +19,77 @@ class TicketCard extends StatelessWidget {
 //  final IconData icon;
   final Function onPress;
 
-  Color statusColour(String status){
-    if(status == "New"){
+  Color statusColour(String status) {
+    if (status == "New") {
       return Colors.red;
-    }
-    else if (status== "Assigned"){
+    } else if (status == "Assigned") {
       return Colors.orange;
-    }
-    else {
+    } else {
       return Colors.white;
     }
   }
 
-  String convertDate (String svcDate){
-    var formattedDate = DateTime.parse(svcDate).toLocal();
-    print('${formattedDate.day}-${formattedDate.month}-${formattedDate.year} ${formattedDate.hour}:00');
-    return '${formattedDate.day}-${formattedDate.month}-${formattedDate.year} ${formattedDate.hour}:00';
+  String _convertDate(String date) {
+    var formattedDate = DateTime.parse(date).toLocal();
+
+    String year;
+    String month;
+    String day;
+    String hour;
+    String minute;
+    year = formattedDate.year.toString();
+    formattedDate.day < 10
+        ? day = '0' + formattedDate.day.toString()
+        : day = formattedDate.day.toString();
+    formattedDate.month < 10
+        ? month = '0' + formattedDate.month.toString()
+        : month = formattedDate.month.toString();
+    formattedDate.hour < 10
+        ? hour = '0' + formattedDate.hour.toString()
+        : hour = formattedDate.hour.toString();
+    formattedDate.minute < 10
+        ? minute = '0' + formattedDate.minute.toString()
+        : minute = formattedDate.minute.toString();
+
+    switch (int.parse(month)) {
+      case (1):
+        month = 'Jan';
+        break;
+      case (2):
+        month = 'Feb';
+        break;
+      case (3):
+        month = 'Mar';
+        break;
+      case (4):
+        month = 'Apr';
+        break;
+      case (5):
+        month = 'May';
+        break;
+      case (6):
+        month = "Jun";
+        break;
+      case (7):
+        month = "Jul";
+        break;
+      case (8):
+        month = "Aug";
+        break;
+      case (9):
+        month = "Sep";
+        break;
+      case (10):
+        month = 'Oct';
+        break;
+      case (11):
+        month = 'Nov';
+        break;
+      case (12):
+        month = 'Dec';
+    }
+
+    return '$day-$month-$year $hour:$minute';
   }
 
   @override
@@ -62,12 +116,16 @@ class TicketCard extends StatelessWidget {
                   padding: EdgeInsets.all(5.0),
                   child: Text(
                     this.cardDesc1,
-                    style: TextStyle(color: this.cardDesc1=="New" || this.cardDesc1=="Assigned" ? Colors.white : Colors.black, fontSize: 12.0),
+                    style: TextStyle(
+                        color: this.cardDesc1 == "New" ||
+                                this.cardDesc1 == "Assigned"
+                            ? Colors.white
+                            : Colors.black,
+                        fontSize: 12.0),
                   ),
                   decoration: BoxDecoration(
                       color: statusColour(this.cardDesc1),
-                    borderRadius: BorderRadius.circular(10.0)
-                  ),
+                      borderRadius: BorderRadius.circular(10.0)),
                 ),
               ),
             ),
@@ -81,7 +139,7 @@ class TicketCard extends StatelessWidget {
               children: <Widget>[
                 Text('Service Type: $cardDesc2',
                     style: TextStyle(color: kTextSecondary)),
-                Text('Service Date: ${convertDate(cardDesc3)}',
+                Text('Service Date: ${_convertDate(cardDesc3)}',
                     style: TextStyle(color: kTextSecondary)),
               ],
             ),

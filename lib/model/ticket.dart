@@ -30,6 +30,7 @@ class Ticket {
   String _dcAccessCode;
   String _actionTaken;
   String _tMsg;
+  String _remarks;
   List<Attachment> _attachments;
   List<MsgLogs> _msgLogs;
   List<SvcStaffs> _svcStaffs;
@@ -77,6 +78,7 @@ class Ticket {
       String createdon,
       Null modifiedby,
       String modifiedon,
+        String remarks,
       bool deleted}) {
     this._svcTypeId = svcTypeId;
     this._naCode = naCode;
@@ -114,6 +116,7 @@ class Ticket {
     this._modifiedby = modifiedby;
     this._modifiedon = modifiedon;
     this._deleted = deleted;
+    this._remarks = remarks;
   }
 
   int get svcTypeId => _svcTypeId;
@@ -170,6 +173,8 @@ class Ticket {
   set actionTaken(String actionTaken) => _actionTaken = actionTaken;
   String get tMsg => _tMsg;
   set tMsg(String tMsg) => _tMsg = tMsg;
+  String get remarks => _remarks;
+  set remarks(String remarks) => _remarks = remarks;
   List<Attachment> get attachments => _attachments;
   set attachments(List<Attachment> attachments) => _attachments = attachments;
   List<MsgLogs> get msgLogs => _msgLogs;

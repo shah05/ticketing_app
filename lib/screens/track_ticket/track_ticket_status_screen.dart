@@ -84,7 +84,6 @@ class _TrackTicketStatusScreenState extends State<TrackTicketStatusScreen>
                     );
                   }
                   return RedirectToLogin();
-//              }
                 },
               ),
             ),

@@ -123,124 +123,14 @@ class BuildTicketDetailPage extends StatelessWidget {
     return ListView(
 //      padding: const EdgeInsets.symmetric(horizontal: 16.0),
       children: <Widget>[
+        //1. NA Code
         Card(
           child: ListTile(
             title: Text('NA Code'),
             subtitle: Text(ticket.naCode),
           ),
         ),
-        Card(
-          child: ListTile(
-            title: Text('Title'),
-            subtitle: Text(ticket.title),
-          ),
-        ),
-//        Divider(),
-        Card(
-          child: ListTile(
-            title: Text('Description'),
-            subtitle: Text(ticket.description),
-          ),
-        ),
-        Card(
-          child: ListTile(
-            title: Text('Organisation'),
-            subtitle: Text(ticket.contract.organisation != null
-                ? ticket.contract.organisation
-                : 'NA'),
-          ),
-        ),
-        Card(
-          child: ListTile(
-            title: Text('Contract Number'),
-            subtitle: Text(ticket.contract.contractNo != null
-                ? ticket.contract.contractNo
-                : 'NA'),
-          ),
-        ),
-        Card(
-          child: ListTile(
-            title: Text('Maintenance Program'),
-            subtitle: Text(ticket.contract.maintProgram != null
-                ? ticket.contract.maintProgram
-                : 'NA'),
-          ),
-        ),
-        Card(
-          child: ListTile(
-            title: Text('Requestor ID'),
-            subtitle:
-                Text(ticket.requestorId != null ? ticket.requestorId : 'NA'),
-          ),
-        ),
-        Card(
-          child: ListTile(
-            title: Text('Maintenance Program'),
-            subtitle: Text(ticket.contract.maintProgram != null
-                ? ticket.contract.maintProgram
-                : 'NA'),
-          ),
-        ),
-        Card(
-          child: ListTile(
-            title: Text('Submit Date'),
-            subtitle: Text(dateConverter(ticket.srSdateTime)),
-          ),
-        ),
-        Card(
-          child: ListTile(
-            title: Text('Reach Date'),
-            subtitle: Text(dateConverter(ticket.srsReachdateTime)),
-          ),
-        ),
-        Card(
-          child: ListTile(
-            title: Text('Start Date'),
-            subtitle: Text(dateConverter(ticket.srsStartdateTime)),
-          ),
-        ),
-        Card(
-          child: ListTile(
-            title: Text('End Date'),
-            subtitle: Text(dateConverter(ticket.srsEnddateTime)),
-          ),
-        ),
-        Card(
-          child: ListTile(
-            title: Text('Status'),
-            subtitle: Text(
-              getTicketStatus(ticket.srsStatusId),
-            ),
-          ),
-        ),
-        Card(
-          child: ListTile(
-            title: Text('Client Reference 1'),
-            subtitle:
-                Text(ticket.clientRef1 != null ? ticket.clientRef1 : 'NA'),
-          ),
-        ),
-        Card(
-          child: ListTile(
-            title: Text('Client Reference 2'),
-            subtitle:
-                Text(ticket.clientRef2 != null ? ticket.clientRef2 : 'NA'),
-          ),
-        ),
-        Card(
-          child: ListTile(
-            title: Text('Client Reference 2'),
-            subtitle:
-                Text(ticket.clientRef2 != null ? ticket.clientRef2 : 'NA'),
-          ),
-        ),
-        Card(
-          child: ListTile(
-            title: Text('Brand Model'),
-            subtitle:
-                Text(ticket.brandModel != null ? ticket.brandModel : 'NA'),
-          ),
-        ),
+        //2. Serial No
         Card(
           child: ListTile(
             title: Text('Equipment Serial Number'),
@@ -248,32 +138,50 @@ class BuildTicketDetailPage extends StatelessWidget {
                 Text(ticket.eqSerialNo != null ? ticket.eqSerialNo : 'NA'),
           ),
         ),
+        //3. Service Type
         Card(
           child: ListTile(
-            title: Text('Part Number'),
-            subtitle: Text(ticket.partno != null ? ticket.partno : 'NA'),
+            title: Text('Service Type'),
+            subtitle: Text(ticket.svcType != null ? ticket.svcType : 'NA'),
           ),
         ),
+        //4. Service Date
+        Card(
+          child: ListTile(
+            title: Text('Request Service on'),
+            subtitle: Text(dateConverter(ticket.srSdateTime)),
+          ),
+        ),
+        //5. Title
+        Card(
+          child: ListTile(
+            title: Text('Subject'),
+            subtitle: Text(ticket.title),
+          ),
+        ),
+        //6. Description
+        Card(
+          child: ListTile(
+            title: Text('Description'),
+            subtitle: Text(ticket.description),
+          ),
+        ),
+        //7. Contact Details
+        Card(
+          child: ListTile(
+            title: Text('Contact Details'),
+            subtitle:
+                Text(ticket.locContact != null ? ticket.locContact : 'NA'),
+          ),
+        ),
+        //8. Equipment Location
         Card(
           child: ListTile(
             title: Text('Equipment Location'),
             subtitle: Text(ticket.eqLoc != null ? ticket.eqLoc : 'NA'),
           ),
         ),
-        Card(
-          child: ListTile(
-            title: Text('Location Contact'),
-            subtitle:
-                Text(ticket.locContact != null ? ticket.locContact : 'NA'),
-          ),
-        ),
-        Card(
-          child: ListTile(
-            title: Text('Site Address'),
-            subtitle:
-                Text(ticket.siteAddress != null ? ticket.siteAddress : 'NA'),
-          ),
-        ),
+        //9. Postal Code
         Card(
           child: ListTile(
             title: Text('Postal Code'),
@@ -281,10 +189,42 @@ class BuildTicketDetailPage extends StatelessWidget {
                 Text(ticket.dcAccessCode != null ? ticket.dcAccessCode : 'NA'),
           ),
         ),
+        //10. Brand/Model
         Card(
           child: ListTile(
-            title: Text('Message'),
-            subtitle: Text(ticket.tMsg != null ? ticket.tMsg : 'NA'),
+            title: Text('Brand Model'),
+            subtitle:
+                Text(ticket.brandModel != null ? ticket.brandModel : 'NA'),
+          ),
+        ),
+        //11. Equipment No
+        Card(
+          child: ListTile(
+            title: Text('Equipment No'),
+            subtitle: Text(ticket.partno != null ? ticket.partno : 'NA'),
+          ),
+        ),
+        //12. Remarks
+        Card(
+          child: ListTile(
+            title: Text('Organisation'),
+            subtitle: Text(ticket.remarks != null ? ticket.remarks : 'NA'),
+          ),
+        ),
+        //13. Client Ref 1
+        Card(
+          child: ListTile(
+            title: Text('Client Reference 1'),
+            subtitle:
+                Text(ticket.clientRef1 != null ? ticket.clientRef1 : 'NA'),
+          ),
+        ),
+        //14. Client Ref 2
+        Card(
+          child: ListTile(
+            title: Text('Client Reference 2'),
+            subtitle:
+                Text(ticket.clientRef2 != null ? ticket.clientRef2 : 'NA'),
           ),
         ),
       ],
@@ -300,9 +240,10 @@ class BuildMsgLogsPage extends StatelessWidget {
 
   BuildMsgLogsPage({this.msgLogs});
 
-  String convertDate (String createDate){
+  String convertDate(String createDate) {
     var formattedDate = DateTime.parse(createDate).toLocal();
-    print('${formattedDate.day}-${formattedDate.month}-${formattedDate.year} ${formattedDate.hour}:00');
+    print(
+        '${formattedDate.day}-${formattedDate.month}-${formattedDate.year} ${formattedDate.hour}:00');
     return '${formattedDate.day}-${formattedDate.month}-${formattedDate.year} ${formattedDate.hour}:00';
   }
 
@@ -338,9 +279,10 @@ class BuildAttachmentsPage extends StatelessWidget {
 
   BuildAttachmentsPage({this.attachments});
 
-  String convertDate (String uploadDate){
+  String convertDate(String uploadDate) {
     var formattedDate = DateTime.parse(uploadDate).toLocal();
-    print('${formattedDate.day}-${formattedDate.month}-${formattedDate.year} ${formattedDate.hour}:00');
+    print(
+        '${formattedDate.day}-${formattedDate.month}-${formattedDate.year} ${formattedDate.hour}:00');
     return '${formattedDate.day}-${formattedDate.month}-${formattedDate.year} ${formattedDate.hour}:00';
   }
 
@@ -358,10 +300,11 @@ class BuildAttachmentsPage extends StatelessWidget {
           child: ListTile(
             title: Text('${attachments[index].fileName}'),
             subtitle: Text(
-//                'Uploaded on ${attachments[index].createdon} by ${attachments[index].createdby}'),
                 'Uploaded on ${convertDate(attachments[index].createdon)}'),
             trailing:
-                GestureDetector(onTap: () {}, child: Icon(Icons.file_download)),
+                GestureDetector(onTap: () {
+                  
+                }, child: Icon(Icons.file_download)),
           ),
         );
       },
