@@ -2,9 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:ticketing_app/util/constants.dart';
 
 class TicketCard extends StatelessWidget {
-  static const DATE_FORMAT = 'dd/MM/yyyy HH:mm';
-
-//  TicketCard({this.cardName, this.cardDesc1, this.cardDesc2, this.icon, this.onPress});
   TicketCard(
       {this.cardName,
       this.cardDesc1,
@@ -27,69 +24,6 @@ class TicketCard extends StatelessWidget {
     } else {
       return Colors.white;
     }
-  }
-
-  String _convertDate(String date) {
-    var formattedDate = DateTime.parse(date).toLocal();
-
-    String year;
-    String month;
-    String day;
-    String hour;
-    String minute;
-    year = formattedDate.year.toString();
-    formattedDate.day < 10
-        ? day = '0' + formattedDate.day.toString()
-        : day = formattedDate.day.toString();
-    formattedDate.month < 10
-        ? month = '0' + formattedDate.month.toString()
-        : month = formattedDate.month.toString();
-    formattedDate.hour < 10
-        ? hour = '0' + formattedDate.hour.toString()
-        : hour = formattedDate.hour.toString();
-    formattedDate.minute < 10
-        ? minute = '0' + formattedDate.minute.toString()
-        : minute = formattedDate.minute.toString();
-
-    switch (int.parse(month)) {
-      case (1):
-        month = 'Jan';
-        break;
-      case (2):
-        month = 'Feb';
-        break;
-      case (3):
-        month = 'Mar';
-        break;
-      case (4):
-        month = 'Apr';
-        break;
-      case (5):
-        month = 'May';
-        break;
-      case (6):
-        month = "Jun";
-        break;
-      case (7):
-        month = "Jul";
-        break;
-      case (8):
-        month = "Aug";
-        break;
-      case (9):
-        month = "Sep";
-        break;
-      case (10):
-        month = 'Oct';
-        break;
-      case (11):
-        month = 'Nov';
-        break;
-      case (12):
-        month = 'Dec';
-    }
-
-    return '$day-$month-$year $hour:$minute';
   }
 
   @override
@@ -139,7 +73,8 @@ class TicketCard extends StatelessWidget {
               children: <Widget>[
                 Text('Service Type: $cardDesc2',
                     style: TextStyle(color: kTextSecondary)),
-                Text('Service Date: ${_convertDate(cardDesc3)}',
+//                Text('Service Date: ${_convertDate(cardDesc3)}',
+                Text('Service Date: ${cardDesc3}',
                     style: TextStyle(color: kTextSecondary)),
               ],
             ),

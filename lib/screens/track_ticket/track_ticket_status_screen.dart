@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:ticketing_app/main.dart';
 import 'package:ticketing_app/model/list_ticket.dart';
-import 'package:ticketing_app/screens/track_ticket/ticket_detail_screen.dart';
+//import 'package:ticketing_app/screens/track_ticket/ticket_detail_screen.dart';
 import 'package:ticketing_app/service/rest_api.dart';
+import 'package:ticketing_app/ui/views/track_ticket/ticket_detail_screen.dart';
 import 'package:ticketing_app/util/constants.dart';
 import 'package:ticketing_app/widgets/redirect_to_login.dart';
 import 'package:ticketing_app/widgets/top_banner.dart';

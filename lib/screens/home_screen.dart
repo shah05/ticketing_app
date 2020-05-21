@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:ticketing_app/screens/create_ticket/create_ticket_form_screen.dart';
-import 'package:ticketing_app/screens/create_ticket/select_contract_screen.dart';
 import 'package:ticketing_app/screens/settings_screen.dart';
+import 'package:ticketing_app/ui/views/create_ticket/select_contract_screen.dart';
 import 'package:ticketing_app/util/constants.dart';
 import 'package:ticketing_app/widgets/bottom_navbar.dart';
 import 'package:ticketing_app/widgets/menu_card.dart';

@@ -1,13 +1,14 @@
 import 'dart:convert';
 import 'dart:io';
+
+import 'package:ticketing_app/model/contract_detail.dart';
 import 'package:ticketing_app/model/create_ticket.dart';
 import 'package:ticketing_app/model/customer.dart';
 import 'package:ticketing_app/model/equipment.dart';
 import 'package:ticketing_app/model/list_ticket.dart';
 import 'package:ticketing_app/model/service_type.dart';
 import 'package:ticketing_app/model/ticket.dart';
-import 'package:ticketing_app/model/ticket_by_id.dart';
-import 'package:ticketing_app/service/rest_api/rest_api.dart';
+import 'package:ticketing_app/service/rest_api/rest_api_service.dart';
 import 'package:http/http.dart' as http;
 import 'package:ticketing_app/service/storage/storage_service.dart';
 
@@ -16,6 +17,7 @@ import '../../service_locator.dart';
 class RestApiServiceImplementation implements RestApiService {
   // the URL of the Web Server
   static const String BASE_URL = 'https://webapi168.azurewebsites.net';
+  // Storage Service
   StorageService _storageService = serviceLocator<StorageService>();
 
   /// ----------------------------------------------------------
@@ -23,20 +25,6 @@ class RestApiServiceImplementation implements RestApiService {
   /// ----------------------------------------------------------
   @override
   Future<CreateTicket> createTicket(Ticket ticket) async {
-//    print('title : ${ticket.title}');
-//    print('description : ${ticket.description}');
-//    print('ref1 : ${ticket.clientRef1}');
-//    print('ref2 : ${ticket.clientRef2}');
-//    print('postal : ${ticket.dcAccessCode}');
-//    print('equipment loc : ${ticket.eqLoc}');
-//    print('equipment serialno : ${ticket.eqSerialNo}');
-//    print('Part no : ${ticket.partno}');
-//    print('brand model : ${ticket.brandModel}');
-//    print('contact details : ${ticket.locContact}');
-//    print('svc date : ${ticket.srSdateTime}');
-//    print('svc date : ${ticket.srSdateTime}');
-//    print('Attachments : ${ticket.attachments}');
-
     CreateTicket t;
     String token = await _storageService.getMobileToken();
     var url = Uri.parse(
@@ -139,9 +127,9 @@ class RestApiServiceImplementation implements RestApiService {
   /// Method that retrieve customer and contract info.
   /// ----------------------------------------------------------
   @override
-  Future<Customer> getContracts() async {
+  Future<List<Contractdetail>> getContracts() async {
     String token = await _storageService.getMobileToken();
-
+    List<Contractdetail> _contractDetails;
     final response = await http.get(
         'https://webapi168.azurewebsites.net/api/customer/GetContractsbyUser',
         headers: {
@@ -152,14 +140,14 @@ class RestApiServiceImplementation implements RestApiService {
     if (response.statusCode == 201) {
       // If the call to the server was successful, parse the JSON.
       final responseJson = json.decode(response.body);
-      Customer c = Customer.fromJson(responseJson);
-      c.httpCode = response.statusCode;
-      return c;
+      _contractDetails = new List<Contractdetail>();
+      responseJson['contractdetails'].forEach((v) {
+        _contractDetails.add(new Contractdetail.fromJson(v));
+      });
+      return _contractDetails;
     } else {
       // If that call was not successful, throw an error.
-      Customer c = Customer();
-      c.httpCode = response.statusCode;
-      return c;
+      return null;
     }
   }
 
@@ -212,102 +200,69 @@ class RestApiServiceImplementation implements RestApiService {
 
     if (response.statusCode == 200) {
       final responseJson = json.decode(response.body);
-//      print('RESPONSE JSON : ${response.body}');
-//      ListTicket l = ListTicket.fromJson(responseJson);
-      if (responseJson['ticketlist'] != null) {
-        _ticketLists = new List<Ticketlist>();
-        responseJson['ticketlist'].forEach((v) {
-          _ticketLists.add(new Ticketlist.fromJson(v));
-        });
+//      if (responseJson['ticketlist'] != null) {
+      _ticketLists = new List<Ticketlist>();
+      responseJson['ticketlist'].forEach((v) {
+        _ticketLists.add(new Ticketlist.fromJson(v));
+      });
+      return _ticketLists;
+//      } else {
+//        return null;
+//      }
+    } else
+      return null;
+  }
 
-        return _ticketLists;
-      }
-      else {
+  /// ----------------------------------------------------------
+  /// Method that retrieve services types for the given token/customer.
+  /// ----------------------------------------------------------
+  @override
+  Future<List<Svctypes>> getServiceType() async {
+    String token = await _storageService.getMobileToken();
+    List<Svctypes> svcTypes;
+    final response = await http.get(
+        'https://webapi168.azurewebsites.net/api/customer/GetServiceType',
+        headers: {
+          HttpHeaders.contentTypeHeader: "application/json",
+          HttpHeaders.authorizationHeader: "Bearer $token"
+        });
+    if (response.statusCode == 201) {
+      // If the call to the server was successful, parse the JSON.
+      final responseJson = json.decode(response.body);
+      if (responseJson['svctypes'] != null) {
+        svcTypes = new List<Svctypes>();
+        responseJson['svctypes'].forEach((v) {
+          svcTypes.add(new Svctypes.fromJson(v));
+        });
+        return svcTypes;
+      } else
         return null;
-      }
-//      l.httpCode = response.statusCode;
-////      return ListTicket.fromJson(responseJson);
-//      return l;
-//    } else {
-////      // If that call was not successful, throw an error.
-//      print('Response status: ${response.statusCode}');
-//      ListTicket l = new ListTicket();
-//      l.httpCode = response.statusCode;
-////      return null;
-//      return l;
-//    }
-    }
+    } else
+      return null;
   }
 
   /// ----------------------------------------------------------
   /// Method that retrieve ticket details by Id.
   /// ----------------------------------------------------------
+  @override
+  Future<Ticket> getTicketDetail(String uuid) async {
+    String token = await _storageService.getMobileToken();
+    var url = Uri.parse(
+        'https://webapi168.azurewebsites.net/api/ticket/GetTicketById');
+    var request = new http.MultipartRequest('POST', url);
+    request.headers['authorization'] = 'Bearer $token';
+    request.fields['id'] = uuid;
 
-    @override
-    Future<Ticket> getTicketDetail(String uuid) async {
-      String token = await _storageService.getMobileToken();
-//    token='';
-      var url = Uri.parse(
-          'https://webapi168.azurewebsites.net/api/ticket/GetTicketById');
-      var request = new http.MultipartRequest('POST', url);
-      request.headers['authorization'] = 'Bearer $token';
-      request.fields['id'] = uuid;
-
-      var streamedResponse = await request.send();
-      var response = await http.Response.fromStream(streamedResponse);
+    var streamedResponse = await request.send();
+    var response = await http.Response.fromStream(streamedResponse);
 //    print(response.statusCode);
-      if (response.statusCode == 200) {
-        // If the call to the server was successful, parse the JSON.
-        final responseJson = json.decode(response.body);
-        TicketById t = TicketById.fromJson(responseJson);
-        Ticket ticket = Ticket.fromJson(responseJson['ticket']);
-        return ticket;
-        return responseJson['ticket'];
-        return responseJson['ticket'];
-//      t.httpCode = response.statusCode;
-////      return TicketById.fromJson(responseJson);
-//      return t;
-      } else {
-        return null;
-//      // If that call was not successful, throw an error.
-//      print('Response status: ${response.statusCode}');
-//      print('Failed to load post');
-//      TicketById t = TicketById();
-//      t.httpCode = response.statusCode;
-////      return TicketById.fromJson(responseJson);
-//      return t;
-      }
+    if (response.statusCode == 200) {
+      // If the call to the server was successful, parse the JSON.
+      final responseJson = json.decode(response.body);
+      Ticket ticket = Ticket.fromJson(responseJson['ticket']);
+      return ticket;
+    } else {
+      return null;
     }
-
-
-    @override
-    Future<List<Svctypes>> getServiceType() async {
-      String token = await _storageService.getMobileToken();
-      List<Svctypes> svcTypes;
-      final response = await http.get(
-          'https://webapi168.azurewebsites.net/api/customer/GetServiceType',
-          headers: {
-            HttpHeaders.contentTypeHeader: "application/json",
-            HttpHeaders.authorizationHeader: "Bearer $token"
-          });
-      if (response.statusCode == 201) {
-        // If the call to the server was successful, parse the JSON.
-        final responseJson = json.decode(response.body);
-        if (responseJson['svctypes'] != null) {
-          svcTypes = new List<Svctypes>();
-          responseJson['svctypes'].forEach((v) {
-            svcTypes.add(new Svctypes.fromJson(v));
-          });
-          return svcTypes;
-        } else
-          return null;
-      } else
-        return null;
-    }
-//
+  }
 }
-
-
-
-
-

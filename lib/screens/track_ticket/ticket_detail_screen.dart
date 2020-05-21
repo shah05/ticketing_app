@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:ticketing_app/model/attachments.dart';
 import 'package:ticketing_app/model/msglogs.dart';
+import 'package:ticketing_app/model/service_type.dart';
 import 'package:ticketing_app/model/ticket.dart';
 import 'package:ticketing_app/model/ticket_by_id.dart';
 import 'package:ticketing_app/service/rest_api.dart';
@@ -13,6 +14,7 @@ import 'package:ticketing_app/widgets/top_banner.dart';
 class TicketDetailScreen extends StatefulWidget {
   final String uuid;
   Future<TicketById> ticket;
+  Future<ServiceType> svcTypeApiResult;
   TicketDetailScreen({this.uuid});
 
   @override
@@ -28,6 +30,7 @@ class _TicketDetailScreenState extends State<TicketDetailScreen>
     // TODO: implement initState
     super.initState();
     widget.ticket = ApiService.getTicketDetail(widget.uuid);
+    widget.svcTypeApiResult = ApiService.getServiceType();
     _tabController = TabController(vsync: this, length: 3);
   }
 
@@ -52,7 +55,6 @@ class _TicketDetailScreenState extends State<TicketDetailScreen>
             Expanded(
               child: FutureBuilder(
                 future: widget.ticket,
-//      future: null,
                 builder: (context, snapshot) {
                   TicketById ticket = snapshot.data;
                   if (ticket == null) {
@@ -62,8 +64,6 @@ class _TicketDetailScreenState extends State<TicketDetailScreen>
                     );
                   }
                   if (ticket.httpCode == 200) {
-//                    return buildTicketDisplay(
-//                        snapshot.data.ticket, widget.uuid,_tabController);
                     Ticket _ticket = snapshot.data.ticket;
                     return TabBarView(
                       controller: _tabController,
@@ -207,7 +207,7 @@ class BuildTicketDetailPage extends StatelessWidget {
         //12. Remarks
         Card(
           child: ListTile(
-            title: Text('Organisation'),
+            title: Text('Remarks'),
             subtitle: Text(ticket.remarks != null ? ticket.remarks : 'NA'),
           ),
         ),
@@ -302,9 +302,7 @@ class BuildAttachmentsPage extends StatelessWidget {
             subtitle: Text(
                 'Uploaded on ${convertDate(attachments[index].createdon)}'),
             trailing:
-                GestureDetector(onTap: () {
-                  
-                }, child: Icon(Icons.file_download)),
+                GestureDetector(onTap: () {}, child: Icon(Icons.file_download)),
           ),
         );
       },
